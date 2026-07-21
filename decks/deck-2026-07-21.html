@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ad Platform News Digest</title>
+<!--
+  SELF-CONTAINED DECK TEMPLATE — used by Routine 2 (Presentation).
+
+  HOW ROUTINE 2 USES THIS FILE:
+    1. Copy this file to decks/deck-YYYY-MM-DD.html
+    2. Replace the single line  <script id="deck-data" ...> ... </script>
+       with a filled-in DECK_DATA object (schema documented in that block below).
+    3. Nothing else needs editing. All rendering is data-driven.
+
+  The deck is one HTML file with zero external requests — safe for GitHub Pages,
+  Slack Canvas embedding is N/A (link out), and it prints cleanly to PDF
+  (Cmd/Ctrl-P -> Save as PDF, one item per page).
+-->
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#14161a; --muted:#5b6472;
+    --line:#e5e8ee; --accent:#3b82f6;
+    --high:#dc2626; --medium:#d97706; --low:#64748b;
+    --chip-bg:#eef2ff; --chip-ink:#3730a3;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0e1116; --card:#171b22; --ink:#e8eaed; --muted:#9aa4b2;
+      --line:#262c36; --accent:#60a5fa;
+      --high:#f87171; --medium:#fbbf24; --low:#94a3b8;
+      --chip-bg:#1e2333; --chip-ink:#a5b4fc;
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:40px 24px 96px}
+  header.masthead{margin-bottom:28px}
+  .kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  h1{font-size:34px;line-height:1.15;margin:.25em 0 .1em}
+  .subtitle{color:var(--muted);font-size:16px}
+  .summary-callout{
+    background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:12px;padding:18px 20px;margin:22px 0 34px;
+  }
+  .summary-callout h2{font-size:15px;margin:0 0 8px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+  .summary-callout ul{margin:0;padding-left:20px}
+  .summary-callout li{margin:4px 0}
+  section.platform{margin:0 0 30px}
+  section.platform > h2{
+    font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+    border-bottom:1px solid var(--line);padding-bottom:8px;margin:0 0 16px;
+  }
+  .item{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:18px 20px;margin:0 0 14px;break-inside:avoid;
+  }
+  .item-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+  .item-title{font-size:18px;font-weight:650;margin:0;flex:1 1 auto;min-width:60%}
+  .item-title a{color:inherit;text-decoration:none;border-bottom:1px solid transparent}
+  .item-title a:hover{border-bottom-color:var(--accent)}
+  .chip{font-size:12px;font-weight:650;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .chip.cat{background:var(--chip-bg);color:var(--chip-ink)}
+  .chip.impact-high{background:color-mix(in srgb,var(--high) 16%,transparent);color:var(--high)}
+  .chip.impact-medium{background:color-mix(in srgb,var(--medium) 18%,transparent);color:var(--medium)}
+  .chip.impact-low{background:color-mix(in srgb,var(--low) 18%,transparent);color:var(--low)}
+  .item-meta{font-size:13px;color:var(--muted);margin-bottom:8px}
+  .item-summary{margin:0}
+  footer.credits{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .empty{color:var(--muted);font-style:italic}
+  @media print{
+    body{background:#fff}
+    .item,.summary-callout{border-color:#ccc}
+    .wrap{padding-top:16px}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <div class="kicker" id="d-kicker">Ad Platform News Digest</div>
+      <h1 id="d-title">Bi-weekly Update</h1>
+      <div class="subtitle" id="d-subtitle"></div>
+    </header>
+
+    <div class="summary-callout" id="d-tldr-wrap">
+      <h2>TL;DR</h2>
+      <ul id="d-tldr"></ul>
+    </div>
+
+    <main id="d-body"></main>
+
+    <footer class="credits" id="d-footer"></footer>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────────────────────────
+       DECK_DATA — Routine 2 replaces the contents of this script block.
+       Schema:
+       {
+         "period_label": "Jul 7 – Jul 21, 2026",   // window covered
+         "generated": "2026-07-21",                  // ISO date deck was built
+         "tldr": ["one-line highlight", "..."],      // 3–5 bullets, most important first
+         "platforms": [                              // ordered; empty ones omitted
+           {
+             "name": "Google Ads",
+             "items": [
+               {
+                 "title": "…",
+                 "url": "https://…",
+                 "source": "Google Ads & Commerce Blog",
+                 "published": "2026-07-14",
+                 "category": "feature",              // feature|beta|policy|deprecation|measurement|api|other
+                 "impact": "high",                   // high|medium|low
+                 "summary": "2–3 sentences."
+               }
+             ]
+           }
+         ]
+       }
+       Items within a platform should be ordered high -> medium -> low impact.
+  ────────────────────────────────────────────────────────────────────────── -->
+  <script id="deck-data" type="application/json">
+{
+  "period_label": "Sample preview · Jun 12 – Jul 21, 2026",
+  "generated": "2026-07-21",
+  "tldr": [
+    "Google: Local Services Ads now run inside Performance Max.",
+    "Google drops the $50K spend requirement for Lead Form assets — format opens to more advertisers.",
+    "Microsoft expands Performance Max with two new experiment types.",
+    "Measurement gets easier: GA4 bulk account linking + GTM guided purchase-conversion setup."
+  ],
+  "platforms": [
+    {
+      "name": "Google Ads",
+      "items": [
+        {
+          "title": "Local Services Ads come to Google Ads via Performance Max",
+          "url": "https://searchengineland.com/local-services-ads-come-to-google-ads-via-performance-max-482692",
+          "source": "Search Engine Land",
+          "published": "2026-07-20",
+          "category": "feature",
+          "impact": "high",
+          "summary": "Local Services Ads can now be managed inside Performance Max, giving local advertisers PMax automation across Search, Maps and more with automatic Google Business Profile syncing."
+        },
+        {
+          "title": "Google drops $50K ad spend requirement for Lead Form assets",
+          "url": "https://searchengineland.com/google-drops-50k-ad-spend-requirement-for-lead-form-assets-482759",
+          "source": "Search Engine Land",
+          "published": "2026-07-20",
+          "category": "policy",
+          "impact": "medium",
+          "summary": "Google removed the $50K historical-spend gate on native Lead Form assets, opening the lead-gen format to far more advertisers, alongside new integrations and simpler eligibility."
+        },
+        {
+          "title": "Google Ads simplifies GA4 setup with bulk account linking",
+          "url": "https://searchengineland.com/google-ads-simplifies-ga4-setup-with-bulk-account-linking-482896",
+          "source": "Search Engine Land",
+          "published": "2026-07-21",
+          "category": "measurement",
+          "impact": "medium",
+          "summary": "Advertisers can now bulk-link multiple Google Ads accounts to a single GA4 property, cutting manual per-account setup — a meaningful time saver for agencies and large MCC structures."
+        },
+        {
+          "title": "Optimize reach and frequency across campaigns with video campaign groups",
+          "url": "https://blog.google/products/ads-commerce/video-campaign-groups/",
+          "source": "Google Ads & Commerce Blog",
+          "published": "2026-07-13",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "YouTube reach & frequency optimization for video campaign groups is now available globally, letting advertisers coordinate R&F across campaigns while keeping individual campaign settings. Coming to DV360 next."
+        },
+        {
+          "title": "Google Ads adds missed growth estimates to the Recommendations tab (beta)",
+          "url": "https://searchengineland.com/google-ads-adds-missed-growth-estimates-to-the-recommendations-tab-482917",
+          "source": "Search Engine Land",
+          "published": "2026-07-21",
+          "category": "beta",
+          "impact": "low",
+          "summary": "A new beta surfaces estimated clicks, conversions and revenue you may be missing due to limited budgets and low bids, shown directly in the Recommendations tab."
+        }
+      ]
+    },
+    {
+      "name": "Meta",
+      "items": [
+        {
+          "title": "Meta expands live shopping ads and virtual card checkout",
+          "url": "https://searchengineland.com/meta-expands-live-shopping-ads-and-virtual-card-checkout-to-drive-more-purchases-480532",
+          "source": "Search Engine Land",
+          "published": "2026-06-17",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "New live shopping ad placements plus a virtual card checkout aim to reduce purchase friction, helping advertisers convert product-discovery moments into sales inside Meta's surfaces."
+        }
+      ]
+    },
+    {
+      "name": "Microsoft Advertising",
+      "items": [
+        {
+          "title": "Microsoft expands Performance Max testing with new experiment types",
+          "url": "https://searchengineland.com/microsoft-expands-performance-max-testing-with-new-experiment-types-481333",
+          "source": "Search Engine Land",
+          "published": "2026-06-30",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "Two new PMax experiment types let advertisers measure incremental campaign impact and validate upgrades before rolling changes out fully."
+        },
+        {
+          "title": "Microsoft Ads expands LinkedIn targeting with job seniority filters",
+          "url": "https://searchengineland.com/microsoft-ads-expands-linkedin-targeting-with-job-seniority-filters-480296",
+          "source": "Search Engine Land",
+          "published": "2026-06-16",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "Advertisers can now target by LinkedIn job seniority across Search and Audience campaigns — a useful B2B lever unique to Microsoft's LinkedIn data."
+        },
+        {
+          "title": "Microsoft Ads launches Product Explorer for catalog insights",
+          "url": "https://searchengineland.com/microsoft-ads-launches-product-explorer-for-catalog-insights-480117",
+          "source": "Search Engine Land",
+          "published": "2026-06-12",
+          "category": "measurement",
+          "impact": "low",
+          "summary": "Product Explorer surfaces catalog issues that may be limiting Shopping ad performance, helping advertisers spot and fix feed problems faster."
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+  <script>
+  (function(){
+    var data;
+    try { data = JSON.parse(document.getElementById('deck-data').textContent); }
+    catch(e){ data = {period_label:'(invalid deck data)', tldr:[], platforms:[]}; }
+
+    var CAT = {feature:'Feature',beta:'Beta',policy:'Policy',deprecation:'Deprecation',
+               measurement:'Measurement',api:'API',other:'Update'};
+
+    function el(tag, cls, html){var n=document.createElement(tag);if(cls)n.className=cls;if(html!=null)n.innerHTML=html;return n;}
+    function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+    document.getElementById('d-subtitle').textContent = data.period_label || '';
+    var kick = document.getElementById('d-kicker');
+    kick.textContent = 'Ad Platform News Digest';
+
+    // TL;DR
+    var tldr = document.getElementById('d-tldr');
+    if(data.tldr && data.tldr.length){
+      data.tldr.forEach(function(t){ tldr.appendChild(el('li', null, esc(t))); });
+    } else {
+      document.getElementById('d-tldr-wrap').style.display='none';
+    }
+
+    // Body: platform sections
+    var body = document.getElementById('d-body');
+    var platforms = (data.platforms||[]).filter(function(p){return p.items && p.items.length;});
+    if(!platforms.length){
+      body.appendChild(el('p','empty','No qualifying updates in this period.'));
+    }
+    platforms.forEach(function(p){
+      var sec = el('section','platform');
+      sec.appendChild(el('h2', null, esc(p.name)));
+      p.items.forEach(function(it){
+        var card = el('div','item');
+        var top = el('div','item-top');
+        var titleHtml = it.url
+          ? '<a href="'+esc(it.url)+'" target="_blank" rel="noopener">'+esc(it.title)+'</a>'
+          : esc(it.title);
+        top.appendChild(el('h3','item-title', titleHtml));
+        top.appendChild(el('span','chip cat', esc(CAT[it.category]||CAT.other)));
+        var imp = (it.impact||'low').toLowerCase();
+        top.appendChild(el('span','chip impact-'+imp, imp.toUpperCase()));
+        card.appendChild(top);
+        var meta = [it.source, it.published].filter(Boolean).map(esc).join(' · ');
+        card.appendChild(el('div','item-meta', meta));
+        card.appendChild(el('p','item-summary', esc(it.summary)));
+        sec.appendChild(card);
+      });
+      body.appendChild(sec);
+    });
+
+    // Footer
+    var n = platforms.reduce(function(a,p){return a+p.items.length;},0);
+    document.getElementById('d-footer').textContent =
+      n + ' update' + (n===1?'':'s') + ' · generated ' + (data.generated||'') +
+      ' · Ad Platform News Digest';
+    document.title = 'Ad Platform News Digest — ' + (data.period_label||'');
+  })();
+  </script>
+</body>
+</html>
