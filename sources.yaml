@@ -71,16 +71,10 @@ sources:
       top links are a site-wide recent/popular block — pick platform-specific items.
 
   # ── Meta ────────────────────────────────────────────────────────────────────
-  - key: meta_business_news
-    platform: meta
-    title: Meta for Business News
-    url: https://www.facebook.com/business/news
-    type: official
-    validation: needs-browser
-    note: Plain fetch returns a Facebook "Error"/noindex page (HTTP 400), no content.
-      Needs a logged-in browser render. Rely on meta_newsroom_tech + searchengineland_meta
-      instead; revisit only if a browser+auth path is worth it.
-
+  # NOTE: www.facebook.com/business/news was removed — a plain fetch returns a
+  # Facebook error/noindex page and the headless-browser path is reset by the run
+  # environment's proxy (no HTTP/2/QUIC support). Meta ads news is covered by the
+  # Newsroom + Search Engine Land sources below.
   - key: meta_newsroom_tech
     platform: meta
     title: Meta Newsroom — Technologies
@@ -100,15 +94,9 @@ sources:
       since facebook.com/business/news is browser-gated.
 
   # ── TikTok ──────────────────────────────────────────────────────────────────
-  - key: tiktok_business_announcements
-    platform: tiktok
-    title: TikTok for Business Blog — Announcements
-    url: https://ads.tiktok.com/business/en-US/blog?category=Announcements
-    type: official
-    validation: needs-browser
-    note: 200 but a JS shell — no post titles/dates in the raw HTML (~1.3MB, no <time>).
-      Needs a browser render. Rely on searchengineland_tiktok until then.
-
+  # NOTE: ads.tiktok.com/business/.../blog was removed — it serves a JS shell with no
+  # titles/dates in the raw HTML, and the browser-render path is proxy-blocked. TikTok
+  # ads news is covered by the Search Engine Land source below.
   - key: searchengineland_tiktok
     platform: tiktok
     title: Search Engine Land — TikTok
@@ -119,15 +107,18 @@ sources:
       since the official blog is browser-gated.
 
   # ── LinkedIn ────────────────────────────────────────────────────────────────
-  - key: linkedin_marketing_blog
+  # NOTE: the official linkedin.com/business/marketing/blog was removed — its post list
+  # is JS-loaded (only nav in raw HTML) and the browser path is proxy-blocked. Replaced
+  # with the SocialBee LinkedIn-updates roundup below.
+  - key: socialbee_linkedin_updates
     platform: linkedin
-    title: LinkedIn for Marketing Blog (LinkedIn Ads)
-    url: https://www.linkedin.com/business/marketing/blog/linkedin-ads
-    type: official
-    validation: needs-browser
-    note: Raw HTML exposes only nav/category links, not article headlines — the post
-      list is JS-loaded. Needs a browser render. No strong LinkedIn-ads aggregator;
-      flag gaps to a human until a browser path exists.
+    title: SocialBee — LinkedIn Updates
+    url: https://socialbee.com/blog/linkedin-updates/
+    type: aggregator
+    validation: pending
+    note: PENDING — socialbee.com must be added to the run environment's egress
+      allowlist before it can be fetched/validated (currently 403 CONNECT). Once
+      allowlisted, verify it returns a readable, dated list of LinkedIn ad updates.
 
   # ── Bing / Microsoft Advertising ────────────────────────────────────────────
   - key: bing_blogs
