@@ -117,7 +117,9 @@ the fetch fails with a `403 CONNECT` policy denial (not a code bug).
       env; do it on Routine 1's first real run.
 - [x] 4. Repo scaffolded (this commit)
 - [x] 5. Routine instruction docs written
-- [ ] 6. **Test:** manual run of Routine 1 → inspect `updates.json`; then Routine 2;
-      then put both on schedule (persistent triggers).
+- [ ] 6. **Test + schedule:** manual run of Routine 1 → inspect `updates.json`; then
+      Routine 2; then put both on schedule. Full runbook in
+      [`routines/SETUP.md`](routines/SETUP.md).
 
-See [`CLAUDE.md`](CLAUDE.md) for the operational quick-reference.
+See [`routines/SETUP.md`](routines/SETUP.md) to put the routines into operation, and
+[`CLAUDE.md`](CLAUDE.md) for the operational quick-reference.

@@ -54,11 +54,13 @@ rule or that hit an "Exclude" rule. For survivors, confirm/adjust `category` and
 - Sanity check: open/parse the file; ensure valid JSON in the data block.
 
 ### 5. Publish the deck (get a shareable link)
-Pick whichever is set up (see "Open config"):
-- **GitHub Pages (primary):** commit the deck; the Pages URL is
+**Primary = GitHub Pages** (chosen delivery):
+- Commit the deck to `main`; the Pages URL is
   `https://<user>.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html`.
-- **Slack Canvas (fallback/mirror):** create a Canvas with `slack_create_canvas`
-  containing the full digest (same ordering); use its link as `deck_link`.
+- Requires Pages enabled once (Settings → Pages, serve `main` / root — see
+  `routines/SETUP.md`). Give Pages a moment to build before posting the link.
+- **Fallback:** if Pages is unavailable, create a Slack Canvas with
+  `slack_create_canvas` containing the full digest and use its link as `deck_link`.
 
 ### 6. Post to Slack
 - Build the channel message from `style/slack-summary.md` (top 3–5 items + `deck_link`).
@@ -74,13 +76,11 @@ Pick whichever is set up (see "Open config"):
 
 ---
 
-## Open config (Ivan to confirm once)
-- **Target Slack channel** for the digest.
-- **Delivery mechanism:** GitHub Pages vs Slack Canvas as the primary link. (Pages
-  needs to be enabled once in repo Settings → Pages, serving `main` / root. Canvas
-  works out of the box via the MCP tool.)
-- **Deck format:** self-contained HTML (current default) vs PPTX. HTML is chosen
-  because it's zero-dependency, links cleanly, and prints to PDF on demand.
+## Open config
+- **Target Slack channel** for the digest — Ivan to fill into the trigger prompt.
+- **Delivery mechanism:** DECIDED → **GitHub Pages** primary, Slack Canvas fallback.
+- **Deck format:** DECIDED → self-contained HTML (zero-dependency, links cleanly,
+  prints to PDF on demand). PPTX not used.
 
 ---
 
