@@ -1,0 +1,134 @@
+# sources.yaml — validated entry points for Routine 1 (Collect)
+#
+# Each source is a stable blog INDEX / announcements page. Routine 1 starts here
+# and follows the fresh links; it never relies on hard-coded article URLs.
+#
+# Fields:
+#   key         Stable identifier. MUST match the key used in data/state.json.
+#   platform    google_ads | meta | tiktok | linkedin | bing
+#   title       Human-readable source name (goes into updates.json -> "source").
+#   url         Entry point (index / announcements page).
+#   type        official | aggregator
+#                 official   = the platform's own blog. Preferred canonical record.
+#                 aggregator = 3rd-party (Search Engine Land). Often repeats official
+#                              stories -> resolved by dedup Layer 2 (see criteria.md).
+#   validation  readable | thin | needs-browser | broken | pending
+#                 pending        = not yet fetch-tested (do it in an env with egress
+#                                  access to the domain — see README "Network").
+#                 readable       = plain fetch returns real, dated article text.
+#                 thin           = fetch returns little/no article text (heavy JS).
+#                 needs-browser  = requires a browser render (Playwright), not a
+#                                  plain fetch. Routine 1 should use the browser path
+#                                  or fall back to the aggregator for this platform.
+#                 broken         = URL dead / blocked; do not use.
+#   note        Free-text guidance for the routine.
+#
+# NOTE ON VALIDATION STATUS: at scaffold time the collection environment's egress
+# policy denied outbound CONNECT to every source domain (403 policy denial), so
+# fetch-based validation (plan step 3) could not run here. Every source is therefore
+# marked `pending`. Routine 1's first manual run — in an environment whose network
+# policy allows these domains — should record the real result per source and update
+# this file. JS-risk sources (Meta business news, TikTok) are pre-flagged from the
+# project handoff as likely `needs-browser`.
+
+sources:
+  # ── Google ──────────────────────────────────────────────────────────────────
+  - key: google_ads_commerce_blog
+    platform: google_ads
+    title: Google Ads & Commerce Blog
+    url: https://blog.google/products/ads-commerce/
+    type: official
+    validation: pending
+    note: Primary Google Ads source. Server-rendered, expected readable.
+
+  - key: google_search_blog
+    platform: google_ads
+    title: Google Blog — Search
+    url: https://blog.google/products-and-platforms/products/search/
+    type: official
+    validation: pending
+    note: Search product news; catches SERP/ads-adjacent changes.
+
+  - key: google_ads_announcements
+    platform: google_ads
+    title: Google Ads Help — New Features & Announcements
+    url: https://support.google.com/google-ads/announcements/9048695?hl=en
+    type: official
+    validation: pending
+    note: Official product announcements feed. High signal-to-noise for features.
+
+  - key: searchengineland_google
+    platform: google_ads
+    title: Search Engine Land — Google
+    url: https://searchengineland.com/library/platforms/google
+    type: aggregator
+    validation: pending
+    note: Overlaps official Google sources; prefer official as canonical on dedup.
+
+  # ── Meta ────────────────────────────────────────────────────────────────────
+  - key: meta_business_news
+    platform: meta
+    title: Meta for Business News
+    url: https://www.facebook.com/business/news
+    type: official
+    validation: pending
+    note: JS-heavy; likely needs-browser. If thin, rely on newsroom + aggregator.
+
+  - key: meta_newsroom_tech
+    platform: meta
+    title: Meta Newsroom — Technologies
+    url: https://about.fb.com/news/category/technologies/
+    type: official
+    validation: pending
+    note: Server-rendered newsroom; expected readable. Filter hard — much is non-ads.
+
+  - key: searchengineland_meta
+    platform: meta
+    title: Search Engine Land — Meta
+    url: https://searchengineland.com/library/platforms/meta
+    type: aggregator
+    validation: pending
+    note: Best fallback if Meta business news is browser-gated.
+
+  # ── TikTok ──────────────────────────────────────────────────────────────────
+  - key: tiktok_business_announcements
+    platform: tiktok
+    title: TikTok for Business Blog — Announcements
+    url: https://ads.tiktok.com/business/en-US/blog?category=Announcements
+    type: official
+    validation: pending
+    note: JS-heavy; likely needs-browser. If thin, rely on aggregator.
+
+  - key: searchengineland_tiktok
+    platform: tiktok
+    title: Search Engine Land — TikTok
+    url: https://searchengineland.com/library/platforms/tiktok
+    type: aggregator
+    validation: pending
+    note: Fallback if TikTok business blog is browser-gated.
+
+  # ── LinkedIn ────────────────────────────────────────────────────────────────
+  - key: linkedin_marketing_blog
+    platform: linkedin
+    title: LinkedIn for Marketing Blog (LinkedIn Ads)
+    url: https://www.linkedin.com/business/marketing/blog/linkedin-ads
+    type: official
+    validation: pending
+    note: LinkedIn may gate content; if thin, no strong aggregator — flag to human.
+
+  # ── Bing / Microsoft Advertising ────────────────────────────────────────────
+  - key: bing_blogs
+    platform: bing
+    title: Bing Blogs
+    url: https://blogs.bing.com/search?page=1
+    type: official
+    validation: pending
+    note: Broad Bing/search news; filter for Microsoft Advertising relevance.
+
+  - key: searchengineland_microsoft
+    platform: bing
+    title: Search Engine Land — Microsoft Advertising
+    url: https://searchengineland.com/library/platforms/microsoft/microsoft-advertising
+    type: aggregator
+    validation: pending
+    note: Often higher signal for Microsoft Ads than the broad Bing blog.
