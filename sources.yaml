@@ -115,10 +115,13 @@ sources:
     title: SocialBee — LinkedIn Updates
     url: https://socialbee.com/blog/linkedin-updates/
     type: aggregator
-    validation: pending
-    note: PENDING — socialbee.com must be added to the run environment's egress
-      allowlist before it can be fetched/validated (currently 403 CONNECT). Once
-      allowlisted, verify it returns a readable, dated list of LinkedIn ad updates.
+    validation: readable
+    note: Verified 2026-07-21 via curl (HTTP 200). Format is a MONTHLY roundup —
+      sections like "July 2026 LinkedIn updates", "June 2026 LinkedIn updates" with
+      in-text dates (e.g. July 8 & 16, 2026) and a JSON-LD dateModified. Routine 1
+      should parse the newest month section(s) and treat each bullet as a candidate
+      item (id = source + month + sha1(title)); filter to ad/Campaign-Manager items
+      per criteria.md. Covers general LinkedIn changes too — filter hard.
 
   # ── Bing / Microsoft Advertising ────────────────────────────────────────────
   - key: bing_blogs
