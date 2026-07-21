@@ -23,13 +23,12 @@
 #                 broken         = URL dead / blocked; do not use.
 #   note        Free-text guidance for the routine.
 #
-# NOTE ON VALIDATION STATUS: at scaffold time the collection environment's egress
-# policy denied outbound CONNECT to every source domain (403 policy denial), so
-# fetch-based validation (plan step 3) could not run here. Every source is therefore
-# marked `pending`. Routine 1's first manual run — in an environment whose network
-# policy allows these domains — should record the real result per source and update
-# this file. JS-risk sources (Meta business news, TikTok) are pre-flagged from the
-# project handoff as likely `needs-browser`.
+# VALIDATION: done 2026-07-21 by in-session curl from an egress-enabled environment.
+# IMPORTANT — fetch method: fetch pages with an in-session client (curl / requests /
+# browser), NOT the managed WebFetch tool. With egress open, curl gets HTTP 200 from
+# every domain, but WebFetch's fetcher is blocked by the sites' anti-bot (403) even
+# then. Dates/titles are most reliably read from each article's JSON-LD
+# ("datePublished") and og: meta tags. Re-validate on drift.
 
 sources:
   # ── Google ──────────────────────────────────────────────────────────────────
@@ -38,32 +37,38 @@ sources:
     title: Google Ads & Commerce Blog
     url: https://blog.google/products/ads-commerce/
     type: official
-    validation: pending
-    note: Primary Google Ads source. Server-rendered, expected readable.
+    validation: readable
+    note: Primary Google Ads source. Server-rendered; article links + JSON-LD dates
+      read fine via curl (verified article dated 2026-07-13).
 
   - key: google_search_blog
     platform: google_ads
     title: Google Blog — Search
     url: https://blog.google/products-and-platforms/products/search/
     type: official
-    validation: pending
-    note: Search product news; catches SERP/ads-adjacent changes.
+    validation: thin
+    note: Returns 200 but the article cards are JS-hydrated — no article links in the
+      raw HTML. Deprioritize; Ads&Commerce blog + Search Engine Land cover Search-ads
+      news. Promote to readable only if a browser-render path is added.
 
   - key: google_ads_announcements
     platform: google_ads
     title: Google Ads Help — New Features & Announcements
     url: https://support.google.com/google-ads/announcements/9048695?hl=en
     type: official
-    validation: pending
-    note: Official product announcements feed. High signal-to-noise for features.
+    validation: readable
+    note: Official product announcements. Large server-rendered page, all entries
+      inline (verified). High signal-to-noise for features.
 
   - key: searchengineland_google
     platform: google_ads
     title: Search Engine Land — Google
     url: https://searchengineland.com/library/platforms/google
     type: aggregator
-    validation: pending
-    note: Overlaps official Google sources; prefer official as canonical on dedup.
+    validation: readable
+    note: ~50 article links with JSON-LD dates (verified article dated 2026-07-17).
+      Overlaps official Google sources; prefer official as canonical on dedup. NB the
+      top links are a site-wide recent/popular block — pick platform-specific items.
 
   # ── Meta ────────────────────────────────────────────────────────────────────
   - key: meta_business_news
@@ -71,24 +76,28 @@ sources:
     title: Meta for Business News
     url: https://www.facebook.com/business/news
     type: official
-    validation: pending
-    note: JS-heavy; likely needs-browser. If thin, rely on newsroom + aggregator.
+    validation: needs-browser
+    note: Plain fetch returns a Facebook "Error"/noindex page (HTTP 400), no content.
+      Needs a logged-in browser render. Rely on meta_newsroom_tech + searchengineland_meta
+      instead; revisit only if a browser+auth path is worth it.
 
   - key: meta_newsroom_tech
     platform: meta
     title: Meta Newsroom — Technologies
     url: https://about.fb.com/news/category/technologies/
     type: official
-    validation: pending
-    note: Server-rendered newsroom; expected readable. Filter hard — much is non-ads.
+    validation: readable
+    note: Server-rendered newsroom; ~14 article links + JSON-LD dates (verified article
+      dated 2026-07-21). Filter HARD — much is non-ads (consumer/policy/PR).
 
   - key: searchengineland_meta
     platform: meta
     title: Search Engine Land — Meta
     url: https://searchengineland.com/library/platforms/meta
     type: aggregator
-    validation: pending
-    note: Best fallback if Meta business news is browser-gated.
+    validation: readable
+    note: ~55 article links with dates (verified). Primary practical Meta-ads source
+      since facebook.com/business/news is browser-gated.
 
   # ── TikTok ──────────────────────────────────────────────────────────────────
   - key: tiktok_business_announcements
@@ -96,16 +105,18 @@ sources:
     title: TikTok for Business Blog — Announcements
     url: https://ads.tiktok.com/business/en-US/blog?category=Announcements
     type: official
-    validation: pending
-    note: JS-heavy; likely needs-browser. If thin, rely on aggregator.
+    validation: needs-browser
+    note: 200 but a JS shell — no post titles/dates in the raw HTML (~1.3MB, no <time>).
+      Needs a browser render. Rely on searchengineland_tiktok until then.
 
   - key: searchengineland_tiktok
     platform: tiktok
     title: Search Engine Land — TikTok
     url: https://searchengineland.com/library/platforms/tiktok
     type: aggregator
-    validation: pending
-    note: Fallback if TikTok business blog is browser-gated.
+    validation: readable
+    note: ~57 article links with dates (verified). Primary practical TikTok-ads source
+      since the official blog is browser-gated.
 
   # ── LinkedIn ────────────────────────────────────────────────────────────────
   - key: linkedin_marketing_blog
@@ -113,8 +124,10 @@ sources:
     title: LinkedIn for Marketing Blog (LinkedIn Ads)
     url: https://www.linkedin.com/business/marketing/blog/linkedin-ads
     type: official
-    validation: pending
-    note: LinkedIn may gate content; if thin, no strong aggregator — flag to human.
+    validation: needs-browser
+    note: Raw HTML exposes only nav/category links, not article headlines — the post
+      list is JS-loaded. Needs a browser render. No strong LinkedIn-ads aggregator;
+      flag gaps to a human until a browser path exists.
 
   # ── Bing / Microsoft Advertising ────────────────────────────────────────────
   - key: bing_blogs
@@ -122,13 +135,15 @@ sources:
     title: Bing Blogs
     url: https://blogs.bing.com/search?page=1
     type: official
-    validation: pending
-    note: Broad Bing/search news; filter for Microsoft Advertising relevance.
+    validation: readable
+    note: Server-rendered; article text + <time> tags present (verified). Broad
+      Bing/search news — filter for Microsoft Advertising relevance.
 
   - key: searchengineland_microsoft
     platform: bing
     title: Search Engine Land — Microsoft Advertising
     url: https://searchengineland.com/library/platforms/microsoft/microsoft-advertising
     type: aggregator
-    validation: pending
-    note: Often higher signal for Microsoft Ads than the broad Bing blog.
+    validation: readable
+    note: ~62 article links with dates (verified). Often higher signal for Microsoft
+      Ads than the broad Bing blog.

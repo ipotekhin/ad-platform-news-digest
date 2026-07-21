@@ -104,18 +104,20 @@ A routine runs as a full cloud Claude Code session. **Outbound HTTPS to every so
 domain in `sources.yaml` must be allowed by the run environment's egress policy**, or
 the fetch fails with a `403 CONNECT` policy denial (not a code bug).
 
-> At scaffold time this repo's session had a **restrictive** egress policy that denied
-> all source domains, so plan **step 3 (fetch-validation)** and **step 6 (test run)**
-> could not be executed here. Every source in `sources.yaml` is marked
-> `validation: pending`. Run Routine 1 once in an environment whose network policy
-> allows the source domains, then commit the real per-source validation results.
+**Fetch with an in-session client (`curl` / `requests` / browser), not the managed
+`WebFetch` tool.** Validated 2026-07-21: once egress is open, curl gets HTTP 200 from
+every source domain, but `WebFetch`'s fetcher is still blocked by the sites' anti-bot
+(403). Some official sources are JS-only and need a browser render (see `sources.yaml`
+`validation` fields): `meta_business_news`, `tiktok_business_announcements`, and
+`linkedin_marketing_blog` are `needs-browser` — use their Search Engine Land aggregator
+fallback until a browser path is added.
 
 ## Status / next actions
 - [x] 1. Architecture / workflow decided
 - [x] 2. Repo created + sources gathered
-- [~] 3. **Validate sources (fetch test)** — blocked by egress policy in the scaffold
-      env; do it on Routine 1's first real run.
-- [x] 4. Repo scaffolded (this commit)
+- [x] 3. **Validate sources** — done 2026-07-21 (in-session curl). Per-source verdicts
+      (`readable` / `thin` / `needs-browser`) recorded in `sources.yaml`.
+- [x] 4. Repo scaffolded
 - [x] 5. Routine instruction docs written
 - [ ] 6. **Test + schedule:** manual run of Routine 1 → inspect `updates.json`; then
       Routine 2; then put both on schedule. Full runbook in

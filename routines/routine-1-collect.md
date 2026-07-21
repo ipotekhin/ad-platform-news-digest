@@ -28,6 +28,11 @@ data/updates.json and data/state.json, and push. Do not build any deck.
 - **Network:** the collection environment MUST allow outbound HTTPS to every source
   domain in `sources.yaml`. If CONNECT is denied (403 policy denial) the fetch fails —
   this is an environment config issue, not a code bug. See repo `README.md` → Network.
+- **Fetch method:** fetch with an **in-session client** (`curl` / `requests` / a
+  browser), **not** the managed `WebFetch` tool. Validated 2026-07-21: with egress
+  open, curl gets HTTP 200 from all domains, but `WebFetch`'s fetcher is blocked by the
+  sites' anti-bot (403) even so. Read dates/titles from each article's JSON-LD
+  (`"datePublished"`) and `og:` meta tags — most reliable across sites.
 - Repo is checked out; `sources.yaml`, `data/updates.json`, `data/state.json` exist.
 
 ---
@@ -45,10 +50,12 @@ data/updates.json and data/state.json, and push. Do not build any deck.
 ### 2. Visit each source
 For each source in `sources.yaml` (skip `validation: broken`):
 - Fetch the entry-point `url`.
-- **If the fetch returns thin/empty content** (heavy-JS pages — Meta business news,
-  TikTok are pre-flagged): try the browser path (Playwright) if available; otherwise
-  fall back to that platform's `aggregator` source and set this source's
-  `validation` to `needs-browser` in `sources.yaml` (commit the note).
+- **Sources flagged `needs-browser`** in `sources.yaml` (as of 2026-07-21:
+  `meta_business_news`, `tiktok_business_announcements`, `linkedin_marketing_blog`)
+  return only a JS shell to a plain fetch — use a browser render (Playwright, which is
+  pre-installed) or fall back to that platform's `aggregator` source. `google_search_blog`
+  is `thin` (deprioritize). If a source's real behavior changes, update its
+  `validation` field and commit the note.
 - Parse the index for **article links with dates**. Keep only items **newer than
   that source's `last_collected` minus the 2-day margin**.
 - For each candidate, fetch the article page and extract: `title`, `url`,
