@@ -12,9 +12,10 @@ The routine UI holds only a short pointer to this file. All logic lives here.
 
 ```
 You are Routine 2 (Presentation) for the ad-platform-news-digest repo.
-Read routines/routine-2-presentation.md and follow it exactly. Build the deck,
-post the summary to Slack channel #<CHANNEL>, then set presented:true on the
-included items and commit. Work on branch claude/present-run (from default).
+Read routines/routine-2-presentation.md and follow it exactly. Branch from main to
+a claude/present-run branch. Build the deck, post the summary to Slack channel
+#<CHANNEL>, then set presented:true on the included items, commit, push, open a
+pull request into main and merge it.
 ```
 
 Set `#<CHANNEL>` to the target Slack channel (Ivan to fill in — see "Open config").
@@ -72,7 +73,8 @@ rule or that hit an "Exclude" rule. For survivors, confirm/adjust `category` and
 - For every item included in the deck, set `presented: true` in `data/updates.json`.
 - Commit `data/updates.json` + `decks/deck-YYYY-MM-DD.html` with a message like
   `present: deck YYYY-MM-DD, M items -> Slack`.
-- Push to the `claude/`-prefixed branch.
+- Push to `claude/present-run`, then open a pull request into `main` and merge it
+  (Pages serves `main`, so the deck link resolves after merge).
 
 ---
 

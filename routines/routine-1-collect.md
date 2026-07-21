@@ -12,14 +12,15 @@ The routine UI holds only a short pointer to this file. All logic lives here.
 
 ```
 You are Routine 1 (Collect) for the ad-platform-news-digest repo.
-Read routines/routine-1-collect.md and follow it exactly. Work on branch
-claude/collect-run (create from the default branch), commit the updated
-data/updates.json and data/state.json, and push. Do not build any deck.
+Read routines/routine-1-collect.md and follow it exactly. Branch from main to a
+claude/collect-run branch, commit the updated data/updates.json and
+data/state.json, push, then open a pull request into main and merge it.
+Do not build any deck.
 ```
 
-> **Branch note:** routines can push to `claude/`-prefixed branches by default. Ivan
-> runs a separate automation that merges these to `main`. If your setup lets the
-> routine commit to `main` directly, it may do so — confirm before relying on it.
+> **Branch note:** `main` is the mainline. Routines can only push to `claude/`-prefixed
+> branches, so each run branches from `main`, pushes to `claude/collect-run`, then
+> merges into `main` via pull request.
 
 ---
 
@@ -111,7 +112,8 @@ that published nothing keeps its old date and stays inside the window next run).
 ### 7. Commit & push
 - Commit `data/updates.json`, `data/state.json`, and any `sources.yaml` validation
   edits with a message like `collect: +N new items (YYYY-MM-DD)`.
-- Push to the `claude/`-prefixed branch. Do **not** build a deck; that's Routine 2.
+- Push to `claude/collect-run`, then open a pull request into `main` and merge it.
+  Do **not** build a deck; that's Routine 2.
 
 ---
 
