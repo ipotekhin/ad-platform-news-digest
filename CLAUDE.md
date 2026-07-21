@@ -26,5 +26,7 @@ operational reference for a routine session.
 - **Egress:** source domains must be allowed by the run environment's network policy,
   or fetches fail with `403 CONNECT`. See README → Network requirement.
 - **Slack:** MCP has no file upload — post a summary + link, never a file attachment.
-- **Branches:** routines push to `claude/`-prefixed branches by default.
+- **Branches:** `main` is the mainline (GitHub Pages serves it). Routines can only push
+  to `claude/`-prefixed branches, so each run branches from `main`, pushes to a
+  `claude/*` branch, then merges into `main` via pull request.
 - Use **cloud** routines for scheduling (desktop tasks only run while the app is open).
