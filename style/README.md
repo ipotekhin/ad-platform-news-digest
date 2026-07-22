@@ -14,7 +14,7 @@
 All styling lives in the `<style>` block of `deck-template.html`. It is theme-aware
 (light/dark via `prefers-color-scheme`). Change the CSS variables under `:root` to
 re-skin. Do not add external fonts/CSS/JS — the single-file, zero-request property is
-what makes the deck portable to GitHub Pages and Slack Canvas contexts.
+what makes the deck portable and safe to serve from GitHub Pages.
 
 ## Deck content rules (applied by Routine 2)
 

@@ -40,30 +40,33 @@ Do not build any deck.
 
 ## Steps
 
-### 1. Load state
-- Read `data/state.json` → for each source `key`, note `last_collected` (a date).
-- Read `data/updates.json` → the existing items (for dedup).
-- Read `sources.yaml` → the source list.
-- Compute the **collection window start** = `min(last_collected)` minus a **2-day
-  safety margin**. You will ignore items older than each source's own
-  `last_collected` (minus margin).
+### 1. Load state and set the window
+- Read `data/updates.json` → the existing items (this is the base you dedup against —
+  **check the base first, before visiting any source**).
+- Read `sources.yaml` → the source list. Read `data/state.json` (a record of the last
+  successful collection date per source; informational).
+- **Collection window = the last 2 weeks.** `window_start = today − 14 days`, minus a
+  **2-day safety margin** (so effectively today − 16 days). **Ignore anything published
+  before `window_start`.** The window is always these ~2 weeks — never an open-ended or
+  earlier period. Dedup (below) prevents re-adding items already collected in a prior
+  run whose window overlaps this one.
 
 ### 2. Visit each source
-For each source in `sources.yaml` (skip `validation: broken`):
-- Fetch the entry-point `url`.
-- **Sources flagged `needs-browser`** in `sources.yaml` (as of 2026-07-21:
-  `meta_business_news`, `tiktok_business_announcements`, `linkedin_marketing_blog`)
-  return only a JS shell to a plain fetch — use a browser render (Playwright, which is
-  pre-installed) or fall back to that platform's `aggregator` source. `google_search_blog`
-  is `thin` (deprioritize). If a source's real behavior changes, update its
-  `validation` field and commit the note.
-- Parse the index for **article links with dates**. Keep only items **newer than
-  that source's `last_collected` minus the 2-day margin**.
-- For each candidate, fetch the article page and extract: `title`, `url`,
-  `published` date, and enough body text to write a 2–3 sentence summary.
+All sources in `sources.yaml` are validated `readable` via curl (see the file header).
+For each source:
+- Fetch the entry-point `url` with an in-session client (curl / requests), not WebFetch.
+- Parse the index for **article links with dates**. Keep only links **published within
+  the window** (step 1). For SocialBee (monthly roundup), parse the newest month
+  section(s) and treat each bullet as a candidate.
+- **Always open the article page itself** — never judge relevance or write a summary
+  from the index headline alone. Fetch the article, read the body, then decide whether
+  it belongs (per `criteria.md`) and, if so, extract `url`, `published` date, and enough
+  body text to write the title + summary.
+- If an index shows a headline with no date, still open the article to get its
+  `datePublished` (JSON-LD / og:) before applying the window.
 
-**Record per source, for this run:** readable / thin / needs-browser / broken. If a
-source's real status differs from `sources.yaml`, update the file.
+If a source's real behavior changes (e.g. stops returning readable content), note it
+and flag to a human — do not silently drop items.
 
 ### 3. Relevance gate (light, at collection time)
 Apply `criteria.md` **loosely** here — *lean include*. The strict filter happens in
@@ -94,20 +97,21 @@ For each genuinely-new item, append a record to `data/updates.json`:
   "id": "a3f9c2b1e004",
   "platform": "google_ads",
   "source": "Google Ads & Commerce Blog",
-  "title": "...",
+  "title": "clear title — the article's own headline, or one you write if it reads better",
   "url": "https://...(canonical)",
   "published": "2026-07-14",
   "first_seen": "<now, ISO8601 UTC>",
-  "summary": "2–3 sentences you wrote from the article body.",
+  "summary": "1–3 sentences you wrote from the article body: what changed + why it matters.",
   "category": "feature|beta|policy|deprecation|measurement|api|other",
   "impact": "high|medium|low",
   "collected": true,
   "presented": false
 }
 ```
-Then update `data/state.json`: set each source's `last_collected` to the **newest
-`published` date you actually processed** for that source (not "today" — so a source
-that published nothing keeps its old date and stays inside the window next run).
+Then update `data/state.json`: set `last_collected` to today's date **only for sources
+you actually read this run** (a record, so a persistently failing source is visible).
+This is informational — the collection window is always the fixed last-2-weeks span
+from step 1, not derived from `state.json`.
 
 ### 7. Commit & push
 - Commit `data/updates.json`, `data/state.json`, and any `sources.yaml` validation

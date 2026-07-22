@@ -78,9 +78,16 @@ the semantic dedup itself.
   anything already stored in the current window. Prefer the **official** source over an
   **aggregator** (Search Engine Land) as the canonical record.
 
+## Collection window
+- Routine 1 collects over a **fixed last-2-weeks window** (`today − 14 days`, ~2 days
+  margin) on every run. Earlier periods are never revisited.
+- Dedup against `data/updates.json` (checked first) prevents re-adding items already
+  collected in an overlapping earlier run.
+
 ## State management
 - `collected` and `presented` flags live **inside each update record**.
-- `data/state.json` holds the last-collected date **per source** (Routine 1's window).
+- `data/state.json` records the last-collected date **per source** (informational — the
+  window is the fixed 2 weeks above, not derived from this file).
 - `presented` is set **only after** the deck is successfully posted to Slack — a failed
   run never silently loses updates.
 
@@ -89,10 +96,13 @@ the semantic dedup itself.
 ## Delivery
 
 The connected Slack MCP has **no file-upload tool**, so the deck is **not** attached.
-Routine 2 posts a short text summary of the top items with a **link** to the deck:
-- **GitHub Pages** (primary) — enable once in *Settings → Pages* (serve `main` / root);
-  deck URL is `https://<user>.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html`.
-- **Slack Canvas** (fallback/mirror) — works out of the box via `slack_create_canvas`.
+Routine 2 posts a short text summary of the top items with the **GitHub Pages link**
+embedded in the message:
+- **GitHub Pages** — enable once in *Settings → Pages* (serve `main` / root); deck URL is
+  `https://ipotekhin.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html`.
+- Delivery is **GitHub Pages only** — no Slack Canvas.
+- The Slack message posts **from Ivan's own identity** (the connector is authorized under
+  his account), not a separate bot.
 
 Deck format is self-contained HTML (zero external requests → portable, prints to PDF).
 
@@ -107,16 +117,14 @@ the fetch fails with a `403 CONNECT` policy denial (not a code bug).
 **Fetch with an in-session client (`curl` / `requests` / browser), not the managed
 `WebFetch` tool.** Validated 2026-07-21: once egress is open, curl gets HTTP 200 from
 every source domain, but `WebFetch`'s fetcher is still blocked by the sites' anti-bot
-(403). Some official sources are JS-only and need a browser render (see `sources.yaml`
-`validation` fields): `meta_business_news`, `tiktok_business_announcements`, and
-`linkedin_marketing_blog` are `needs-browser` — use their Search Engine Land aggregator
-fallback until a browser path is added.
+(403). `sources.yaml` lists **9 sources**, all confirmed readable via curl; sources that
+could not be read were dropped and are not tracked.
 
 ## Status / next actions
 - [x] 1. Architecture / workflow decided
 - [x] 2. Repo created + sources gathered
-- [x] 3. **Validate sources** — done 2026-07-21 (in-session curl). Per-source verdicts
-      (`readable` / `thin` / `needs-browser`) recorded in `sources.yaml`.
+- [x] 3. **Validate sources** — done 2026-07-21 (in-session curl). 9 sources confirmed
+      `readable`; unreadable ones dropped. Recorded in `sources.yaml`.
 - [x] 4. Repo scaffolded
 - [x] 5. Routine instruction docs written
 - [ ] 6. **Test + schedule:** manual run of Routine 1 → inspect `updates.json`; then

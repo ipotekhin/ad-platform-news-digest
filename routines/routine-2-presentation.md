@@ -24,8 +24,11 @@ Set `#<CHANNEL>` to the target Slack channel (Ivan to fill in — see "Open conf
 
 ## Preconditions
 - `data/updates.json`, `criteria.md`, `style/deck-template.html` exist.
-- Slack MCP is connected (tools: `slack_send_message`, `slack_create_canvas`,
-  `slack_update_canvas`). **No file-upload tool exists** — deck is linked, not attached.
+- Slack MCP is connected (tools: `slack_send_message`, `slack_send_message_draft`,
+  `slack_search_channels`). **No file-upload tool exists** — the deck is **linked**, not
+  attached. The message posts **from Ivan's own Slack identity** (the connector is
+  authorized under his account), not a separate bot.
+- **Delivery is GitHub Pages only.** Do not create or format anything in Slack Canvas.
 
 ---
 
@@ -54,19 +57,21 @@ rule or that hit an "Exclude" rule. For survivors, confirm/adjust `category` and
   `platforms[].items[]`. Each item links to its **canonical** URL.
 - Sanity check: open/parse the file; ensure valid JSON in the data block.
 
-### 5. Publish the deck (get a shareable link)
-**Primary = GitHub Pages** (chosen delivery):
-- Commit the deck to `main`; the Pages URL is
-  `https://<user>.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html`.
+### 5. Publish the deck (GitHub Pages)
+- Commit the deck to `main` (via the PR flow); the Pages URL is
+  `https://ipotekhin.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html`.
 - Requires Pages enabled once (Settings → Pages, serve `main` / root — see
   `routines/SETUP.md`). Give Pages a moment to build before posting the link.
-- **Fallback:** if Pages is unavailable, create a Slack Canvas with
-  `slack_create_canvas` containing the full digest and use its link as `deck_link`.
+- This is the **only** delivery format. Do not use Slack Canvas.
 
 ### 6. Post to Slack
-- Build the channel message from `style/slack-summary.md` (top 3–5 items + `deck_link`).
-- Post with `slack_send_message` to the target channel.
-- **Verify the post succeeded** (tool returned ok / message ts). If it failed, STOP —
+- Build the message from `style/slack-summary.md` (top 3–5 items + `deck_link`
+  embedded in the text), standard Markdown.
+- **Test / first runs (default until Ivan flips it live):** do NOT post publicly.
+  Either create a **draft** with `slack_send_message_draft`, or send the message to
+  **Ivan's DM** (`slack_send_message` with `channel_id` = his user id) so he can review.
+- **Live mode:** post with `slack_send_message` to the target channel `#<CHANNEL>`.
+- **Verify it succeeded** (tool returned ok / message link). If it failed, STOP —
   do not mark anything presented; leave the items for the next run.
 
 ### 7. Mark presented (only after success)
@@ -79,8 +84,9 @@ rule or that hit an "Exclude" rule. For survivors, confirm/adjust `category` and
 ---
 
 ## Open config
-- **Target Slack channel** for the digest — Ivan to fill into the trigger prompt.
-- **Delivery mechanism:** DECIDED → **GitHub Pages** primary, Slack Canvas fallback.
+- **Target Slack channel** for the digest — Ivan to fill into the trigger prompt (only
+  needed for live mode; test runs use a draft or Ivan's DM).
+- **Delivery mechanism:** DECIDED → **GitHub Pages only** (no Slack Canvas).
 - **Deck format:** DECIDED → self-contained HTML (zero-dependency, links cleanly,
   prints to PDF on demand). PPTX not used.
 
