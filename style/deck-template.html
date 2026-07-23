@@ -44,6 +44,9 @@
   .kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
   h1{font-size:34px;line-height:1.15;margin:.25em 0 .1em}
   .subtitle{color:var(--muted);font-size:16px}
+  .released{display:inline-block;margin-top:10px;font-size:13px;font-weight:600;
+    letter-spacing:.02em;color:var(--chip-ink);background:var(--chip-bg);
+    padding:5px 12px;border-radius:999px}
   .summary-callout{
     background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
     border-radius:12px;padding:18px 20px;margin:22px 0 34px;
@@ -70,6 +73,7 @@
   .chip.impact-medium{background:color-mix(in srgb,var(--medium) 18%,transparent);color:var(--medium)}
   .chip.impact-low{background:color-mix(in srgb,var(--low) 18%,transparent);color:var(--low)}
   .item-meta{font-size:13px;color:var(--muted);margin-bottom:8px}
+  .item-date{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
   .item-summary{margin:0}
   footer.credits{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
   .empty{color:var(--muted);font-style:italic}
@@ -86,6 +90,7 @@
       <div class="kicker" id="d-kicker">Ad Platform News Digest</div>
       <h1 id="d-title">Bi-weekly Update</h1>
       <div class="subtitle" id="d-subtitle"></div>
+      <div class="released" id="d-released"></div>
     </header>
 
     <div class="summary-callout" id="d-tldr-wrap">
@@ -163,9 +168,13 @@
     function el(tag, cls, html){var n=document.createElement(tag);if(cls)n.className=cls;if(html!=null)n.innerHTML=html;return n;}
     function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 
-    document.getElementById('d-subtitle').textContent = data.period_label || '';
+    document.getElementById('d-subtitle').textContent =
+      data.period_label ? ('Updates published ' + data.period_label) : '';
     var kick = document.getElementById('d-kicker');
     kick.textContent = 'Ad Platform News Digest';
+    var rel = document.getElementById('d-released');
+    if(data.generated){ rel.textContent = 'Released ' + data.generated; }
+    else { rel.style.display = 'none'; }
 
     // TL;DR
     var tldr = document.getElementById('d-tldr');
@@ -195,8 +204,9 @@
         var imp = (it.impact||'low').toLowerCase();
         top.appendChild(el('span','chip impact-'+imp, imp.toUpperCase()));
         card.appendChild(top);
-        var meta = [it.source, it.published].filter(Boolean).map(esc).join(' · ');
-        card.appendChild(el('div','item-meta', meta));
+        var metaHtml = (it.published ? '<span class="item-date">'+esc(it.published)+'</span>' : '') +
+          (it.published && it.source ? ' · ' : '') + (it.source ? esc(it.source) : '');
+        card.appendChild(el('div','item-meta', metaHtml));
         card.appendChild(el('p','item-summary', esc(it.summary)));
         sec.appendChild(card);
       });
