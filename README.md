@@ -31,9 +31,11 @@ Each routine's trigger prompt is just a short pointer to its instruction doc in
 sources.yaml          # validated entry points (blog index pages) per platform
 criteria.md           # relevance rules + impact scoring (human-edited)
 style/
-  deck-template.html  # self-contained, data-driven HTML deck
+  deck-template.html  # data-driven HTML deck ("Zine" skin)
   slack-summary.md    # Slack channel message format
   README.md           # style/deck notes
+assets/
+  stickers/           # colorized sticker PNGs the deck template references
 data/
   updates.json        # all collected updates + collected/presented flags
   state.json          # last-collected date per source (Routine 1's window)
@@ -104,7 +106,10 @@ embedded in the message:
 - The Slack message posts **from Ivan's own identity** (the connector is authorized under
   his account), not a separate bot.
 
-Deck format is self-contained HTML (zero external requests → portable, prints to PDF).
+Deck format is a single HTML file per edition, still portable and prints cleanly to
+PDF. It is not zero-request: the "Zine" skin loads Playfair Display / Courier Prime
+from the Google Fonts CDN and sticker PNGs from `assets/stickers/` (repo-relative) —
+both are static, low-risk, and GitHub Pages serves them fine alongside the deck.
 
 ---
 

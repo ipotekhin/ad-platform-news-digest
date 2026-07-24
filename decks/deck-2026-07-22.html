@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Ad Platform News Digest</title>
 <!--
-  SELF-CONTAINED DECK TEMPLATE — used by Routine 2 (Presentation).
+  ZINE DECK TEMPLATE — used by Routine 2 (Presentation).
 
   HOW ROUTINE 2 USES THIS FILE:
     1. Copy this file to decks/deck-YYYY-MM-DD.html
@@ -13,121 +13,167 @@
        with a filled-in DECK_DATA object (schema documented in that block below).
     3. Nothing else needs editing. All rendering is data-driven.
 
-  The deck is one HTML file with zero external requests — safe for GitHub Pages,
-  it is served from GitHub Pages (linked, not attached), and it prints cleanly to PDF
-  (Cmd/Ctrl-P -> Save as PDF, one item per page).
+  Not zero-request: this skin pulls Playfair Display + Courier Prime from Google
+  Fonts CDN and reads sticker PNGs from ../assets/stickers/ (repo-relative, works
+  identically from style/ and from decks/ since both sit one level below repo
+  root). Both are static, low-risk requests — no analytics/tracking/third-party
+  JS. Fine to serve from GitHub Pages and to print to PDF (Cmd/Ctrl-P).
+
+  No dark-mode variant — this skin is a light/cream editorial look by design
+  (see the Claude Design "Zine" direction it implements); it does not adapt to
+  prefers-color-scheme like the previous template did.
 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f7f8fa; --card:#ffffff; --ink:#14161a; --muted:#5b6472;
-    --line:#e5e8ee; --accent:#3b82f6;
-    --high:#dc2626; --medium:#d97706; --low:#64748b;
-    --chip-bg:#eef2ff; --chip-ink:#3730a3;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#0e1116; --card:#171b22; --ink:#e8eaed; --muted:#9aa4b2;
-      --line:#262c36; --accent:#60a5fa;
-      --high:#f87171; --medium:#fbbf24; --low:#94a3b8;
-      --chip-bg:#1e2333; --chip-ink:#a5b4fc;
-    }
+    --aid-blue:     rgb(0, 9, 220);
+    --aid-blue-50:  rgb(245, 245, 254);
+    --aid-ink:      rgb(11, 11, 11);
+    --aid-slate:    rgb(51, 52, 74);
+    --aid-mute:     rgb(128, 128, 142);
+    --aid-pink:     rgb(240, 52, 142);
+    --aid-lime:     rgb(174, 243, 62);
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
-  body{
-    background:var(--bg); color:var(--ink);
-    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:920px;margin:0 auto;padding:40px 24px 96px}
-  header.masthead{margin-bottom:28px}
-  .kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
-  h1{font-size:34px;line-height:1.15;margin:.25em 0 .1em}
-  .subtitle{color:var(--muted);font-size:16px}
-  .released{display:inline-block;margin-top:10px;font-size:13px;font-weight:600;
-    letter-spacing:.02em;color:var(--chip-ink);background:var(--chip-bg);
-    padding:5px 12px;border-radius:999px}
-  .summary-callout{
-    background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
-    border-radius:12px;padding:18px 20px;margin:22px 0 34px;
-  }
-  .summary-callout h2{font-size:15px;margin:0 0 8px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
-  .summary-callout ul{margin:0;padding-left:20px}
-  .summary-callout li{margin:4px 0}
-  section.platform{margin:0 0 30px}
-  section.platform > h2{
-    font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
-    border-bottom:1px solid var(--line);padding-bottom:8px;margin:0 0 16px;
-  }
-  .item{
-    background:var(--card);border:1px solid var(--line);border-radius:12px;
-    padding:18px 20px;margin:0 0 14px;break-inside:avoid;
-  }
-  .item-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
-  .item-title{font-size:18px;font-weight:650;margin:0;flex:1 1 auto;min-width:60%}
-  .item-title a{color:inherit;text-decoration:none;border-bottom:1px solid transparent}
-  .item-title a:hover{border-bottom-color:var(--accent)}
-  .chip{font-size:12px;font-weight:650;padding:3px 9px;border-radius:999px;white-space:nowrap}
-  .chip.cat{background:var(--chip-bg);color:var(--chip-ink)}
-  .chip.impact-high{background:color-mix(in srgb,var(--high) 16%,transparent);color:var(--high)}
-  .chip.impact-medium{background:color-mix(in srgb,var(--medium) 18%,transparent);color:var(--medium)}
-  .chip.impact-low{background:color-mix(in srgb,var(--low) 18%,transparent);color:var(--low)}
-  .item-meta{font-size:13px;color:var(--muted);margin-bottom:8px}
-  .item-date{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
-  .item-summary{margin:0}
-  footer.credits{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
-  .empty{color:var(--muted);font-style:italic}
+  body{margin:0;background:#f4f1ea;color:var(--aid-ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--aid-blue);text-decoration:none}
+  a:hover{opacity:.78}
+  ::selection{background:var(--aid-lime)}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-8px) rotate(var(--r,0deg))}}
+  .card-hov{transition:transform .18s ease, box-shadow .18s ease}
+  .card-hov:hover{transform:translate(-2px,-2px)}
+  .lnk-underline{background-image:linear-gradient(var(--aid-blue),var(--aid-blue));background-size:0% 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .25s ease}
+  .lnk-underline:hover{background-size:100% 2px;opacity:1}
+  .empty{color:var(--aid-mute);font-style:italic}
   @media print{
-    body{background:#fff}
-    .item,.summary-callout{border-color:#ccc}
-    .wrap{padding-top:16px}
+    header[style*="sticky"]{position:static}
+    img[style*="floaty"]{animation:none}
   }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header class="masthead">
-      <div class="kicker" id="d-kicker">Ad Platform News Digest</div>
-      <h1 id="d-title">Bi-weekly Update</h1>
-      <div class="subtitle" id="d-subtitle"></div>
-      <div class="released" id="d-released"></div>
-    </header>
 
-    <div class="summary-callout" id="d-tldr-wrap">
-      <h2>📌 TL;DR</h2>
-      <ul id="d-tldr"></ul>
+<div style="min-height:100vh">
+
+<!-- ══ TOP BAR ══ -->
+<header style="position:sticky;top:0;z-index:40;background:rgba(244,241,234,.85);backdrop-filter:blur(10px);border-bottom:2px solid var(--aid-ink)">
+  <div style="max-width:1120px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+    <div style="display:flex;align-items:center;gap:11px">
+      <span style="width:22px;height:22px;border-radius:6px;background:var(--aid-blue);display:inline-block;border:2px solid var(--aid-ink)"></span>
+      <span style="font-family:'Courier Prime',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:700">Ad Platform Digest</span>
     </div>
-
-    <main id="d-body"></main>
-
-    <footer class="credits" id="d-footer"></footer>
+    <nav style="display:flex;align-items:center;gap:26px;font-family:'Courier Prime',monospace;font-size:12.5px;letter-spacing:.04em">
+      <a class="lnk-underline" href="#tldr">TL;DR</a>
+      <a class="lnk-underline" href="#updates">Updates</a>
+    </nav>
   </div>
+</header>
 
-  <!-- ─────────────────────────────────────────────────────────────────────────
-       DECK_DATA — Routine 2 replaces the contents of this script block.
-       Schema:
-       {
-         "period_label": "Jul 7 – Jul 21, 2026",   // window covered
-         "generated": "2026-07-21",                  // ISO date deck was built
-         "tldr": ["one-line highlight", "..."],      // 3–5 bullets, most important first
-         "platforms": [                              // ordered; empty ones omitted
-           {
-             "name": "Google Ads",
-             "items": [
-               {
-                 "title": "…",
-                 "url": "https://…",
-                 "source": "Google Ads & Commerce Blog",
-                 "published": "2026-07-14",
-                 "category": "feature",              // feature|beta|policy|deprecation|measurement|api|other
-                 "impact": "high",                   // high|medium|low
-                 "summary": "2–3 sentences."
-               }
-             ]
-           }
-         ]
-       }
-       Items within a platform should be ordered high -> medium -> low impact.
+<!-- ══ HERO ══ -->
+<section style="max-width:1120px;margin:0 auto;padding:66px 32px 26px;position:relative">
+  <div id="d-badge" style="display:inline-flex;align-items:center;gap:9px;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--aid-ink);background:var(--aid-lime);border:2px solid var(--aid-ink);border-radius:999px;padding:6px 16px;box-shadow:3px 3px 0 var(--aid-ink)"></div>
+  <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(52px,8vw,104px);line-height:.95;letter-spacing:-.015em;margin:26px 0 14px;max-width:920px;text-wrap:balance">The <span style="font-style:italic;color:var(--aid-blue)">Bi-Weekly</span> Brief</h1>
+  <p id="d-subtitle" style="font-size:19px;line-height:1.5;color:var(--aid-slate);margin:0;max-width:560px;text-wrap:pretty"></p>
+  <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:30px">
+    <div style="background:#fff;border:2px solid var(--aid-ink);border-radius:14px;padding:16px 22px;box-shadow:5px 5px 0 var(--aid-blue);min-width:118px">
+      <div id="stat-updates" style="font-family:'Playfair Display',serif;font-weight:800;font-size:44px;line-height:1;color:var(--aid-ink)"></div>
+      <div style="font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aid-mute);margin-top:6px">updates</div>
+    </div>
+    <div style="background:#fff;border:2px solid var(--aid-ink);border-radius:14px;padding:16px 22px;box-shadow:5px 5px 0 var(--aid-pink);min-width:118px">
+      <div id="stat-platforms" style="font-family:'Playfair Display',serif;font-weight:800;font-size:44px;line-height:1;color:var(--aid-ink)"></div>
+      <div style="font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aid-mute);margin-top:6px">platforms</div>
+    </div>
+    <div style="background:#fff;border:2px solid var(--aid-ink);border-radius:14px;padding:16px 22px;box-shadow:5px 5px 0 var(--aid-lime);min-width:118px">
+      <div id="stat-readmin" style="font-family:'Playfair Display',serif;font-weight:800;font-size:44px;line-height:1;color:var(--aid-ink)"></div>
+      <div style="font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aid-mute);margin-top:6px">min read</div>
+    </div>
+  </div>
+  <img src="../assets/stickers/bandage-formula-pink.png" alt="" style="position:absolute;right:6px;top:84px;width:220px;--r:-8deg;animation:floaty 6.5s ease-in-out infinite;filter:drop-shadow(0 14px 20px rgba(0,0,0,.18))">
+  <img src="../assets/stickers/thumbs-up-blue-pink.png" alt="" style="position:absolute;right:250px;top:246px;width:64px;--r:8deg;animation:floaty 5.5s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.16))">
+</section>
+
+<!-- ══ TL;DR ══ -->
+<section id="tldr" style="max-width:1120px;margin:0 auto;padding:30px 32px 10px">
+  <div id="d-tldr-wrap" style="background:#fff;border:2px solid var(--aid-ink);border-radius:20px;padding:34px 38px;box-shadow:10px 12px 0 var(--aid-blue);position:relative;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px">
+      <span style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--aid-blue);background:var(--aid-lime);border:1.5px solid var(--aid-ink);border-radius:999px;padding:4px 12px">TL;DR</span>
+      <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:var(--aid-slate)">what matters this edition</span>
+    </div>
+    <ul id="d-tldr" style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:18px 44px"></ul>
+    <img src="../assets/stickers/shooting-star-pink.png" alt="" style="position:absolute;width:82px;--r:-6deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 14px rgba(0,0,0,.16));left:974px;top:-4px;height:71px">
+  </div>
+</section>
+
+<!-- ══ UPDATES ══ -->
+<main id="updates" style="max-width:1120px;margin:0 auto;padding:48px 32px 20px">
+  <div id="d-body"></div>
+</main>
+
+<!-- ══ ARCHIVE (only shown if deck-data provides `archive`) ══ -->
+<section id="d-archive-section" style="max-width:1120px;margin:0 auto;padding:10px 32px 30px;display:none">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+    <img src="../assets/stickers/folder-star-blue.png" alt="" style="width:40px">
+    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:26px;margin:0">Past editions</h2>
+  </div>
+  <div id="d-archive" style="display:flex;gap:12px;flex-wrap:wrap"></div>
+</section>
+
+<!-- ══ SIGN-OFF ══ -->
+<section style="max-width:1120px;margin:0 auto;padding:20px 32px 70px">
+  <div style="background:var(--aid-blue);border:2px solid var(--aid-ink);border-radius:22px;padding:56px 46px;box-shadow:12px 14px 0 var(--aid-ink);position:relative;overflow:hidden;text-align:center">
+    <div style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--aid-lime);margin-bottom:16px">That's a wrap</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(32px,4.4vw,52px);line-height:1.02;color:#fff;margin:0 auto 14px;max-width:660px">Hope this was useful — now go make something move.</h2>
+    <p style="color:rgba(255,255,255,.82);font-size:16px;line-height:1.55;margin:0 auto;max-width:520px">Spot something worth testing? Flag it in the channel.<br>See you in two weeks.</p>
+    <img src="../assets/stickers/thumbs-up-green-blue.png" alt="" style="position:absolute;left:44px;bottom:15px;width:104px;--r:-9deg;animation:floaty 6s ease-in-out infinite;filter:drop-shadow(0 10px 16px rgba(0,0,0,.28))">
+    <img src="../assets/stickers/rainbow.png" alt="" style="position:absolute;right:38px;top:34px;width:120px;--r:7deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.2))">
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer style="border-top:2px solid var(--aid-ink);background:#f4f1ea">
+  <div style="max-width:1120px;margin:0 auto;padding:28px 32px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;font-family:'Courier Prime',monospace;font-size:12px;color:var(--aid-mute)">
+    <span id="d-footer"></span>
+    <span>AI Digital · Ad Platform News Digest</span>
+  </div>
+</footer>
+
+</div>
+
+<!-- ─────────────────────────────────────────────────────────────────────────
+     DECK_DATA — Routine 2 replaces the contents of this script block.
+     Required (unchanged from the previous template):
+     {
+       "period_label": "Jul 7 – Jul 21, 2026",   // window covered
+       "generated": "2026-07-21",                  // ISO date deck was built
+       "tldr": ["one-line highlight", "..."],      // 3–5 bullets, most important first
+       "platforms": [                              // ordered; empty ones omitted
+         {
+           "name": "Google Ads",
+           "items": [
+             {
+               "title": "…",
+               "url": "https://…",
+               "source": "Google Ads & Commerce Blog",
+               "published": "2026-07-14",
+               "category": "feature",              // feature|beta|policy|deprecation|measurement|api|other
+               "impact": "high",                   // high|medium|low
+               "summary": "2–3 sentences."
+             }
+           ]
+         }
+       ]
+     }
+     Items within a platform should be ordered high -> medium -> low impact.
+
+     Optional (new in this skin — omit any/all, the deck degrades gracefully):
+       "edition_no":     14,                    // shown as "No. 14 · <period_label>"; omitted -> just period_label
+       "subtitle":       "…",                   // hero subhead; falls back to "Updates published <period_label>"
+       "read_minutes":   5,                     // falls back to an estimate from item count
+       "author":         "Ivan Potekhin",       // footer credit; falls back to "Ivan Potekhin"
+       "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"decks/deck-2026-07-05.html" }]  // past-editions strip; omitted -> section hidden
   ────────────────────────────────────────────────────────────────────────── -->
   <script id="deck-data" type="application/json">
 {
@@ -135,10 +181,10 @@
   "generated": "2026-07-22",
   "author": "Ivan Potekhin",
   "tldr": [
-    "📍 Local Services Ads now run inside Google Performance Max.",
-    "🎯 Google drops the $50K spend requirement for Lead Form assets — the format opens to far more advertisers.",
-    "📊 Measurement upgrades across Google Ads: GA4 bulk account linking, GTM guided purchase tracking, and enhanced Brand Lift Studies.",
-    "💼 LinkedIn brings AI creative tools (ad-copy generation + auto ad variations) to Campaign Manager."
+    "Local Services Ads now run inside Google Performance Max.",
+    "Google drops the $50K spend requirement for Lead Form assets — the format opens to far more advertisers.",
+    "Measurement upgrades across Google Ads: GA4 bulk account linking, GTM guided purchase tracking, and enhanced Brand Lift Studies.",
+    "LinkedIn brings AI creative tools (ad-copy generation + auto ad variations) to Campaign Manager."
   ],
   "platforms": [
     {
@@ -254,71 +300,147 @@
 }
   </script>
 
-  <script>
-  (function(){
-    var data;
-    try { data = JSON.parse(document.getElementById('deck-data').textContent); }
-    catch(e){ data = {period_label:'(invalid deck data)', tldr:[], platforms:[]}; }
+<script>
+(function(){
+  var data;
+  try { data = JSON.parse(document.getElementById('deck-data').textContent); }
+  catch(e){ data = {period_label:'(invalid deck data)', tldr:[], platforms:[]}; }
 
-    var CAT = {feature:'✨ Feature',beta:'🧪 Beta',policy:'📋 Policy',deprecation:'⚠️ Deprecation',
-               measurement:'📊 Measurement',api:'🔌 API',other:'📰 Update'};
-    var PLAT_EMOJI = {google:'🔍',meta:'📘',tiktok:'🎵',linkedin:'💼',microsoft:'🟦',bing:'🟦'};
-    function platEmoji(name){var n=(name||'').toLowerCase();for(var k in PLAT_EMOJI){if(n.indexOf(k)>=0)return PLAT_EMOJI[k];}return '📣';}
+  var CAT = { feature:"Feature", beta:"Beta", policy:"Policy", deprecation:"Deprecation", measurement:"Measurement", api:"API", other:"Update" };
+  var IMP = {
+    high:   { label:"High",   bg:"var(--aid-pink)", fg:"#fff",            shadow:"var(--aid-blue)" },
+    medium: { label:"Medium", bg:"var(--aid-blue)", fg:"#fff",            shadow:"var(--aid-pink)" },
+    low:    { label:"Low",    bg:"#ffffff",         fg:"var(--aid-slate)", shadow:"var(--aid-lime)" }
+  };
+  var PF_ICON = [
+    { key:"google",    src:"../assets/stickers/globe-blue-pink.png" },
+    { key:"linkedin",  src:"../assets/stickers/todo-notepad-blue.png" },
+    { key:"meta",      src:"../assets/stickers/globe-pink-blue.png" },
+    { key:"facebook",  src:"../assets/stickers/globe-pink-blue.png" },
+    { key:"tiktok",    src:"../assets/stickers/document-sparkle-blue.png" },
+    { key:"microsoft", src:"../assets/stickers/globe-blue-pink.png" },
+    { key:"bing",      src:"../assets/stickers/globe-blue-pink.png" }
+  ];
+  var PEEK = ["../assets/stickers/sleepy-dome-pink.png","../assets/stickers/sleepy-dome-blue.png","../assets/stickers/blob-face-green.png","../assets/stickers/hand-raised-pink-blue.png","../assets/stickers/brain-star-blue.png","../assets/stickers/sleepy-dome-green.png"];
+  function iconFor(name){
+    var n = (name||"").toLowerCase();
+    for(var i=0;i<PF_ICON.length;i++){ if(n.indexOf(PF_ICON[i].key) >= 0) return PF_ICON[i].src; }
+    return "../assets/stickers/document-sparkle-blue.png";
+  }
 
-    function el(tag, cls, html){var n=document.createElement(tag);if(cls)n.className=cls;if(html!=null)n.innerHTML=html;return n;}
-    function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-
-    document.getElementById('d-subtitle').textContent =
-      data.period_label ? ('Updates published ' + data.period_label) : '';
-    var kick = document.getElementById('d-kicker');
-    kick.textContent = 'Ad Platform News Digest';
-    var rel = document.getElementById('d-released');
-    if(data.generated){ rel.textContent = 'Released ' + data.generated; }
-    else { rel.style.display = 'none'; }
-
-    // TL;DR
-    var tldr = document.getElementById('d-tldr');
-    if(data.tldr && data.tldr.length){
-      data.tldr.forEach(function(t){ tldr.appendChild(el('li', null, esc(t))); });
-    } else {
-      document.getElementById('d-tldr-wrap').style.display='none';
+  function el(tag, style){
+    var node = document.createElement(tag);
+    if (style) for (var k in style) node.style[k] = style[k];
+    for (var i = 2; i < arguments.length; i++) {
+      var child = arguments[i];
+      if (child == null || child === false) continue;
+      node.appendChild(typeof child === "string" ? document.createTextNode(child) : child);
     }
+    return node;
+  }
+  function img(src, style){
+    var i = document.createElement("img");
+    i.src = src; i.alt = "";
+    if (style) for (var k in style) i.style[k] = style[k];
+    return i;
+  }
 
-    // Body: platform sections
-    var body = document.getElementById('d-body');
-    var platforms = (data.platforms||[]).filter(function(p){return p.items && p.items.length;});
-    if(!platforms.length){
-      body.appendChild(el('p','empty','No qualifying updates in this period.'));
-    }
-    platforms.forEach(function(p){
-      var sec = el('section','platform');
-      sec.appendChild(el('h2', null, platEmoji(p.name) + ' ' + esc(p.name)));
-      p.items.forEach(function(it){
-        var card = el('div','item');
-        var top = el('div','item-top');
-        var titleHtml = it.url
-          ? '<a href="'+esc(it.url)+'" target="_blank" rel="noopener">'+esc(it.title)+'</a>'
-          : esc(it.title);
-        top.appendChild(el('h3','item-title', titleHtml));
-        top.appendChild(el('span','chip cat', esc(CAT[it.category]||CAT.other)));
-        var imp = (it.impact||'low').toLowerCase();
-        top.appendChild(el('span','chip impact-'+imp, imp.toUpperCase()));
-        card.appendChild(top);
-        var metaHtml = (it.published ? '<span class="item-date">'+esc(it.published)+'</span>' : '') +
-          (it.published && it.source ? ' · ' : '') + (it.source ? esc(it.source) : '');
-        card.appendChild(el('div','item-meta', metaHtml));
-        card.appendChild(el('p','item-summary', esc(it.summary)));
-        sec.appendChild(card);
-      });
-      body.appendChild(sec);
+  var platforms = (data.platforms || []).filter(function(p){ return p.items && p.items.length; });
+  var total = platforms.reduce(function(a, p){ return a + p.items.length; }, 0);
+
+  // Hero
+  var badge = data.edition_no
+    ? "● No. " + data.edition_no + " · " + (data.period_label || "")
+    : "● " + (data.period_label || "");
+  document.getElementById("d-badge").textContent = badge;
+  document.getElementById("d-subtitle").textContent =
+    data.subtitle || (data.period_label ? ("Updates published " + data.period_label) : "");
+
+  document.getElementById("stat-updates").textContent = total;
+  document.getElementById("stat-platforms").textContent = platforms.length;
+  document.getElementById("stat-readmin").textContent =
+    data.read_minutes || Math.max(2, Math.round(total * 0.5));
+
+  // TL;DR
+  var tldrList = document.getElementById("d-tldr");
+  if (data.tldr && data.tldr.length) {
+    data.tldr.forEach(function(text, i){
+      tldrList.appendChild(
+        el("li", { display:"flex", gap:"14px", alignItems:"flex-start", color:"var(--aid-ink)", fontSize:"16px", lineHeight:"1.5" },
+          el("span", { flex:"none", fontFamily:"'Playfair Display',serif", fontWeight:"800", fontSize:"22px", color:"var(--aid-blue)", lineHeight:"1.25" }, String(i + 1).padStart(2, "0")),
+          el("span", null, text)
+        )
+      );
+    });
+  } else {
+    document.getElementById("d-tldr-wrap").style.display = "none";
+  }
+
+  // Updates, grouped by platform
+  var body = document.getElementById("d-body");
+  if (!platforms.length) {
+    body.appendChild(el("p", { color:"var(--aid-mute)", fontStyle:"italic" }, "No qualifying updates in this period."));
+  }
+  var peekI = 0;
+  platforms.forEach(function(pf){
+    var heading = el("div", { display:"flex", alignItems:"center", gap:"14px", marginBottom:"24px" },
+      img(iconFor(pf.name), { width:"46px", flex:"none", filter:"drop-shadow(0 6px 10px rgba(0,0,0,.14))" }),
+      el("h2", { fontFamily:"'Playfair Display',Georgia,serif", fontWeight:"800", fontSize:"38px", lineHeight:"1", margin:"0", color:"var(--aid-ink)" }, pf.name),
+      el("span", { fontFamily:"'Courier Prime',monospace", fontSize:"13px", color:"var(--aid-ink)", background:"#fff", border:"2px solid var(--aid-ink)", borderRadius:"999px", padding:"3px 12px", fontWeight:"700" }, pf.items.length + (pf.items.length === 1 ? " update" : " updates")),
+      el("span", { flex:"1", height:"2px", background:"var(--aid-ink)", opacity:".14" })
+    );
+
+    var grid = el("div", { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(340px,1fr))", gap:"22px" });
+
+    pf.items.forEach(function(it, i){
+      var imp = IMP[(it.impact || "low").toLowerCase()] || IMP.low;
+      var wantSticker = (it.impact === "high") || (i % 3 === 1);
+      var stickerSrc = wantSticker ? PEEK[(peekI++) % PEEK.length] : null;
+      var bg = (i % 2 === 1) ? "var(--aid-blue-50)" : "#ffffff";
+
+      var link = el("a", { color:"inherit" }, it.title || "");
+      link.href = it.url || "#";
+      link.target = "_blank";
+      link.rel = "noopener";
+
+      var card = el("article", { background:bg, border:"2px solid var(--aid-ink)", borderRadius:"18px", padding:"26px 26px 22px", boxShadow:"7px 8px 0 " + imp.shadow, position:"relative" },
+        stickerSrc ? img(stickerSrc, { position:"absolute", right:"18px", top:"-26px", width:"66px", "--r":"7deg", animation:"floaty 5s ease-in-out infinite", filter:"drop-shadow(0 6px 9px rgba(0,0,0,.18))" }) : null,
+        el("div", { display:"flex", gap:"8px", marginBottom:"14px", flexWrap:"wrap" },
+          el("span", { fontFamily:"'Courier Prime',monospace", fontSize:"10.5px", letterSpacing:".06em", textTransform:"uppercase", color:"var(--aid-ink)", background:"#fff", border:"1.5px solid var(--aid-ink)", borderRadius:"7px", padding:"3px 10px" }, CAT[it.category] || CAT.other),
+          el("span", { fontFamily:"'Courier Prime',monospace", fontSize:"10.5px", letterSpacing:".06em", textTransform:"uppercase", color:imp.fg, background:imp.bg, border:"1.5px solid var(--aid-ink)", borderRadius:"7px", padding:"3px 10px" }, imp.label)
+        ),
+        el("h3", { fontFamily:"'Playfair Display',Georgia,serif", fontWeight:"700", fontSize:"23px", lineHeight:"1.14", margin:"0 0 12px", color:"var(--aid-ink)" }, link),
+        el("p", { margin:"0", fontSize:"14.5px", lineHeight:"1.56", color:"var(--aid-slate)" }, it.summary || ""),
+        el("div", { fontFamily:"'Courier Prime',monospace", fontSize:"11px", color:"var(--aid-mute)", marginTop:"16px", display:"flex", gap:"8px", alignItems:"center" },
+          el("span", { color:"var(--aid-blue)" }, "↳"), el("span", null, it.published || ""), el("span", null, "·"), el("span", null, it.source || "")
+        )
+      );
+      card.className = "card-hov";
+      grid.appendChild(card);
     });
 
-    // Footer
-    var n = platforms.reduce(function(a,p){return a+p.items.length;},0);
-    document.getElementById('d-footer').textContent =
-      n + ' update' + (n===1?'':'s') + ' · Generated by ' + (data.author || 'Ivan Potekhin');
-    document.title = 'Ad Platform News Digest — ' + (data.period_label||'');
-  })();
-  </script>
+    body.appendChild(el("section", { marginBottom:"56px" }, heading, grid));
+  });
+
+  // Archive (optional)
+  if (data.archive && data.archive.length) {
+    document.getElementById("d-archive-section").style.display = "";
+    var archiveList = document.getElementById("d-archive");
+    data.archive.forEach(function(a){
+      var link = el("a", { fontFamily:"'Courier Prime',monospace", fontSize:"12.5px", color:"var(--aid-ink)", background:"#fff", border:"2px solid var(--aid-ink)", borderRadius:"12px", padding:"12px 18px", boxShadow:"3px 3px 0 var(--aid-ink)", display:"flex", flexDirection:"column", gap:"3px" },
+        el("span", { fontWeight:"700" }, "No. " + a.no),
+        el("span", { color:"var(--aid-mute)" }, a.label)
+      );
+      link.href = a.url || "#";
+      archiveList.appendChild(link);
+    });
+  }
+
+  // Footer
+  document.getElementById("d-footer").textContent =
+    total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "") + " · Compiled by " + (data.author || "Ivan Potekhin");
+  document.title = "Ad Platform News Digest — " + (data.period_label || "");
+})();
+</script>
 </body>
 </html>

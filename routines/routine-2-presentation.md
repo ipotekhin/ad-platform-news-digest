@@ -53,8 +53,15 @@ rule or that hit an "Exclude" rule. For survivors, confirm/adjust `category` and
 ### 4. Build the deck
 - Copy `style/deck-template.html` → `decks/deck-YYYY-MM-DD.html` (today's date).
 - Replace the `<script id="deck-data">` JSON block with the real data (schema is
-  documented inside the template). Fill `period_label`, `generated`, `tldr`, and
-  `platforms[].items[]`. Each item links to its **canonical** URL.
+  documented inside the template). Fill `period_label`, `generated`, `author`
+  ("Ivan Potekhin"), `tldr`, and `platforms[].items[]`. Each item links to its
+  **canonical** URL. `edition_no` = this run's number (see editions registry below).
+- **Past editions block:** read `data/editions.json` (the registry of prior editions)
+  and pass its entries as `archive` in the deck data — each as
+  `{ "no": <n>, "label": "<period_label>", "url": "deck-YYYY-MM-DD.html" }`. Use the
+  **bare filename** for `url` (decks are siblings in `decks/`, so `deck-….html`
+  resolves correctly; do NOT prefix `decks/`). If the registry is empty, omit `archive`
+  and the section stays hidden.
 - Sanity check: open/parse the file; ensure valid JSON in the data block.
 
 ### 5. Publish the deck (GitHub Pages)
@@ -76,8 +83,11 @@ rule or that hit an "Exclude" rule. For survivors, confirm/adjust `category` and
 
 ### 7. Mark presented (only after success)
 - For every item included in the deck, set `presented: true` in `data/updates.json`.
-- Commit `data/updates.json` + `decks/deck-YYYY-MM-DD.html` with a message like
-  `present: deck YYYY-MM-DD, M items -> Slack`.
+- **Append this edition to `data/editions.json`** so the next run lists it under Past
+  editions: `{ "no": <n>, "date": "YYYY-MM-DD", "period_label": "<period_label>",
+  "url": "deck-YYYY-MM-DD.html" }` (`no` = previous max + 1).
+- Commit `data/updates.json` + `data/editions.json` + `decks/deck-YYYY-MM-DD.html`
+  with a message like `present: deck YYYY-MM-DD, M items -> Slack`.
 - Push to `claude/present-run`, then open a pull request into `main` and merge it
   (Pages serves `main`, so the deck link resolves after merge).
 
