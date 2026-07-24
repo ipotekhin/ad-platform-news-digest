@@ -53,21 +53,34 @@ Do not build any deck.
   run whose window overlaps this one.
 
 ### 2. Visit each source
-All sources in `sources.yaml` are validated `readable` via curl (see the file header).
-For each source:
-- Fetch the entry-point `url` with an in-session client (curl / requests), not WebFetch.
-- Parse the index for **article links with dates**. Keep only links **published within
-  the window** (step 1). For SocialBee (monthly roundup), parse the newest month
-  section(s) and treat each bullet as a candidate.
-- **Always open the article page itself** — never judge relevance or write a summary
-  from the index headline alone. Fetch the article, read the body, then decide whether
-  it belongs (per `criteria.md`) and, if so, extract `url`, `published` date, and enough
-  body text to write the title + summary.
-- If an index shows a headline with no date, still open the article to get its
-  `datePublished` (JSON-LD / og:) before applying the window.
+For each source in `sources.yaml` (a source marked `validation: pending` — e.g. a newly
+added one — should still be fetched: read it, and if it returns readable dated content,
+flip its `validation` to `readable` with a short note; if not, mark it accordingly and
+flag). Handling depends on the source's `cadence` (default `feed`):
 
-If a source's real behavior changes (e.g. stops returning readable content), note it
-and flag to a human — do not silently drop items.
+**`cadence: feed`** (dated article stream — Google blog, Search Engine Land, Social
+Media Today, Bing, etc.):
+- Fetch the entry-point `url` with an in-session client (curl / requests), not WebFetch.
+- Parse the index for **article links with dates**; keep only links **published within
+  the window** (step 1).
+- **Always open the article page itself** — never judge relevance or write a summary
+  from the index headline alone. Read the body, then decide (per `criteria.md`) and, if
+  it belongs, extract `url`, `published` (JSON-LD `datePublished` / `og:`), and enough
+  body text for the title + summary.
+- If a headline has no date on the index, still open the article to get its real date
+  before applying the window.
+
+**`cadence: roundup`** (periodic digest that surfaces items late — SocialBee):
+- Do **not** apply the strict 2-week window, and do **not** date items by the underlying
+  official post (those are often weeks old and would be dropped every run).
+- Take every **ads-manager-relevant** item from the **newest section(s)** that is **not
+  already in `updates.json`** (dedup id = `source + month + sha1(title)`); set
+  `published` to the roundup month (or an in-text date if given). Dedup guarantees no
+  repeats across runs. Follow the item's source link if you need context for the
+  summary, but keep the roundup date.
+
+If a source's real behavior changes (e.g. stops returning readable content), note it and
+flag to a human — do not silently drop items.
 
 ### 3. Relevance gate (light, at collection time)
 Apply `criteria.md` **loosely** here — *lean include*. The strict filter happens in
