@@ -91,8 +91,8 @@
       <div style="font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aid-mute);margin-top:6px">min read</div>
     </div>
   </div>
-  <img src="../assets/stickers/bandage-formula-pink.png" alt="" style="position:absolute;right:6px;top:84px;width:220px;--r:-8deg;animation:floaty 6.5s ease-in-out infinite;filter:drop-shadow(0 14px 20px rgba(0,0,0,.18))">
-  <img src="../assets/stickers/thumbs-up-blue-pink.png" alt="" style="position:absolute;right:250px;top:246px;width:64px;--r:8deg;animation:floaty 5.5s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.16))">
+  <img id="dec-hero-1" src="../assets/stickers/bandage-formula-pink.png" alt="" style="position:absolute;right:6px;top:84px;width:220px;--r:-8deg;animation:floaty 6.5s ease-in-out infinite;filter:drop-shadow(0 14px 20px rgba(0,0,0,.18))">
+  <img id="dec-hero-2" src="../assets/stickers/thumbs-up-blue-pink.png" alt="" style="position:absolute;right:250px;top:246px;width:64px;--r:8deg;animation:floaty 5.5s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.16))">
 </section>
 
 <!-- ══ TL;DR ══ -->
@@ -103,7 +103,7 @@
       <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:var(--aid-slate)">what matters this edition</span>
     </div>
     <ul id="d-tldr" style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:18px 44px"></ul>
-    <img src="../assets/stickers/shooting-star-pink.png" alt="" style="position:absolute;width:82px;--r:-6deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 14px rgba(0,0,0,.16));left:974px;top:-4px;height:71px">
+    <img id="dec-tldr" src="../assets/stickers/shooting-star-pink.png" alt="" style="position:absolute;width:82px;--r:-6deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 14px rgba(0,0,0,.16));left:974px;top:-4px;height:71px">
   </div>
 </section>
 
@@ -115,7 +115,7 @@
 <!-- ══ ARCHIVE (only shown if deck-data provides `archive`) ══ -->
 <section id="d-archive-section" style="max-width:1120px;margin:0 auto;padding:10px 32px 30px;display:none">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
-    <img src="../assets/stickers/folder-star-blue.png" alt="" style="width:40px">
+    <img id="dec-archive" src="../assets/stickers/folder-star-blue.png" alt="" style="width:40px">
     <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:26px;margin:0">Past editions</h2>
   </div>
   <div id="d-archive" style="display:flex;gap:12px;flex-wrap:wrap"></div>
@@ -127,8 +127,8 @@
     <div style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--aid-lime);margin-bottom:16px">That's a wrap</div>
     <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(32px,4.4vw,52px);line-height:1.02;color:#fff;margin:0 auto 14px;max-width:660px">Hope this was useful — now go make something move.</h2>
     <p style="color:rgba(255,255,255,.82);font-size:16px;line-height:1.55;margin:0 auto;max-width:520px">Spot something worth testing? Flag it in the channel.<br>See you in two weeks.</p>
-    <img src="../assets/stickers/thumbs-up-green-blue.png" alt="" style="position:absolute;left:44px;bottom:15px;width:104px;--r:-9deg;animation:floaty 6s ease-in-out infinite;filter:drop-shadow(0 10px 16px rgba(0,0,0,.28))">
-    <img src="../assets/stickers/rainbow.png" alt="" style="position:absolute;right:38px;top:34px;width:120px;--r:7deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.2))">
+    <img id="dec-signoff-1" src="../assets/stickers/thumbs-up-green-blue.png" alt="" style="position:absolute;left:44px;bottom:15px;width:104px;--r:-9deg;animation:floaty 6s ease-in-out infinite;filter:drop-shadow(0 10px 16px rgba(0,0,0,.28))">
+    <img id="dec-signoff-2" src="../assets/stickers/rainbow.png" alt="" style="position:absolute;right:38px;top:34px;width:120px;--r:7deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.2))">
   </div>
 </section>
 
@@ -214,21 +214,32 @@
     medium: { label:"Medium", bg:"var(--aid-blue)", fg:"#fff",            shadow:"var(--aid-pink)" },
     low:    { label:"Low",    bg:"#ffffff",         fg:"var(--aid-slate)", shadow:"var(--aid-lime)" }
   };
-  var PF_ICON = [
-    { key:"google",    src:"../assets/stickers/globe-blue-pink.png" },
-    { key:"linkedin",  src:"../assets/stickers/todo-notepad-blue.png" },
-    { key:"meta",      src:"../assets/stickers/globe-pink-blue.png" },
-    { key:"facebook",  src:"../assets/stickers/globe-pink-blue.png" },
-    { key:"tiktok",    src:"../assets/stickers/document-sparkle-blue.png" },
-    { key:"microsoft", src:"../assets/stickers/globe-blue-pink.png" },
-    { key:"bing",      src:"../assets/stickers/globe-blue-pink.png" }
-  ];
-  var PEEK = ["../assets/stickers/sleepy-dome-pink.png","../assets/stickers/sleepy-dome-blue.png","../assets/stickers/blob-face-green.png","../assets/stickers/hand-raised-pink-blue.png","../assets/stickers/brain-star-blue.png","../assets/stickers/sleepy-dome-green.png"];
+  // ── Stickers: randomized per edition, deterministic (same deck → same layout) ──
+  // Positions & sizes of every sticker slot are fixed in the HTML/JS; only WHICH png
+  // lands in each slot is shuffled, seeded off the edition date, so nothing shifts.
+  var STK = "../assets/stickers/";
+  var ALL_STICKERS = ["arrows-grid-blue.png","arrows-grid-green.png","arrows-grid-pink.png","bandage-formula-pink.png","blob-face-blue.png","blob-face-green.png","blob-face-pink.png","brain-star-blue.png","brain-star-green.png","brain-star-pink.png","document-sparkle-blue.png","document-sparkle-green.png","document-sparkle-pink.png","flag-blue.png","flag-green.png","flag-pink.png","folder-star-blue.png","folder-star-green.png","folder-star-pink.png","globe-blue-pink.png","globe-green-blue.png","globe-pink-blue.png","hand-raised-blue-green.png","hand-raised-pink-blue.png","hand-raised-pink-green.png","paperclip-blue-pink.png","paperclip-green-blue.png","paperclip-green-pink.png","rainbow.png","shooting-star-blue.png","shooting-star-green.png","shooting-star-pink.png","sleepy-dome-blue.png","sleepy-dome-green.png","sleepy-dome-pink.png","thumbs-up-blue-pink.png","thumbs-up-green-blue.png","thumbs-up-green-pink.png","todo-notepad-blue.png","todo-notepad-green.png","todo-notepad-pink.png"];
+  // Platform-heading icons stay meaningful (a shape per platform), but the colour varies.
+  var FAM = {
+    globe:  ["globe-blue-pink.png","globe-green-blue.png","globe-pink-blue.png"],
+    notepad:["todo-notepad-blue.png","todo-notepad-green.png","todo-notepad-pink.png"],
+    doc:    ["document-sparkle-blue.png","document-sparkle-green.png","document-sparkle-pink.png"]
+  };
+  var PF_FAM = [{k:"linkedin",f:"notepad"},{k:"tiktok",f:"doc"},{k:"meta",f:"globe"},{k:"facebook",f:"globe"},{k:"microsoft",f:"globe"},{k:"bing",f:"globe"},{k:"google",f:"globe"}];
+  function hashStr(s){var h=2166136261>>>0;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h>>>0;}
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  var _rng = mulberry32(hashStr(String((typeof data!=="undefined" && (data.generated||data.period_label)) || "seed")));
+  function pickFrom(pool){ return STK + pool[Math.floor(_rng()*pool.length)]; }
+  function anySticker(){ return pickFrom(ALL_STICKERS); }
   function iconFor(name){
-    var n = (name||"").toLowerCase();
-    for(var i=0;i<PF_ICON.length;i++){ if(n.indexOf(PF_ICON[i].key) >= 0) return PF_ICON[i].src; }
-    return "../assets/stickers/document-sparkle-blue.png";
+    var n=(name||"").toLowerCase(), fam="globe";
+    for(var i=0;i<PF_FAM.length;i++){ if(n.indexOf(PF_FAM[i].k)>=0){ fam=PF_FAM[i].f; break; } }
+    return pickFrom(FAM[fam]);
   }
+  // Shuffle the fixed decorative slots (image swaps; position/size untouched)
+  ["dec-hero-1","dec-hero-2","dec-tldr","dec-archive","dec-signoff-1","dec-signoff-2"].forEach(function(id){
+    var n=document.getElementById(id); if(n){ n.src = anySticker(); }
+  });
 
   function el(tag, style){
     var node = document.createElement(tag);
@@ -297,7 +308,7 @@
     pf.items.forEach(function(it, i){
       var imp = IMP[(it.impact || "low").toLowerCase()] || IMP.low;
       var wantSticker = (it.impact === "high") || (i % 3 === 1);
-      var stickerSrc = wantSticker ? PEEK[(peekI++) % PEEK.length] : null;
+      var stickerSrc = wantSticker ? anySticker() : null;
       var bg = (i % 2 === 1) ? "var(--aid-blue-50)" : "#ffffff";
 
       var link = el("a", { color:"inherit" }, it.title || "");
@@ -340,7 +351,7 @@
 
   // Footer
   document.getElementById("d-footer").textContent =
-    total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "") + " · Compiled by " + (data.author || "Ivan Potekhin");
+    total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "") + " · Made for Performance Team with 💜 by " + (data.author || "Ivan Potekhin");
   document.title = "Ad Platform News Digest — " + (data.period_label || "");
 })();
 </script>

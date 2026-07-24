@@ -1,6 +1,7 @@
 # Routine 1 — Collect
 
-**Cadence:** 2×/week (e.g. Wed + Fri).
+**Cadence:** 1×/week (set manually in the routine UI; the schedule can change at any
+time without affecting this logic — the collection window stays a fixed 2 weeks).
 **Job:** discover new, marketing-relevant updates from the ad platforms and append
 only genuinely new items to `data/updates.json`.
 

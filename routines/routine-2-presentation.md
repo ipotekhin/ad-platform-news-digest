@@ -1,6 +1,7 @@
 # Routine 2 — Presentation
 
-**Cadence:** every 2 weeks.
+**Cadence:** every 2 weeks (set manually in the routine UI; changing the schedule does
+not affect this logic).
 **Job:** turn the not-yet-presented updates into a readable deck, post a summary to
 Slack, then mark those items `presented: true` — **only after** a successful post.
 
@@ -12,13 +13,15 @@ The routine UI holds only a short pointer to this file. All logic lives here.
 
 ```
 You are Routine 2 (Presentation) for the ad-platform-news-digest repo.
-Read routines/routine-2-presentation.md and follow it exactly. Branch from main to
-a claude/present-run branch. Build the deck, post the summary to Slack channel
-#<CHANNEL>, then set presented:true on the included items, commit, push, open a
-pull request into main and merge it.
+Read routines/routine-2-presentation.md and follow it exactly. If nothing qualifies,
+stop and do nothing (empty-edition guard). Otherwise branch from main to a
+claude/present-run branch, build the deck, deliver the Slack message to the target in
+the doc's Open config, then set presented:true on the included items, commit, push,
+open a pull request into main and merge it.
 ```
 
-Set `#<CHANNEL>` to the target Slack channel (Ivan to fill in — see "Open config").
+The Slack destination lives in the doc (Open config → currently Ivan's DM), so the
+prompt never needs editing when the destination changes.
 
 ---
 
@@ -35,14 +38,20 @@ Set `#<CHANNEL>` to the target Slack channel (Ivan to fill in — see "Open conf
 ## Steps
 
 ### 1. Select candidates
-From `data/updates.json`, take every item where `presented == false` **and**
-`published` (or `first_seen`) falls in the **last 2 weeks**. Older un-presented items:
-include them too (better late than dropped) unless clearly stale.
+From `data/updates.json`, take every item where `presented == false` (all un-presented
+items — no time filter here; Routine 1 already bounded what got collected).
 
 ### 2. Strict relevance filter
 Apply `criteria.md` **strictly** now. Drop items that don't clearly match an "Include"
 rule or that hit an "Exclude" rule. For survivors, confirm/adjust `category` and
 `impact` per `criteria.md`.
+
+### 2a. Empty-edition guard (IMPORTANT — stop if nothing qualifies)
+If **no items** survive selection + filtering (i.e. there are zero un-presented,
+relevant updates across **all** platforms), **STOP the whole run**: do **not** build a
+deck, do **not** post anything to Slack, do **not** commit. This edition simply does
+not happen. (Optional: leave a one-line note in the run log.) Only continue to step 3
+when there is at least one qualifying update.
 
 ### 3. Order & trim
 - Group by platform: **Google Ads → Meta → TikTok → LinkedIn → Bing** (omit empty).
@@ -72,12 +81,14 @@ rule or that hit an "Exclude" rule. For survivors, confirm/adjust `category` and
 - This is the **only** delivery format. Do not use Slack Canvas.
 
 ### 6. Post to Slack
-- Build the message from `style/slack-summary.md` (top 3–5 items + `deck_link`
-  embedded in the text), standard Markdown.
-- **Test / first runs (default until Ivan flips it live):** do NOT post publicly.
-  Either create a **draft** with `slack_send_message_draft`, or send the message to
-  **Ivan's DM** (`slack_send_message` with `channel_id` = his user id) so he can review.
-- **Live mode:** post with `slack_send_message` to the target channel `#<CHANNEL>`.
+- Compose the message by following **`style/slack-summary.md`** exactly (greeting →
+  digest intro with the date range → highlights intro → 3–4 platform lines → digest
+  summary → link line with the deck URL). Rotate the wording per that file; standard
+  Slack formatting (`*bold*`, `:emoji:`).
+- **Delivery target (current):** send via `slack_send_message` to **Ivan's DM** —
+  `channel_id = U065VBRHYV7`. This is the configured destination; it posts from Ivan's
+  own Slack identity. To change where the digest goes (e.g. a team channel), edit the
+  `channel_id` in this line — nothing else changes.
 - **Verify it succeeded** (tool returned ok / message link). If it failed, STOP —
   do not mark anything presented; leave the items for the next run.
 
@@ -93,12 +104,14 @@ rule or that hit an "Exclude" rule. For survivors, confirm/adjust `category` and
 
 ---
 
-## Open config
-- **Target Slack channel** for the digest — Ivan to fill into the trigger prompt (only
-  needed for live mode; test runs use a draft or Ivan's DM).
-- **Delivery mechanism:** DECIDED → **GitHub Pages only** (no Slack Canvas).
-- **Deck format:** DECIDED → self-contained HTML (zero-dependency, links cleanly,
-  prints to PDF on demand). PPTX not used.
+## Open config (single source of truth — edit here, routines pick it up)
+- **Slack delivery target:** Ivan's DM, `channel_id = U065VBRHYV7` (step 6). Change this
+  value here to redirect the digest to a channel later.
+- **Delivery mechanism:** GitHub Pages only (no Slack Canvas).
+- **Deck format:** the "Zine" HTML template in `style/` (Google Fonts + local sticker
+  PNGs). PPTX not used.
+- **Author credit (footer):** "Ivan Potekhin" (`author` in deck data).
+- **Empty edition:** if nothing qualifies, no deck and no Slack post (step 2a).
 
 ---
 
