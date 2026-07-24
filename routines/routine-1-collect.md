@@ -109,6 +109,16 @@ in `updates.json` within the current 2-week window. For each new candidate ask:
 - If no → it is genuinely new.
 
 ### 6. Write results
+
+> **URL rule (critical — a broken link ships to the reader).** Set `url` to the EXACT
+> link as it appears in the source — **copy the href verbatim; never construct,
+> shorten, paraphrase, or guess any part of it (especially the slug).** Then **verify
+> the URL resolves** (a request returns 2xx/3xx, following redirects) before saving. If
+> it does not resolve (4xx/5xx), fall back to a link that does — the article's own
+> canonical URL, the source's index page, or (for roundups) the roundup page — rather
+> than storing a broken deep link. For roundup items whose cited source link is dead,
+> the roundup page URL is an acceptable fallback.
+
 For each genuinely-new item, append a record to `data/updates.json`:
 ```json
 {
