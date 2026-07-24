@@ -73,11 +73,15 @@ Media Today, Bing, etc.):
 **`cadence: roundup`** (periodic digest that surfaces items late — SocialBee):
 - Do **not** apply the strict 2-week window, and do **not** date items by the underlying
   official post (those are often weeks old and would be dropped every run).
-- Take every **ads-manager-relevant** item from the **newest section(s)** that is **not
-  already in `updates.json`** (dedup id = `source + month + sha1(title)`); set
-  `published` to the roundup month (or an in-text date if given). Dedup guarantees no
-  repeats across runs. Follow the item's source link if you need context for the
-  summary, but keep the roundup date.
+- **Scope (hard bound — do not scan the whole archive):** read only the **current
+  calendar month** section relative to the run date; additionally read the **previous
+  month** section *only* if the run date is within the first 7 days of a new month.
+  Ignore all older sections.
+- From that scope, take every **ads-manager-relevant** item **not already in
+  `updates.json`** (dedup id = `source + month + sha1(title)`); set `published` to the
+  roundup month (or an in-text date if given). Dedup guarantees no repeats across runs.
+  Follow the item's source link if you need context for the summary, but keep the
+  roundup date.
 
 If a source's real behavior changes (e.g. stops returning readable content), note it and
 flag to a human — do not silently drop items.

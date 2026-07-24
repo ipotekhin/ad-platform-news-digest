@@ -16,8 +16,9 @@
 #                 feed    = dated article stream -> apply the normal 2-week window by
 #                           each article's published date.
 #                 roundup = periodic digest that surfaces items late -> do NOT apply the
-#                           strict window; collect newest-section items not already in
-#                           the base (dedup handles repeats). See the SocialBee note.
+#                           strict window; read only the current-month section (see the
+#                           SocialBee note for the exact bound) and collect items not
+#                           already in the base (dedup handles repeats).
 #   validation  readable = plain in-session fetch returns real, dated article text.
 #                 Every source below was confirmed readable on 2026-07-21. Sources
 #                 that could not be read were dropped and are intentionally not listed.
@@ -97,12 +98,15 @@ sources:
     note: >-
       MONTHLY ROUNDUP (sections like "July 2026 LinkedIn updates"). Because it surfaces
       items weeks after the original announcement, do NOT apply the strict 2-week window
-      here and do NOT date items by the underlying official post. Instead: take every
-      ad/Campaign-Manager item from the newest month section(s) that is NOT already in
-      updates.json (dedup id = source + month + sha1(title)); set `published` to the
-      roundup month (or the in-text date if given). Dedup guarantees no repeats across
-      runs. Filter to ads-manager relevance per criteria.md (drop consumer/jobs items
-      like "Suggested feeds", "Easy Apply").
+      here and do NOT date items by the underlying official post. Scope: read ONLY the
+      **current calendar month** section (relative to the run date) — plus the previous
+      month's section ONLY if the run date is within the first 7 days of a new month
+      (to catch end-of-month stragglers). Never read older sections. From that scope,
+      take every ads-manager-relevant item NOT already in updates.json (dedup id =
+      source + month + sha1(title)); set `published` to the roundup month (or the in-text
+      date if given). Dedup guarantees no repeats across runs. Filter to ads-manager
+      relevance per criteria.md (drop consumer/jobs items like "Suggested feeds",
+      "Easy Apply").
 
   - key: socialmediatoday_linkedin
     platform: linkedin
