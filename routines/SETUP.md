@@ -50,7 +50,9 @@ each routine's environment at the network-enabled one from step 1. Paste these a
 trigger prompts — the logic lives in the repo docs, so the prompts stay short.
 
 Schedule (set manually in the routine UI; it can change any time without touching the
-logic): **Routine 1 = once a week**, **Routine 2 = once every 2 weeks**.
+logic): **Routine 1 = once a week** (e.g. Monday `0 7 * * 1`), **Routine 2 = every
+Wednesday `0 7 * * 3`** — its step-0 cadence gate then makes the digest land bi-weekly
+(standard cron can't express "every 14 days"; the gate does it exactly and self-corrects).
 
 ### Routine 1 — Collect  ·  schedule: **weekly**
 ```
@@ -61,15 +63,15 @@ data/state.json (and any sources.yaml validation edits), push, then open a pull
 request into main and merge it. Do not build any deck.
 ```
 
-### Routine 2 — Presentation  ·  schedule: **every 2 weeks**
+### Routine 2 — Presentation  ·  schedule: **every Wednesday** `0 7 * * 3` (gate makes it bi-weekly)
 ```
 You are Routine 2 (Presentation) for the ad-platform-news-digest repo.
-Read routines/routine-2-presentation.md and follow it exactly. If nothing qualifies,
-stop and do nothing (empty-edition guard). Otherwise branch from main to a
-claude/present-run branch, build the deck, publish it to GitHub Pages, and deliver the
-Slack message to the target in the doc's Open config (currently Ivan's DM). Only after
-a successful delivery, set presented:true on the included items, commit, push, open a
-pull request into main and merge it.
+Read routines/routine-2-presentation.md and follow it exactly. First apply the step-0
+cadence gate and the empty-edition guard — if either says stop, do nothing. Otherwise
+branch from main to a claude/present-run branch, build the deck, publish it to GitHub
+Pages, and deliver the Slack message to the target in the doc's Open config (currently
+Ivan's DM). Only after a successful delivery, set presented:true on the included items,
+commit, push, open a pull request into main and merge it.
 ```
 
 > The Slack destination and message wording live in the repo (`routine-2` Open config +
