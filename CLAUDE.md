@@ -16,7 +16,10 @@ operational reference for a routine session.
 - Dedup: Layer 1 = canonical-URL exact match (`sha1(canonical_url)[:12]`); Layer 2 =
   LLM semantic match, preferring official sources over aggregators.
 - Only advance a source's `last_collected` in `state.json` if you actually read it.
-- Keep the deck a **single self-contained HTML file** (no external requests).
+- The deck (`style/deck-template.html`) loads Google Fonts (Playfair Display, Courier
+  Prime) from the Google Fonts CDN and reads sticker PNGs from `assets/stickers/` —
+  these are the only external/local requests it makes. Don't add anything beyond that
+  (no analytics, no other third-party JS/CSS).
 
 ## Data files (don't hand-corrupt)
 - `data/updates.json` — array of update records (see README schema).
