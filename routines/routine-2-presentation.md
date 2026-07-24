@@ -1,7 +1,8 @@
 # Routine 2 — Presentation
 
-**Cadence:** every 2 weeks (set manually in the routine UI; changing the schedule does
-not affect this logic).
+**Cadence:** bi-weekly. Set the trigger to fire **every Wednesday** (`0 7 * * 3`); the
+step-0 cadence gate (min 12 days between editions) makes the digest land every 2 weeks
+and self-corrects after any missed run. Changing the schedule doesn't affect the logic.
 **Job:** turn the not-yet-presented updates into a readable deck, post a summary to
 Slack, then mark those items `presented: true` — **only after** a successful post.
 
@@ -13,11 +14,11 @@ The routine UI holds only a short pointer to this file. All logic lives here.
 
 ```
 You are Routine 2 (Presentation) for the ad-platform-news-digest repo.
-Read routines/routine-2-presentation.md and follow it exactly. If nothing qualifies,
-stop and do nothing (empty-edition guard). Otherwise branch from main to a
-claude/present-run branch, build the deck, deliver the Slack message to the target in
-the doc's Open config, then set presented:true on the included items, commit, push,
-open a pull request into main and merge it.
+Read routines/routine-2-presentation.md and follow it exactly. First apply the step-0
+cadence gate and the empty-edition guard — if either says stop, do nothing. Otherwise
+branch from main to a claude/present-run branch, build the deck, deliver the Slack
+message to the target in the doc's Open config, then set presented:true on the included
+items, commit, push, open a pull request into main and merge it.
 ```
 
 The Slack destination lives in the doc (Open config → currently Ivan's DM), so the
@@ -36,6 +37,13 @@ prompt never needs editing when the destination changes.
 ---
 
 ## Steps
+
+### 0. Cadence gate (enforces "every 2 weeks" even if the trigger fires weekly)
+Read `data/editions.json`. If it has entries, take the **most recent** edition date. If
+**fewer than 12 days** have passed since that date, **STOP the whole run** — do nothing
+(no deck, no Slack, no commit). This makes the digest land exactly bi-weekly even when
+the schedule is set to fire every Wednesday. If the registry is empty, continue (first
+edition). Threshold lives in Open config.
 
 ### 1. Select candidates
 From `data/updates.json`, take every item where `presented == false` (all un-presented
@@ -112,6 +120,9 @@ when there is at least one qualifying update.
   PNGs). PPTX not used.
 - **Author credit (footer):** "Ivan Potekhin" (`author` in deck data).
 - **Empty edition:** if nothing qualifies, no deck and no Slack post (step 2a).
+- **Cadence gate:** min **12 days** between editions (step 0). Set the trigger to fire
+  every Wednesday (`0 7 * * 3`); the gate makes the actual digest land bi-weekly.
+  Change the 12-day threshold here to adjust cadence.
 
 ---
 
