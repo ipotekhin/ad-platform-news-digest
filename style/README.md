@@ -19,6 +19,24 @@ both sit one level below repo root). Don't add anything beyond fonts + local sti
 assets — no analytics or other third-party JS. There is no dark-mode variant; this
 skin is a light/cream editorial look by design.
 
+### Stickers (randomized per edition)
+
+Sticker PNGs live in `assets/stickers/`. Each edition shuffles which PNG lands in each
+fixed slot (seeded by the edition date, so a given deck always looks the same). Which
+stickers may appear **where** is controlled by pools in the template's `<script>`:
+
+- `POOL_GENERAL` — hero / TL;DR / archive / **cards**. Excludes `arrows-grid`, `flag`,
+  `folder-star`, `paperclip`.
+- `POOL_HERO` = `POOL_GENERAL` + `paperclip` — the hero (`section:nth-child(2)`) may use
+  paperclip.
+- `POOL_WRAP` — the dark-blue "THAT'S A WRAP" block only. A hand-curated set that reads
+  well on blue (the only place `folder-star` and `paperclip-green-pink` appear).
+- Platform-heading icons stay a meaningful shape per platform (globe / notepad / doc)
+  with a random colour — see `FAM` / `PF_FAM`.
+
+`arrows-grid` and `flag` PNGs were removed from the repo. To change what appears where,
+edit the pool arrays; positions/sizes are fixed in the HTML so nothing shifts.
+
 ## Deck-data schema
 
 Required fields are unchanged (`period_label`, `generated`, `tldr`, `platforms[].items[]`
