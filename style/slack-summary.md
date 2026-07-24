@@ -1,37 +1,100 @@
-# Slack summary format (Routine 2 output)
+# Slack message format (Routine 2 output)
 
-> The Slack MCP has **no file-upload tool**, so the deck is **not** attached. Routine 2
-> posts a short text summary with the **GitHub Pages link** to the deck embedded in the
-> text. Delivery is GitHub Pages only — no Slack Canvas. The message posts **from Ivan's
-> own Slack identity** (the connector is authorized under his account).
+> Routine 2 sends this as a single message via `slack_send_message` to the target in
+> `routines/routine-2-presentation.md` → Open config (currently **Ivan's DM**,
+> `U065VBRHYV7`), from Ivan's own Slack identity. The deck is **linked**, never
+> attached. Use Slack formatting: `*bold*` and `:emoji:` shortcodes.
+>
+> **If the edition is empty (no qualifying updates), send nothing at all.**
 
-## Channel message template (standard Markdown)
-
-The connector renders **standard Markdown** (`**bold**`, `_italic_`, `[text](url)`,
-bullet lists) — not legacy Slack mrkdwn.
+## Structure
 
 ```
-📰 **Ad Platform News Digest — {period_label}**
-{N} ad-account updates across {platform_count} platforms. Top items:
+[GREETING]
 
-- **{Platform}** — {title} _({impact})_
-- **{Platform}** — {title} _({impact})_
-- **{Platform}** — {title} _({impact})_
+[DIGEST INTRO — includes the date range]
 
-👉 Full deck: {deck_link}
+[HIGHLIGHTS INTRO]
+
+[EMOJI] *[PLATFORM]* — [KEY UPDATE]
+[EMOJI] *[PLATFORM]* — [KEY UPDATE]
+[EMOJI] *[PLATFORM]* — [KEY UPDATE]
+[EMOJI] *[PLATFORM]* — [KEY UPDATE]   ← drop this line if only 3 highlights
+
+[DIGEST SUMMARY — total update count + platforms]
+
+[LINK EMOJI] [LINK CTA]: <DECK_URL>
 ```
 
 Rules:
-- List only the **top 3–5** items (highest impact first) in the message.
-- `{deck_link}` = the GitHub Pages URL of `decks/deck-YYYY-MM-DD.html`, embedded in the
-  text (not a query-param-laden link).
-- Keep it short — depth lives in the deck.
+- Pick the **top 3–4** items by impact (high first) for the highlight lines.
+- `[DIGEST SUMMARY]` counts **all** updates in the deck, not just the highlighted ones.
+- Date range: short month names, no year — e.g. `Jul 6–22`.
+- Embed the deck URL directly (no tracking params).
+- **Rotate** the wording each edition (options below) so it never reads canned.
 
-## Test vs live delivery
+## Wording options (rotate per edition)
 
-- **Test / first runs (default):** do not post to the public channel. Either
-  `slack_send_message_draft` (a draft Ivan reviews in Slack) or `slack_send_message`
-  to **Ivan's DM** (`channel_id` = his user id). Ivan approves before going live.
-- **Live:** `slack_send_message` to the target channel `#<CHANNEL>`.
-- Only after a **confirmed** post (any mode Ivan accepts as the delivery) does Routine 2
-  set `presented: true`.
+**[GREETING]**
+- `Hi team! Hope your week is going well 🤗`
+- `Hey team! Hope you're having a great day 🤗`
+- `Hi everyone! Hope you're having a productive but not-too-busy week 😄`
+- `Hey everyone! Hope your week is treating you well ☀️`
+- `Happy [Weekday], team! Hope you're having a good one ✨`
+
+**[DIGEST INTRO]** (must contain the date range)
+- `It's time for another round of *Ad Platform Updates*, covering *[DATE RANGE]*.`
+- `We're back with another round of *Ad Platform Updates*, covering *[DATE RANGE]*.`
+- `The latest *Ad Platform Updates* are here, covering *[DATE RANGE]*.`
+- `A fresh batch of *Ad Platform Updates* has landed, covering *[DATE RANGE]*.`
+
+**[HIGHLIGHTS INTRO]**
+- `A few updates worth keeping on your radar:`
+- `Here's what stood out this time:`
+- `Here are the main highlights from this edition:`
+- `A few key updates to keep on your radar:`
+- `Here's a quick look at the top news:`
+
+**[EMOJI] by update type** (Slack shortcodes)
+- New product / feature: `:rocket:` / `:sparkles:`
+- Big change: `:eyes:` / `:loudspeaker:`
+- AI feature: `:bulb:`
+- Reporting / analytics: `:bar_chart:` / `:chart_with_upwards_trend:`
+- Targeting / optimization: `:target:` / `:dart:`
+- Technical / setup: `:gear:`
+- Research / discovery: `:mag:`
+- B2B / LinkedIn: `:briefcase:`
+
+**[DIGEST SUMMARY]**
+- `We've included *[N] updates* in total across [PLATFORM NAMES].`
+- `This edition includes *[N] updates* across [PLATFORM NAMES].`
+- `In total, we've collected *[N] updates* from [PLATFORM NAMES].`
+- `[PLATFORM NAMES]` = e.g. `Google Ads and LinkedIn`, or `across the major ad platforms` if many.
+
+**[LINK EMOJI]** `:point_right:` / `:link:`
+
+**[LINK CTA]**
+- `The full overview is available here`
+- `You can find the full digest here`
+- `Check out the full digest here`
+- `Take a look at the full edition here`
+- `Read the full digest here`
+
+## Worked example (edition Jul 6–22, 2026)
+
+```
+Hey hey, team! Hope your week is going well 🤗
+
+It's time for another round of *Ad Platform Updates*, covering *Jul 6–22*.
+
+A few updates worth keeping on your radar:
+
+:mag: *Google Ads* — Local Services Ads now run inside Performance Max
+:dart: *Google Ads* — Google drops the $50K spend gate on Lead Form assets
+:bar_chart: *Google Ads* — Bulk-link multiple accounts to one GA4 property
+:briefcase: *LinkedIn* — AI creative tools come to Campaign Manager
+
+We've included *11 updates* in total across Google Ads and LinkedIn.
+
+:point_right: The full overview is available here: <DECK_URL>
+```

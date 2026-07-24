@@ -10,6 +10,18 @@ operational reference for a routine session.
 - **Edit relevance rules:** they live in [`criteria.md`](criteria.md) (human-owned).
 - **Re-skin the deck:** CSS vars in [`style/deck-template.html`](style/deck-template.html).
 
+## Control model (how this stays autonomous)
+The routines are meant to run **hands-off from the repo**: the trigger prompts are tiny
+pointers, and every decision lives in these repo files. All tuning happens by editing
+the repo (via chat) — never by rewriting the routine prompts:
+- **Sources** → `sources.yaml`   ·   **Relevance** → `criteria.md`
+- **Design** → `style/deck-template.html` (+ `assets/stickers/`)
+- **Slack message** → `style/slack-summary.md`   ·   **Slack destination / config** →
+  `routines/routine-2-presentation.md` → Open config
+- **Schedule** → set manually in the routine UI; it does not affect any logic here.
+Add a source, change the look, or redirect Slack by editing these files — the routines
+keep working unchanged.
+
 ## Hard rules
 - `presented` is set **only after** a confirmed Slack post (Routine 2). Never before.
 - Routine 1 **never** builds a deck; Routine 2 **never** collects.

@@ -49,7 +49,10 @@ Use **cloud** routines (desktop scheduled tasks only run while the app is open).
 each routine's environment at the network-enabled one from step 1. Paste these as the
 trigger prompts — the logic lives in the repo docs, so the prompts stay short.
 
-### Routine 1 — Collect  ·  suggested: **Wed + Fri, ~08:00**
+Schedule (set manually in the routine UI; it can change any time without touching the
+logic): **Routine 1 = once a week**, **Routine 2 = once every 2 weeks**.
+
+### Routine 1 — Collect  ·  schedule: **weekly**
 ```
 You are Routine 1 (Collect) for the ad-platform-news-digest repo.
 Read routines/routine-1-collect.md and follow it exactly. Branch from main to a
@@ -58,33 +61,32 @@ data/state.json (and any sources.yaml validation edits), push, then open a pull
 request into main and merge it. Do not build any deck.
 ```
 
-### Routine 2 — Presentation  ·  suggested: **every 2 weeks, Fri ~16:00**
+### Routine 2 — Presentation  ·  schedule: **every 2 weeks**
 ```
 You are Routine 2 (Presentation) for the ad-platform-news-digest repo.
-Read routines/routine-2-presentation.md and follow it exactly. Branch from main
-to a claude/present-run branch. Build the deck and publish it to GitHub Pages.
-For test runs, deliver the summary as a Slack draft or a DM to Ivan for review;
-in live mode, post it to Slack channel #<CHANNEL>. Only after a delivery Ivan
-accepts, set presented:true on the included items, commit, push, open a pull
-request into main and merge it.
+Read routines/routine-2-presentation.md and follow it exactly. If nothing qualifies,
+stop and do nothing (empty-edition guard). Otherwise branch from main to a
+claude/present-run branch, build the deck, publish it to GitHub Pages, and deliver the
+Slack message to the target in the doc's Open config (currently Ivan's DM). Only after
+a successful delivery, set presented:true on the included items, commit, push, open a
+pull request into main and merge it.
 ```
 
-> **Cadence note:** if the scheduler can't express "every 2 weeks," run Routine 2
-> **weekly on Friday** instead — it only presents items still marked
-> `presented:false`, so an extra run with nothing new is a harmless no-op. Just expect
-> a post whenever ≥1 new item has accumulated.
+> The Slack destination and message wording live in the repo (`routine-2` Open config +
+> `style/slack-summary.md`), so these prompts never need editing when they change.
 
 ## 5. First run = smoke test
 
 1. **Manually run Routine 1 once.** Then inspect `data/updates.json` — check items are
    real (last-2-weeks window), deduped, ad-account-relevant, with a clear title and a
    1–3 sentence summary written from the article body.
-2. **Manually run Routine 2 in test mode.** It builds the deck and, instead of posting
-   to the channel, either creates a **draft** or sends the summary to **Ivan's DM** for
-   review (see `routine-2-presentation.md` step 6). Confirm the deck renders and the
-   Pages link resolves. Items are marked `presented` only after a delivery Ivan accepts.
-3. Once both look right, flip Routine 2 to live (post to `#<CHANNEL>`) and leave them on
-   the schedule above.
+2. **Manually run Routine 2 once.** It builds the deck and sends the Slack message to
+   the configured target — currently **Ivan's DM** (`U065VBRHYV7`). Confirm the deck
+   renders, the Pages link resolves, and the DM looks right. Items are marked
+   `presented` only after the delivery succeeds.
+3. Once both look right, leave them on the weekly / bi-weekly schedule. To send to a
+   team channel later, change the `channel_id` in `routine-2` Open config — no other
+   edits needed.
 
 ## 6. Branch / merge workflow (main is the mainline)
 
