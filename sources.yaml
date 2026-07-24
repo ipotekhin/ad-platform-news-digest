@@ -12,6 +12,12 @@
 #                 official   = the platform's own blog. Preferred canonical record.
 #                 aggregator = 3rd-party (Search Engine Land / SocialBee). Often
 #                              repeats official stories -> resolved by dedup Layer 2.
+#   cadence     feed | roundup (optional; default feed)
+#                 feed    = dated article stream -> apply the normal 2-week window by
+#                           each article's published date.
+#                 roundup = periodic digest that surfaces items late -> do NOT apply the
+#                           strict window; collect newest-section items not already in
+#                           the base (dedup handles repeats). See the SocialBee note.
 #   validation  readable = plain in-session fetch returns real, dated article text.
 #                 Every source below was confirmed readable on 2026-07-21. Sources
 #                 that could not be read were dropped and are intentionally not listed.
@@ -86,13 +92,33 @@ sources:
     title: SocialBee — LinkedIn Updates
     url: https://socialbee.com/blog/linkedin-updates/
     type: aggregator
+    cadence: roundup            # monthly digest, NOT a dated feed
     validation: readable
-    note: Verified 2026-07-21 via curl (HTTP 200). Format is a MONTHLY roundup —
-      sections like "July 2026 LinkedIn updates", "June 2026 LinkedIn updates" with
-      in-text dates (e.g. July 8 & 16, 2026) and a JSON-LD dateModified. Routine 1
-      should parse the newest month section(s) and treat each bullet as a candidate
-      item (id = source + month + sha1(title)); filter to ad/Campaign-Manager items
-      per criteria.md. Covers general LinkedIn changes too — filter hard.
+    note: >-
+      MONTHLY ROUNDUP (sections like "July 2026 LinkedIn updates"). Because it surfaces
+      items weeks after the original announcement, do NOT apply the strict 2-week window
+      here and do NOT date items by the underlying official post. Instead: take every
+      ad/Campaign-Manager item from the newest month section(s) that is NOT already in
+      updates.json (dedup id = source + month + sha1(title)); set `published` to the
+      roundup month (or the in-text date if given). Dedup guarantees no repeats across
+      runs. Filter to ads-manager relevance per criteria.md (drop consumer/jobs items
+      like "Suggested feeds", "Easy Apply").
+
+  - key: socialmediatoday_linkedin
+    platform: linkedin
+    title: Social Media Today — LinkedIn
+    url: https://www.socialmediatoday.com/topic/linkedin/
+    type: aggregator
+    cadence: feed               # normal dated article feed
+    validation: pending
+    note: >-
+      Standard dated article FEED (like Search Engine Land) — apply the normal 2-week
+      window using each article's own published date. PENDING validation: blocked in the
+      scaffolding session's egress, but the domain is allowlisted in the routine env, so
+      Routine 1 should fetch it, confirm it returns readable dated LinkedIn articles, and
+      flip `validation` to `readable` on first run. Filter to ads-manager relevance
+      (Campaign Manager, formats, targeting, reporting) — much LinkedIn coverage is
+      organic/social, not ads.
 
   # ── Bing / Microsoft Advertising ────────────────────────────────────────────
   - key: bing_blogs
