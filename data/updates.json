@@ -152,5 +152,47 @@
     "impact": "low",
     "collected": true,
     "presented": false
+  },
+  {
+    "id": "1d7248d3f589",
+    "platform": "google_ads",
+    "source": "Search Engine Land — Google",
+    "title": "Google brings business data feeds to Demand Gen campaigns",
+    "url": "https://searchengineland.com/google-brings-business-data-feeds-to-demand-gen-campaigns-482612",
+    "published": "2026-07-17",
+    "first_seen": "2026-07-24T16:47:06Z",
+    "summary": "Google is expanding Demand Gen so advertisers can connect business data feeds and serve dynamic ads without a Google Merchant Center feed. Ads can now dynamically display content based on audience interest and available inventory, opening dynamic advertising to non-retail verticals and reducing manual asset updates.",
+    "category": "feature",
+    "impact": "medium",
+    "collected": true,
+    "presented": false
+  },
+  {
+    "id": "cd54bae072e2",
+    "platform": "google_ads",
+    "source": "Search Engine Land — Google",
+    "title": "Google expands Brand Lift Studies with an enhanced measurement option",
+    "url": "https://searchengineland.com/google-expands-brand-lift-studies-with-enhanced-measurement-option-482701",
+    "published": "2026-07-20",
+    "first_seen": "2026-07-24T16:47:06Z",
+    "summary": "Google Ads now lets advertisers choose between a standard and a new Enhanced Brand Lift Study. The enhanced option requires roughly 3× the budget but increases the likelihood of detecting a positive lift by about 60%, giving more confidence when measuring smaller changes in awareness/consideration for upper-funnel campaigns.",
+    "category": "measurement",
+    "impact": "medium",
+    "collected": true,
+    "presented": false
+  },
+  {
+    "id": "578a67149a79",
+    "platform": "linkedin",
+    "source": "SocialBee — LinkedIn Updates",
+    "title": "LinkedIn adds AI creative tools to Campaign Manager (Draft with AI, AI ad copy, Flexible campaigns)",
+    "url": "https://www.linkedin.com/business/marketing/blog/linkedin-ads/introducing-linkedins-new-creative-tools-draft-with-ai-brand-voice",
+    "published": "2026-07",
+    "first_seen": "2026-07-24T16:47:06Z",
+    "summary": "LinkedIn rolled out new AI-powered creative options inside Campaign Manager: AI-generated ad copy, a new \"Flexible\" campaign creation flow, and the ability to generate multiple variations of an existing ad with alternative headlines and intro text. Surfaced via SocialBee's July 2026 roundup; confirmed by LinkedIn's official Ads blog.",
+    "category": "feature",
+    "impact": "medium",
+    "collected": true,
+    "presented": false
   }
 ]

@@ -117,10 +117,12 @@ sources:
     validation: pending
     note: >-
       Standard dated article FEED (like Search Engine Land) — apply the normal 2-week
-      window using each article's own published date. PENDING validation: blocked in the
-      scaffolding session's egress, but the domain is allowlisted in the routine env, so
-      Routine 1 should fetch it, confirm it returns readable dated LinkedIn articles, and
-      flip `validation` to `readable` on first run. Filter to ads-manager relevance
+      window using each article's own published date. PENDING validation: still blocked
+      by this run's egress — curl returned `403 CONNECT tunnel failed` on 2026-07-24
+      (also blocked in the scaffolding session). The domain is supposed to be allowlisted
+      in the routine env; until a run can actually reach it, leave `validation: pending`
+      and do NOT flip to `readable`. FLAG to a human: confirm blogs.socialmediatoday.com
+      is in the run environment's egress allowlist. Filter to ads-manager relevance
       (Campaign Manager, formats, targeting, reporting) — much LinkedIn coverage is
       organic/social, not ads.
 
