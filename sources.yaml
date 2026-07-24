@@ -114,17 +114,16 @@ sources:
     url: https://www.socialmediatoday.com/topic/linkedin/
     type: aggregator
     cadence: feed               # normal dated article feed
-    validation: pending
+    validation: readable
     note: >-
-      Standard dated article FEED (like Search Engine Land) — apply the normal 2-week
-      window using each article's own published date. PENDING validation: still blocked
-      by this run's egress — curl returned `403 CONNECT tunnel failed` on 2026-07-24
-      (also blocked in the scaffolding session). The domain is supposed to be allowlisted
-      in the routine env; until a run can actually reach it, leave `validation: pending`
-      and do NOT flip to `readable`. FLAG to a human: confirm blogs.socialmediatoday.com
-      is in the run environment's egress allowlist. Filter to ads-manager relevance
-      (Campaign Manager, formats, targeting, reporting) — much LinkedIn coverage is
-      organic/social, not ads.
+      Standard dated article FEED — apply the normal 2-week window by each article's own
+      published date. Verified 2026-07-24 via curl (HTTP 200): the topic page lists ~28
+      LinkedIn article links (e.g. /news/<slug>/<id>/). NOTE: dates are NOT on the index —
+      open each article and read its JSON-LD `datePublished` / `og:` before applying the
+      window. Egress: the correct host is `www.socialmediatoday.com` (the apex 301s to
+      www; allowlist the www host, not the apex or a `blogs.` subdomain). Filter HARD to
+      ads-manager relevance (Campaign Manager, ad formats, targeting, reporting) — most
+      LinkedIn coverage here is organic/social, not ads.
 
   # ── Bing / Microsoft Advertising ────────────────────────────────────────────
   - key: bing_blogs
