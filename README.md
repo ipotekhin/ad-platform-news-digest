@@ -60,7 +60,9 @@ README.md / CLAUDE.md # repo context
   "category": "feature | beta | policy | deprecation | measurement | api | other",
   "impact": "high | medium | low",
   "collected": true,
-  "presented": false
+  "presented": false,
+  "expired": false          // optional; Routine 2 sets true once an un-presented item
+                            // ages past 28 days (retired from the backlog)
 }
 ```
 

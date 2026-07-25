@@ -71,10 +71,16 @@ R1 applies it loosely (lean-include); R2 applies it strictly.
   newest `editions.json` entry is < 12 days old, the run does nothing → digest lands
   exactly every 2 weeks and self-corrects after a miss.
 - **Empty-edition guard:** if nothing un-presented+relevant, build/post nothing.
-- **Select:** all `presented:false` items (R1 already bounded the window).
+- **Expiry:** un-presented items older than **28 days** (`first_seen`) are retired
+  (`expired:true`) so backlog can't pile up forever.
+- **Select:** `presented:false` and not `expired`.
 - **Order:** platforms Google Ads → Meta → TikTok → LinkedIn → Bing; within, high→med→low.
-- **>12 rule:** if the deck would exceed ~12 items, drop/group `low`-impact ones to keep
-  it tight. Dropped items stay `presented:false` and carry to a future edition (not lost).
+- **Balance (no overall cap):** **per-platform cap 6** (up to **8** to fit all `high`s),
+  so no platform dominates and both teams (Search: Google/Bing · Social: Meta/TikTok/
+  LinkedIn) stay represented. Overflow carries to a future edition.
+- **Backlog status note:** after delivery, Routine 2 DMs Ivan (`U065VBRHYV7`) a short
+  deferred/expired-by-platform summary (internal, always to Ivan even once the digest
+  goes to a team channel).
 - **Deck:** copy `style/deck-template.html` → `decks/deck-YYYY-MM-DD.html`; fill the
   `#deck-data` JSON. Publish to GitHub Pages (only delivery — no Slack Canvas). Each
   edition is a **new permanent URL**; old ones stay live.

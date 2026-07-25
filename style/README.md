@@ -52,5 +52,6 @@ changes to `routines/routine-2-presentation.md` — the template falls back sens
 - Order platforms: **Google Ads → Meta → TikTok → LinkedIn → Bing** (drop empty ones).
 - Within a platform, order items **high → medium → low** impact.
 - TL;DR: 3–5 bullets, the single most important change first.
-- If the deck exceeds ~12 items, drop or group `low`-impact items (see `criteria.md`).
+- No overall size cap; **per-platform cap 6** (up to 8 to fit all `high`s) keeps Search
+  vs Social balanced. Overflow carries to a future edition (see `criteria.md`).
 - Every item links to its **canonical** source URL (official over aggregator).
