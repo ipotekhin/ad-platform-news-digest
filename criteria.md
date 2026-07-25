@@ -69,8 +69,11 @@ The official newsrooms (esp. Meta) publish a lot of non-ads news. Use this to fo
 | `medium` | Worth knowing, no immediate action.                            |
 | `low`    | Minor / informational.                                         |
 
-The deck (Routine 2) leads with `high`, then `medium`; `low` items are grouped or
-dropped if the deck is getting long (see `style/`).
+The deck (Routine 2) leads with `high`, then `medium`, then `low`. There is **no overall
+size cap**, but a **per-platform cap** keeps it fair across the Search (Google, Bing) and
+Social (Meta, TikTok, LinkedIn) teams: **max 6 items per platform** (up to **8** to fit
+all `high`-impact items). Overflow carries to a future edition; un-presented items older
+than 28 days are retired. See `routines/routine-2-presentation.md` steps 1 & 3.
 
 ## Category tags (for `updates.json.category`)
 

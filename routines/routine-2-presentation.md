@@ -16,9 +16,10 @@ The routine UI holds only a short pointer to this file. All logic lives here.
 You are Routine 2 (Presentation) for the ad-platform-news-digest repo.
 Read routines/routine-2-presentation.md and follow it exactly. First apply the step-0
 cadence gate and the empty-edition guard — if either says stop, do nothing. Otherwise
-branch from main to a claude/present-run branch, build the deck, deliver the Slack
-message to the target in the doc's Open config, then set presented:true on the included
-items, commit, push, open a pull request into main and merge it.
+branch from main to a claude/present-run branch, expire stale backlog, select with the
+per-platform caps, build the deck, deliver the Slack message to the target in the doc's
+Open config, then set presented:true on the included items, DM Ivan the backlog status
+note, commit, push, open a pull request into main and merge it.
 ```
 
 The Slack destination lives in the doc (Open config → currently Ivan's DM), so the
@@ -45,9 +46,13 @@ Read `data/editions.json`. If it has entries, take the **most recent** edition d
 the schedule is set to fire every Wednesday. If the registry is empty, continue (first
 edition). Threshold lives in Open config.
 
-### 1. Select candidates
-From `data/updates.json`, take every item where `presented == false` (all un-presented
-items — no time filter here; Routine 1 already bounded what got collected).
+### 1. Expire stale backlog, then select candidates
+- **Expiry pass first.** For every item with `presented == false` and no `expired`
+  flag, if its `first_seen` is **older than 28 days** (from today), set `expired: true`.
+  Expired items are permanently out of the running — a digest is about recent news, and
+  this stops an un-shown item (esp. high-volume Google) from piling up forever. Threshold
+  in Open config.
+- **Select:** take every item where `presented == false` **and** `expired` is not true.
 
 ### 2. Strict relevance filter
 Apply `criteria.md` **strictly** now. Drop items that don't clearly match an "Include"
@@ -61,11 +66,18 @@ deck, do **not** post anything to Slack, do **not** commit. This edition simply 
 not happen. (Optional: leave a one-line note in the run log.) Only continue to step 3
 when there is at least one qualifying update.
 
-### 3. Order & trim
+### 3. Balance & per-platform cap (keeps the deck fair across teams)
+The digest serves two audiences — **Search** (Google Ads, Microsoft/Bing) and **Social**
+(Meta, TikTok, LinkedIn) — so no single platform may dominate.
 - Group by platform: **Google Ads → Meta → TikTok → LinkedIn → Bing** (omit empty).
 - Within each platform, order **high → medium → low** impact.
-- If > ~12 items total, group or drop `low`-impact items to keep the deck tight.
-- Write a **TL;DR** of 3–5 bullets, most important change first.
+- **No overall cap.** **Per-platform cap = 6** items: take the top 6 by impact.
+- **`high`-impact items are always included** — if a platform has more than 6 highs, raise
+  its cap to fit them, up to an absolute **max of 8** per platform. (So a platform ships
+  6 normally, up to 8 only when highs demand it.)
+- Items beyond the cap stay `presented: false` and carry to a future edition (subject to
+  the 28-day expiry in step 1). Caps live in Open config.
+- Write a **TL;DR** of 3–5 bullets, most important change first (across platforms).
 
 ### 4. Build the deck
 - Copy `style/deck-template.html` → `decks/deck-YYYY-MM-DD.html` (today's date).
@@ -102,13 +114,25 @@ when there is at least one qualifying update.
 
 ### 7. Mark presented (only after success)
 - For every item included in the deck, set `presented: true` in `data/updates.json`.
+  (Items marked `expired: true` in step 1 keep that flag.)
 - **Append this edition to `data/editions.json`** so the next run lists it under Past
   editions: `{ "no": <n>, "date": "YYYY-MM-DD", "period_label": "<period_label>",
   "url": "deck-YYYY-MM-DD.html" }` (`no` = previous max + 1).
-- Commit `data/updates.json` + `data/editions.json` + `decks/deck-YYYY-MM-DD.html`
-  with a message like `present: deck YYYY-MM-DD, M items -> Slack`.
+- Commit `data/updates.json` (presented + expired flags) + `data/editions.json` +
+  `decks/deck-YYYY-MM-DD.html` with a message like `present: deck YYYY-MM-DD, M items -> Slack`.
 - Push to `claude/present-run`, then open a pull request into `main` and merge it
   (Pages serves `main`, so the deck link resolves after merge).
+
+### 8. Backlog status note to Ivan (internal — always to Ivan's DM)
+After the digest is delivered, send a **separate short** `slack_send_message` to
+**Ivan's DM (`channel_id = U065VBRHYV7`)** — this is an internal ops note and always goes
+to Ivan regardless of where the digest itself is sent. Summarize the backlog pressure so
+Ivan can decide whether to raise a platform's cap later:
+- **Included:** total shipped this edition.
+- **Deferred** (still `presented:false`, hit the per-platform cap): count **by platform**.
+- **Expired this run** (aged past 28 days, retired): count **by platform**.
+If nothing was deferred or expired, one line ("no backlog — everything relevant shipped")
+is enough. Keep it compact; this note is for Ivan only, not the teams.
 
 ---
 
@@ -123,6 +147,12 @@ when there is at least one qualifying update.
 - **Cadence gate:** min **12 days** between editions (step 0). Set the trigger to fire
   every Wednesday (`0 7 * * 3`); the gate makes the actual digest land bi-weekly.
   Change the 12-day threshold here to adjust cadence.
+- **Per-platform cap:** **6** items (up to **8** to fit all `high`-impact); **no overall
+  cap** (step 3). Raise a platform's cap here if its backlog note shows steady pressure.
+- **Backlog expiry:** un-presented items older than **28 days** (`first_seen`) are retired
+  (`expired:true`, step 1). Raise this if too much is aging out.
+- **Backlog status note:** step 8 always DMs Ivan (`U065VBRHYV7`) a short deferred/expired
+  summary by platform, even when the digest later goes to a team channel.
 
 ---
 
