@@ -52,6 +52,26 @@
     header[style*="sticky"]{position:static}
     img[style*="floaty"]{animation:none}
   }
+
+  /* ── News filter (segmented slider) ── */
+  #news-filter{position:relative;display:inline-flex;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;padding:3px}
+  #news-filter .flt{position:relative;z-index:1;border:0;background:transparent;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:6px 14px;border-radius:999px;transition:color .2s;white-space:nowrap}
+  #news-filter .flt.active{color:#fff}
+  #news-filter .flt-ind{position:absolute;left:0;top:3px;bottom:3px;z-index:0;border-radius:999px;background:var(--aid-blue);transform:translateX(3px);transition:transform .3s cubic-bezier(.5,1.5,.4,1),width .3s cubic-bezier(.5,1.5,.4,1)}
+  /* ── Typewriter caret ── */
+  .tw-caret::after{content:"";display:inline-block;width:.055em;height:.92em;background:currentColor;margin-left:.05em;vertical-align:-.06em;animation:tw-blink .8s steps(1) infinite}
+  @keyframes tw-blink{50%{opacity:0}}
+  /* ── Sticker entrance (uses `scale` so it won't fight the floaty transform) ── */
+  img.stk-in{opacity:0;scale:.5;transition:opacity .5s ease,scale .6s cubic-bezier(.34,1.56,.64,1)}
+  img.stk-in.shown{opacity:1;scale:1}
+  /* ── Section reveal (smooth top-to-bottom) ── */
+  .reveal{opacity:0;translate:0 18px;transition:opacity .6s ease,translate .6s cubic-bezier(.22,1,.36,1)}
+  .reveal.shown{opacity:1;translate:0 0}
+  @media (prefers-reduced-motion: reduce){
+    img.stk-in,img.stk-in.shown{opacity:1;scale:1;transition:none}
+    .reveal,.reveal.shown{opacity:1;translate:0 0;transition:none}
+    .tw-caret::after{display:none}
+  }
 </style>
 </head>
 <body>
@@ -65,17 +85,18 @@
       <span style="width:22px;height:22px;border-radius:6px;background:var(--aid-blue);display:inline-block;border:2px solid var(--aid-ink)"></span>
       <span style="font-family:'Courier Prime',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:700">Ad Platform Digest</span>
     </div>
-    <nav style="display:flex;align-items:center;gap:26px;font-family:'Courier Prime',monospace;font-size:12.5px;letter-spacing:.04em">
-      <a class="lnk-underline" href="#tldr">TL;DR</a>
-      <a class="lnk-underline" href="#updates">Updates</a>
-    </nav>
+    <div id="news-filter" role="tablist" aria-label="Filter news">
+      <button class="flt active" data-team="all" role="tab">All news</button>
+      <button class="flt" data-team="search" role="tab">Search</button>
+      <button class="flt" data-team="social" role="tab">Social</button>
+    </div>
   </div>
 </header>
 
 <!-- ══ HERO ══ -->
 <section style="max-width:1120px;margin:0 auto;padding:66px 32px 26px;position:relative">
   <div id="d-badge" style="display:inline-flex;align-items:center;gap:9px;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--aid-ink);background:var(--aid-lime);border:2px solid var(--aid-ink);border-radius:999px;padding:6px 16px;box-shadow:3px 3px 0 var(--aid-ink)"></div>
-  <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(52px,8vw,104px);line-height:.95;letter-spacing:-.015em;margin:26px 0 14px;max-width:920px;text-wrap:balance">The <span style="font-style:italic;color:var(--aid-blue)">Bi-Weekly</span> Brief</h1>
+  <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(52px,8vw,104px);line-height:.95;letter-spacing:-.015em;margin:26px 0 14px;max-width:920px;text-wrap:balance" id="hero-title">The <span style="font-style:italic;color:var(--aid-blue)">Bi-Weekly</span> Brief</h1>
   <p id="d-subtitle" style="font-size:19px;line-height:1.5;color:var(--aid-slate);margin:0;max-width:560px;text-wrap:pretty"></p>
   <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:30px">
     <div style="background:#fff;border:2px solid var(--aid-ink);border-radius:14px;padding:16px 22px;box-shadow:5px 5px 0 var(--aid-blue);min-width:118px">
@@ -96,7 +117,7 @@
 </section>
 
 <!-- ══ TL;DR ══ -->
-<section id="tldr" style="max-width:1120px;margin:0 auto;padding:30px 32px 10px">
+<section id="tldr" class="reveal" style="max-width:1120px;margin:0 auto;padding:30px 32px 10px">
   <div id="d-tldr-wrap" style="background:#fff;border:2px solid var(--aid-ink);border-radius:20px;padding:34px 38px;box-shadow:10px 12px 0 var(--aid-blue);position:relative;overflow:hidden">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px">
       <span style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--aid-blue);background:var(--aid-lime);border:1.5px solid var(--aid-ink);border-radius:999px;padding:4px 12px">TL;DR</span>
@@ -122,10 +143,10 @@
 </section>
 
 <!-- ══ SIGN-OFF ══ -->
-<section style="max-width:1120px;margin:0 auto;padding:20px 32px 70px">
+<section class="reveal" style="max-width:1120px;margin:0 auto;padding:20px 32px 70px">
   <div style="background:var(--aid-blue);border:2px solid var(--aid-ink);border-radius:22px;padding:56px 46px;box-shadow:12px 14px 0 var(--aid-ink);position:relative;overflow:hidden;text-align:center">
     <div style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--aid-lime);margin-bottom:16px">That's a wrap</div>
-    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(32px,4.4vw,52px);line-height:1.02;color:#fff;margin:0 auto 14px;max-width:660px">Hope this was useful — now go make something move.</h2>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(32px,4.4vw,52px);line-height:1.02;color:#fff;margin:0 auto 14px;max-width:660px" id="wrap-title">Hope this was useful — now go make something move.</h2>
     <p style="color:rgba(255,255,255,.82);font-size:16px;line-height:1.55;margin:0 auto;max-width:520px">Spot something worth testing? Flag it in the channel.<br>See you in two weeks.</p>
     <img id="dec-signoff-1" src="../assets/stickers/thumbs-up-green-blue.png" alt="" style="position:absolute;left:44px;bottom:15px;width:104px;--r:-9deg;animation:floaty 6s ease-in-out infinite;filter:drop-shadow(0 10px 16px rgba(0,0,0,.28))">
     <img id="dec-signoff-2" src="../assets/stickers/rainbow.png" alt="" style="position:absolute;right:38px;top:34px;width:120px;--r:7deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.2))">
@@ -177,13 +198,13 @@
   ────────────────────────────────────────────────────────────────────────── -->
   <script id="deck-data" type="application/json">
 {
-  "period_label": "MOCK — Past Editions test",
+  "period_label": "MOCK — effects & filter test",
   "generated": "2026-08-07",
   "edition_no": 2,
   "author": "Ivan Potekhin",
   "tldr": [
-    "This is a MOCK edition built only to test the Past editions block.",
-    "The archive card below links to the real edition 1 deck."
+    "MOCK edition to test the typewriter, sticker scroll-in, and the Search/Social filter.",
+    "Use the header toggle to filter; scroll to see stickers pop and the final headline type."
   ],
   "platforms": [
     {
@@ -206,6 +227,20 @@
           "category": "feature",
           "impact": "medium",
           "summary": "YouTube reach-and-frequency optimization for video campaign groups is now available globally in Google Ads, letting advertisers coordinate reach and frequency across multiple video campaigns to hit optimal frequency targets. Google cites a Meridian MMM study showing an optimal ~2.7 impressions/week drives a 19% ROI lift; the capability is coming to Display & Video 360 soon."
+        }
+      ]
+    },
+    {
+      "name": "Meta",
+      "items": [
+        {
+          "title": "Meta launches Business Agent, autonomous AI agents for messaging-based sales and service",
+          "url": "https://searchengineland.com/meta-business-agent-marketers-pay-attention-482561",
+          "source": "Search Engine Land — Meta",
+          "published": "2026-07-17",
+          "category": "feature",
+          "impact": "low",
+          "summary": "At Meta Conversations 2026, Meta announced the Meta Business Agent—enterprise-grade, autonomous AI agents (beyond rule-based chatbots) that handle multi-turn conversations, qualify leads, answer support, and check inventory via API while maintaining brand voice. Relevant to advertisers running click-to-message / lead campaigns; ads-manager surface still limited."
         }
       ]
     },
@@ -272,6 +307,7 @@
   function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
   var _rng = mulberry32(hashStr(String((typeof data!=="undefined" && (data.generated||data.period_label)) || "seed")));
   function pickFrom(pool){ return STK + pool[Math.floor(_rng()*pool.length)]; }
+  function teamOf(name){var n=(name||"").toLowerCase();return (n.indexOf("meta")>=0||n.indexOf("tiktok")>=0||n.indexOf("linkedin")>=0||n.indexOf("facebook")>=0)?"social":"search";}
   function iconFor(name){
     var n=(name||"").toLowerCase(), fam="globe";
     for(var i=0;i<PF_FAM.length;i++){ if(n.indexOf(PF_FAM[i].k)>=0){ fam=PF_FAM[i].f; break; } }
@@ -340,7 +376,7 @@
   var peekI = 0;
   platforms.forEach(function(pf){
     var heading = el("div", { display:"flex", alignItems:"center", gap:"14px", marginBottom:"24px" },
-      img(iconFor(pf.name), { width:"46px", flex:"none", filter:"drop-shadow(0 6px 10px rgba(0,0,0,.14))" }),
+      (function(){var _pi=img(iconFor(pf.name),{width:"46px",flex:"none",filter:"drop-shadow(0 6px 10px rgba(0,0,0,.14))"});_pi.className="pf-icon";return _pi;})(),
       el("h2", { fontFamily:"'Playfair Display',Georgia,serif", fontWeight:"800", fontSize:"38px", lineHeight:"1", margin:"0", color:"var(--aid-ink)" }, pf.name),
       el("span", { fontFamily:"'Courier Prime',monospace", fontSize:"13px", color:"var(--aid-ink)", background:"#fff", border:"2px solid var(--aid-ink)", borderRadius:"999px", padding:"3px 12px", fontWeight:"700" }, pf.items.length + (pf.items.length === 1 ? " update" : " updates")),
       el("span", { flex:"1", height:"2px", background:"var(--aid-ink)", opacity:".14" })
@@ -375,7 +411,7 @@
       grid.appendChild(card);
     });
 
-    body.appendChild(el("section", { marginBottom:"56px" }, heading, grid));
+    var _sec=el("section",{marginBottom:"56px"},heading,grid);_sec.className="reveal";_sec.setAttribute("data-team",teamOf(pf.name));body.appendChild(_sec);
   });
 
   // Archive (optional)
@@ -396,6 +432,70 @@
   document.getElementById("d-footer").textContent =
     total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "") + " · Made for Performance Team with 💜 by " + (data.author || "Ivan Potekhin");
   document.title = "Ad Platform News Digest — " + (data.period_label || "");
+})();
+</script>
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // News filter
+  var filter=document.getElementById("news-filter");
+  if(filter){
+    var btns=[].slice.call(filter.querySelectorAll(".flt"));
+    var ind=document.createElement("div"); ind.className="flt-ind"; filter.insertBefore(ind, filter.firstChild);
+    function moveInd(btn){ ind.style.width=btn.offsetWidth+"px"; ind.style.transform="translateX("+btn.offsetLeft+"px)"; }
+    function apply(team){
+      var secs=[].slice.call(document.querySelectorAll('#d-body > section'));
+      secs.forEach(function(s){ s.style.display=(team==="all"||s.getAttribute("data-team")===team)?"":"none"; });
+      var vis=secs.filter(function(s){return s.style.display!=="none";});
+      var items=0; vis.forEach(function(s){ items+=s.querySelectorAll('article').length; });
+      var su=document.getElementById('stat-updates'); if(su) su.textContent=items;
+      var sp=document.getElementById('stat-platforms'); if(sp) sp.textContent=vis.length;
+    }
+    btns.forEach(function(b){ b.addEventListener("click", function(){
+      btns.forEach(function(x){x.classList.remove("active");}); b.classList.add("active"); moveInd(b); apply(b.getAttribute("data-team"));
+    });});
+    requestAnimationFrame(function(){ var a=filter.querySelector(".flt.active")||btns[0]; if(a) moveInd(a); });
+    window.addEventListener("resize", function(){ var a=filter.querySelector(".flt.active"); if(a) moveInd(a); });
+  }
+
+  // Sticker entrance (exclude platform icons)
+  var stickers=[].slice.call(document.querySelectorAll("img")).filter(function(i){ return !i.classList.contains("pf-icon"); });
+  if(reduce || !("IntersectionObserver" in window)){ stickers.forEach(function(i){ i.classList.add("stk-in","shown"); }); }
+  else {
+    stickers.forEach(function(i){ i.classList.add("stk-in"); });
+    var so=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ var t=e.target; setTimeout(function(){t.classList.add("shown");}, Math.random()*160); so.unobserve(t);} }); },{threshold:.15});
+    stickers.forEach(function(i){ so.observe(i); });
+  }
+
+  // Section reveal
+  var reveals=[].slice.call(document.querySelectorAll(".reveal"));
+  if(reduce || !("IntersectionObserver" in window)){ reveals.forEach(function(r){ r.classList.add("shown"); }); }
+  else { var ro=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("shown"); ro.unobserve(e.target);} }); },{threshold:.08}); reveals.forEach(function(r){ ro.observe(r); }); }
+
+  // Typewriter (preserves inline-styled segments like the italic "Bi-Weekly")
+  function typewrite(node){
+    if(!node) return;
+    var segs=[]; [].forEach.call(node.childNodes, function(n){
+      if(n.nodeType===3) segs.push({t:n.nodeValue,s:null,tag:null});
+      else if(n.nodeType===1) segs.push({t:n.textContent,s:n.getAttribute("style"),tag:n.tagName});
+    });
+    node.textContent=""; node.classList.add("tw-caret");
+    var si=0,ci=0,cur=null;
+    (function step(){
+      if(si>=segs.length){ node.classList.remove("tw-caret"); return; }
+      var seg=segs[si];
+      if(ci===0){ if(seg.s!==null){ cur=document.createElement(seg.tag||"span"); if(seg.s) cur.setAttribute("style",seg.s); node.appendChild(cur);} else cur=null; }
+      var ch=seg.t.charAt(ci); if(cur) cur.textContent+=ch; else node.appendChild(document.createTextNode(ch));
+      ci++; if(ci>=seg.t.length){ si++; ci=0; }
+      setTimeout(step, 34);
+    })();
+  }
+  if(!reduce){
+    typewrite(document.getElementById("hero-title"));
+    var wrap=document.getElementById("wrap-title");
+    if(wrap && "IntersectionObserver" in window){ var did=false; var wo=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && !did){ did=true; typewrite(wrap); wo.unobserve(e.target);} }); },{threshold:.4}); wo.observe(wrap); }
+  }
 })();
 </script>
 </body>
