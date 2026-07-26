@@ -136,7 +136,7 @@
 <!-- ══ ARCHIVE (only shown if deck-data provides `archive`) ══ -->
 <section id="d-archive-section" style="max-width:1120px;margin:0 auto;padding:10px 32px 30px;display:none">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
-    <img id="dec-archive" src="../assets/stickers/folder-star-blue.png" alt="" style="width:40px">
+    <img id="dec-archive" class="stk-static" src="../assets/stickers/folder-star-blue.png" alt="" style="width:40px">
     <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:26px;margin:0">Past editions</h2>
   </div>
   <div id="d-archive" style="display:flex;gap:12px;flex-wrap:wrap"></div>
@@ -146,8 +146,8 @@
 <section class="reveal" style="max-width:1120px;margin:0 auto;padding:20px 32px 70px">
   <div style="background:var(--aid-blue);border:2px solid var(--aid-ink);border-radius:22px;padding:56px 46px;box-shadow:12px 14px 0 var(--aid-ink);position:relative;overflow:hidden;text-align:center">
     <div style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--aid-lime);margin-bottom:16px">That's a wrap</div>
-    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(32px,4.4vw,52px);line-height:1.02;color:#fff;margin:0 auto 14px;max-width:660px" id="wrap-title">Hope this was useful — now go make something move.</h2>
-    <p style="color:rgba(255,255,255,.82);font-size:16px;line-height:1.55;margin:0 auto;max-width:520px">Spot something worth testing? Flag it in the channel.<br>See you in two weeks.</p>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(32px,4.4vw,52px);line-height:1.02;color:#fff;margin:0 auto 14px;max-width:660px" id="wrap-title">Spot something worth testing?<br>Share it in the channel!</h2>
+    <p style="color:rgba(255,255,255,.82);font-size:16px;line-height:1.55;margin:0 auto;max-width:520px">Hope this was useful.<br>See you in two weeks✨</p>
     <img id="dec-signoff-1" src="../assets/stickers/thumbs-up-green-blue.png" alt="" style="position:absolute;left:44px;bottom:15px;width:104px;--r:-9deg;animation:floaty 6s ease-in-out infinite;filter:drop-shadow(0 10px 16px rgba(0,0,0,.28))">
     <img id="dec-signoff-2" src="../assets/stickers/rainbow.png" alt="" style="position:absolute;right:38px;top:34px;width:120px;--r:7deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.2))">
   </div>
@@ -459,12 +459,13 @@
     window.addEventListener("resize", function(){ var a=filter.querySelector(".flt.active"); if(a) moveInd(a); });
   }
 
-  // Sticker entrance (exclude platform icons)
-  var stickers=[].slice.call(document.querySelectorAll("img")).filter(function(i){ return !i.classList.contains("pf-icon"); });
+  // Sticker entrance (exclude platform icons and always-static stickers like Past editions)
+  var stickers=[].slice.call(document.querySelectorAll("img")).filter(function(i){ return !i.classList.contains("pf-icon") && !i.classList.contains("stk-static"); });
   if(reduce || !("IntersectionObserver" in window)){ stickers.forEach(function(i){ i.classList.add("stk-in","shown"); }); }
   else {
     stickers.forEach(function(i){ i.classList.add("stk-in"); });
-    var so=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ var t=e.target; setTimeout(function(){t.classList.add("shown");}, Math.random()*160); so.unobserve(t);} }); },{threshold:.15});
+    // Wide, randomized delay so stickers in view pop in one-by-one (chaotic), not all at once.
+    var so=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ var t=e.target; setTimeout(function(){t.classList.add("shown");}, 120 + Math.random()*1000); so.unobserve(t);} }); },{threshold:.15});
     stickers.forEach(function(i){ so.observe(i); });
   }
 
@@ -478,13 +479,20 @@
     if(!node) return;
     var segs=[]; [].forEach.call(node.childNodes, function(n){
       if(n.nodeType===3) segs.push({t:n.nodeValue,s:null,tag:null});
-      else if(n.nodeType===1) segs.push({t:n.textContent,s:n.getAttribute("style"),tag:n.tagName});
+      else if(n.nodeType===1){
+        if(n.tagName==="BR") segs.push({br:true});
+        else segs.push({t:n.textContent,s:n.getAttribute("style"),tag:n.tagName});
+      }
     });
+    // Reserve the fully-laid-out height BEFORE clearing so the block doesn't grow
+    // line-by-line while typing (the phrase wraps to 2 lines).
+    node.style.minHeight = node.offsetHeight + "px";
     node.textContent=""; node.classList.add("tw-caret");
     var si=0,ci=0,cur=null;
     (function step(){
       if(si>=segs.length){ node.classList.remove("tw-caret"); return; }
       var seg=segs[si];
+      if(seg.br){ node.appendChild(document.createElement("br")); si++; ci=0; cur=null; return step(); }
       if(ci===0){ if(seg.s!==null){ cur=document.createElement(seg.tag||"span"); if(seg.s) cur.setAttribute("style",seg.s); node.appendChild(cur);} else cur=null; }
       var ch=seg.t.charAt(ci); if(cur) cur.textContent+=ch; else node.appendChild(document.createTextNode(ch));
       ci++; if(ci>=seg.t.length){ si++; ci=0; }
@@ -492,7 +500,7 @@
     })();
   }
   if(!reduce){
-    typewrite(document.getElementById("hero-title"));
+    // Typewriter runs only on the bottom sign-off heading (the hero shows immediately).
     var wrap=document.getElementById("wrap-title");
     if(wrap && "IntersectionObserver" in window){ var did=false; var wo=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && !did){ did=true; typewrite(wrap); wo.unobserve(e.target);} }); },{threshold:.4}); wo.observe(wrap); }
   }
