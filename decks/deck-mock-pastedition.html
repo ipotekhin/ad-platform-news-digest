@@ -83,10 +83,13 @@
     body section,body main,body header>div,footer>div{padding-left:20px!important;padding-right:20px!important}
     #d-tldr-wrap{padding:26px 22px!important}
     .signoff-card{padding:40px 26px!important}
-    /* Header: compact the filter and allow it to wrap under the brand on very
-       narrow phones so it never runs off the right edge. */
-    header>div{flex-wrap:wrap;row-gap:10px}
-    #news-filter .flt{padding:6px 9px;letter-spacing:.02em}
+    /* Header: keep the brand on the LEFT and the filter on the RIGHT in one row
+       (like desktop). Compact the filter and let the brand wrap to 2–3 lines so
+       both fit on narrow phones without running off the edge. */
+    header>div>div:first-child{min-width:0}
+    header>div>div:first-child span:last-child{font-size:11px;letter-spacing:.09em;line-height:1.25}
+    #news-filter{flex:none}
+    #news-filter .flt{padding:6px 8px;letter-spacing:.02em}
   }
 </style>
 </head>
