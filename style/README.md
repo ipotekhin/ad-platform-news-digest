@@ -19,6 +19,24 @@ both sit one level below repo root). Don't add anything beyond fonts + local sti
 assets — no analytics or other third-party JS. There is no dark-mode variant; this
 skin is a light/cream editorial look by design.
 
+### Interactive & responsive (built into the template)
+
+These are template chrome — they work automatically for every edition, no
+deck-data changes needed:
+
+- **Team filter.** The header holds an **All news / Search / Social** segmented
+  control. Selecting a team shows/hides platform sections and recomputes the header
+  stats. Teams are derived from the platform name (`teamOf`): Meta / TikTok / LinkedIn
+  → *Social*, everything else (Google Ads, Microsoft/Bing) → *Search*.
+- **Motion.** A typewriter reveal on the sign-off heading, sticker entrance
+  (fade + scale, staggered on scroll), and section reveals. Platform-heading icons
+  (`.pf-icon`) and the Past-editions sticker (`.stk-static`) are excluded from the
+  entrance; decorative stickers carry `stk-in` in the markup so they never flash on
+  load. All motion is disabled under `prefers-reduced-motion`.
+- **Mobile.** A `≤640px` media query hides the large floating stickers (they overlap
+  text on narrow screens), centers the footer, keeps the brand left / filter right,
+  and shrinks the sign-off heading. Desktop (≥641px) is unaffected.
+
 ### Stickers (randomized per edition)
 
 Sticker PNGs live in `assets/stickers/`. Each edition shuffles which PNG lands in each
