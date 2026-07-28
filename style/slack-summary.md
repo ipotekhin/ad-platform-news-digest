@@ -44,19 +44,20 @@ Rules:
 - Date range: short month names, no year — e.g. `Jul 6–22`.
 - **Deep-linked deck URL:** append `?team=search` or `?team=social` to the deck URL so the
   link opens on that team's filtered view — e.g.
-  `…/decks/deck-2026-07-24.html?team=social`. (The `?team=` param is the only param — no
+  `…/decks/deck-YYYY-MM-DD.html?team=social`. (The `?team=` param is the only param — no
   tracking params.)
 - **Rotate** the wording each edition (options below) so it never reads canned, and keep
   the Search and Social messages worded differently from each other.
 
 ## Wording options (rotate per edition)
 
-**[GREETING]** (optionally address the team — Search or Social — to make the hook fit)
-- `Hi team! Hope your week is going well 🤗`
-- `Hey Search team! Hope you're having a great day 🤗` (Search) / `Hey Social team! …` (Social)
-- `Hi everyone! Hope you're having a productive but not-too-busy week 😄`
-- `Hey everyone! Hope your week is treating you well ☀️`
-- `Happy [Weekday], team! Hope you're having a good one ✨`
+**[GREETING]** — **always address the message's own team by name** (`Search team` /
+`Social team`), so both messages read as tailored, never generic. Both messages must use
+the team-named form; only vary the rest of the wording between them.
+- `Hi Search team! Hope your week is going well 🤗`  ·  `Hi Social team! Hope your week is going well 🤗`
+- `Hey Search team! Hope you're having a great day 🤗`  ·  `Hey Social team! Hope you're having a great day 🤗`
+- `Happy [Weekday], Search team! Hope you're having a good one ✨`  ·  `Happy [Weekday], Social team! …`
+- `Hey Search team! Hope your week is treating you well ☀️`  ·  `Hey Social team! Hope your week is treating you well ☀️`
 
 **[DIGEST INTRO]** (must contain the date range)
 - `It's time for another round of *Ad Platform Updates*, covering *[DATE RANGE]*.`

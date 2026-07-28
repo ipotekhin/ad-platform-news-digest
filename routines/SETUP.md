@@ -82,13 +82,16 @@ commit, push, open a pull request into main and merge it.
 1. **Manually run Routine 1 once.** Then inspect `data/updates.json` — check items are
    real (last-2-weeks window), deduped, ad-account-relevant, with a clear title and a
    1–3 sentence summary written from the article body.
-2. **Manually run Routine 2 once.** It builds the deck and sends the Slack message to
-   the configured target — currently **Ivan's DM** (`U065VBRHYV7`). Confirm the deck
-   renders, the Pages link resolves, and the DM looks right. Items are marked
-   `presented` only after the delivery succeeds.
-3. Once both look right, leave them on the weekly / bi-weekly schedule. To send to a
-   team channel later, change the `channel_id` in `routine-2` Open config — no other
-   edits needed.
+2. **Manually run Routine 2 once.** It builds one deck and sends **up to two Slack
+   messages — one per team** (Search / Social) to the targets in `routine-2` Open config
+   — **currently both = Ivan's DM** (`U065VBRHYV7`) for testing. Each message links the
+   deck with `?team=search|social` so it opens on that team's filtered view. Confirm the
+   deck renders, the Pages links resolve on the right filter, and both DMs look right. A
+   team with no items sends no message. Items are marked `presented` per team, only after
+   that team's delivery succeeds.
+3. Once both look right, leave them on the weekly / bi-weekly schedule. To send to the
+   real team channels later, set `search_channel_id` / `social_channel_id` in `routine-2`
+   Open config — no other edits needed.
 
 ## 6. Branch / merge workflow (main is the mainline)
 
