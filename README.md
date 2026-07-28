@@ -102,11 +102,18 @@ the semantic dedup itself.
 The connected Slack MCP has **no file-upload tool**, so the deck is **not** attached.
 Routine 2 posts a short text summary of the top items with the **GitHub Pages link**
 embedded in the message:
+- **Two team channels.** Each edition is announced to **two audiences** — **Search**
+  (Google Ads + Microsoft/Bing) and **Social** (Meta + TikTok + LinkedIn) — as a separate
+  message adapted to that team. A team with no items this edition gets no message.
+- **Deep-linked filter.** Both messages link to the *same* deck, but with `?team=search`
+  / `?team=social` appended so the page opens **pre-filtered to that team's view**; the
+  reader can switch to *All news* in the header.
 - **GitHub Pages** — enable once in *Settings → Pages* (serve `main` / root); deck URL is
   `https://ipotekhin.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html`.
 - Delivery is **GitHub Pages only** — no Slack Canvas.
-- The Slack message posts **from Ivan's own identity** (the connector is authorized under
-  his account), not a separate bot.
+- The Slack messages post **from Ivan's own identity** (the connector is authorized under
+  his account), not a separate bot. Channel IDs live in `routines/routine-2-presentation.md`
+  → Open config (currently both = Ivan's DM for testing).
 
 Deck format is a single HTML file per edition, still portable and prints cleanly to
 PDF. It is not zero-request: the "Zine" skin loads Playfair Display / Courier Prime

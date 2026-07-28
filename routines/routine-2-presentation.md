@@ -17,9 +17,10 @@ You are Routine 2 (Presentation) for the ad-platform-news-digest repo.
 Read routines/routine-2-presentation.md and follow it exactly. First apply the step-0
 cadence gate and the empty-edition guard — if either says stop, do nothing. Otherwise
 branch from main to a claude/present-run branch, expire stale backlog, select with the
-per-platform caps, build the deck, deliver the Slack message to the target in the doc's
-Open config, then set presented:true on the included items, DM Ivan the backlog status
-note, commit, push, open a pull request into main and merge it.
+per-platform caps, build the deck, deliver the per-team Slack messages (Search / Social,
+each with its own `?team=` deep link) to the targets in the doc's Open config, then set
+presented:true on the delivered items, DM Ivan the backlog status note, commit, push,
+open a pull request into main and merge it.
 ```
 
 The Slack destination lives in the doc (Open config → currently Ivan's DM), so the
@@ -100,24 +101,40 @@ The digest serves two audiences — **Search** (Google Ads, Microsoft/Bing) and 
   `routines/SETUP.md`). Give Pages a moment to build before posting the link.
 - This is the **only** delivery format. Do not use Slack Canvas.
 
-### 6. Post to Slack
-- Compose the message by following **`style/slack-summary.md`** exactly (greeting →
-  digest intro with the date range → highlights intro → 3–4 platform lines → digest
-  summary → link line with the deck URL). Rotate the wording per that file; standard
-  Slack formatting (`*bold*`, `:emoji:`).
-- **Delivery target (current):** send via `slack_send_message` to **Ivan's DM** —
-  `channel_id = U065VBRHYV7`. This is the configured destination; it posts from Ivan's
-  own Slack identity. To change where the digest goes (e.g. a team channel), edit the
-  `channel_id` in this line — nothing else changes.
-- **Verify it succeeded** (tool returned ok / message link). If it failed, STOP —
-  do not mark anything presented; leave the items for the next run.
+### 6. Post to Slack — one message per team (Search / Social)
+The digest is announced to **two teams**, each in its own channel, with a message adapted
+to that team and a link that opens the deck **already filtered to their view**. The deck
+itself is a single file with all platforms; the two links only differ by a `?team=` param.
+
+- **Split the included (capped) items into two teams by platform:**
+  - **Search** = Google Ads + Microsoft/Bing.
+  - **Social** = Meta + TikTok + LinkedIn.
+- **For each team that has at least one included item**, compose a message by following
+  **`style/slack-summary.md`** exactly (greeting → digest intro with the date range →
+  highlights intro → 3–4 highlight lines → digest summary → link). The highlights and the
+  summary count use **only that team's platforms**. Rotate the wording per that file;
+  standard Slack formatting (`*bold*`, `:emoji:`).
+- **Deep-linked deck URL:** append `?team=search` or `?team=social` to the deck URL so the
+  link opens straight to that team's filtered view (readers can switch to *All news* in the
+  header). E.g. `https://ipotekhin.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html?team=social`.
+- **Send** each team's message via `slack_send_message` to that team's channel from Open
+  config (`search_channel_id` / `social_channel_id`). Posts from Ivan's own Slack identity.
+- **Empty team = skip:** if a team has **no** included items this edition, **do not post to
+  that team's channel** — its digest simply doesn't happen this time. (If *both* teams are
+  empty, the run already stopped at step 2a.)
+- **Verify each send** (tool returned ok / message link). If a team's send fails, leave
+  **that team's** items un-presented for the next run; a success for the other team still
+  counts. Only mark presented (step 7) for items whose team message was confirmed.
 
 ### 7. Mark presented (only after success)
-- For every item included in the deck, set `presented: true` in `data/updates.json`.
-  (Items marked `expired: true` in step 1 keep that flag.)
-- **Append this edition to `data/editions.json`** so the next run lists it under Past
-  editions: `{ "no": <n>, "date": "YYYY-MM-DD", "period_label": "<period_label>",
-  "url": "deck-YYYY-MM-DD.html" }` (`no` = previous max + 1).
+- For every item **whose team message was confirmed delivered** in step 6, set
+  `presented: true` in `data/updates.json`. Items in a team whose send failed — or a team
+  skipped for being empty — stay `presented:false` for the next run. (Items marked
+  `expired: true` in step 1 keep that flag.)
+- **Append this edition to `data/editions.json`** (once at least one team's message was
+  delivered) so the next run lists it under Past editions: `{ "no": <n>, "date":
+  "YYYY-MM-DD", "period_label": "<period_label>", "url": "deck-YYYY-MM-DD.html" }`
+  (`no` = previous max + 1).
 - Commit `data/updates.json` (presented + expired flags) + `data/editions.json` +
   `decks/deck-YYYY-MM-DD.html` with a message like `present: deck YYYY-MM-DD, M items -> Slack`.
 - Push to `claude/present-run`, then open a pull request into `main` and merge it
@@ -137,8 +154,15 @@ is enough. Keep it compact; this note is for Ivan only, not the teams.
 ---
 
 ## Open config (single source of truth — edit here, routines pick it up)
-- **Slack delivery target:** Ivan's DM, `channel_id = U065VBRHYV7` (step 6). Change this
-  value here to redirect the digest to a channel later.
+- **Slack delivery targets (two teams):** `search_channel_id` and `social_channel_id`
+  (step 6). **Currently both = Ivan's DM `U065VBRHYV7` for testing** — change each to the
+  real team channel when ready (nothing else changes). Team→platform mapping:
+  **Search** = Google Ads + Microsoft/Bing · **Social** = Meta + TikTok + LinkedIn.
+- **Deep-linked digest URL:** each team message links to the *same* deck with
+  `?team=search` / `?team=social` appended, so it opens on that team's filtered view; the
+  reader can switch to *All news* in the header (step 6).
+- **Empty team:** a team with no items this edition gets **no post** (step 6). If both
+  teams are empty, no edition at all (step 2a).
 - **Delivery mechanism:** GitHub Pages only (no Slack Canvas).
 - **Deck format:** the "Zine" HTML template in `style/` (Google Fonts + local sticker
   PNGs). PPTX not used.

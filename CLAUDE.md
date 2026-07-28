@@ -16,14 +16,17 @@ pointers, and every decision lives in these repo files. All tuning happens by ed
 the repo (via chat) — never by rewriting the routine prompts:
 - **Sources** → `sources.yaml`   ·   **Relevance** → `criteria.md`
 - **Design** → `style/deck-template.html` (+ `assets/stickers/`)
-- **Slack message** → `style/slack-summary.md`   ·   **Slack destination / config** →
-  `routines/routine-2-presentation.md` → Open config
+- **Slack message** → `style/slack-summary.md` (one message **per team** — Search /
+  Social)   ·   **Slack destinations / config** → `routines/routine-2-presentation.md` →
+  Open config (`search_channel_id` / `social_channel_id`; each message deep-links the deck
+  with `?team=search|social` to open on that team's filtered view)
 - **Schedule** → set manually in the routine UI; it does not affect any logic here.
 Add a source, change the look, or redirect Slack by editing these files — the routines
 keep working unchanged.
 
 ## Hard rules
-- `presented` is set **only after** a confirmed Slack post (Routine 2). Never before.
+- `presented` is set **only after** a confirmed Slack post (Routine 2), **per team** —
+  items in a team whose message failed or was skipped stay un-presented. Never before.
 - Routine 1 **never** builds a deck; Routine 2 **never** collects.
 - Dedup: Layer 1 = canonical-URL exact match (`sha1(canonical_url)[:12]`); Layer 2 =
   LLM semantic match, preferring official sources over aggregators.

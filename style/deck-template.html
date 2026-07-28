@@ -429,10 +429,21 @@
       var su=document.getElementById('stat-updates'); if(su) su.textContent=items;
       var sp=document.getElementById('stat-platforms'); if(sp) sp.textContent=vis.length;
     }
-    btns.forEach(function(b){ b.addEventListener("click", function(){
-      btns.forEach(function(x){x.classList.remove("active");}); b.classList.add("active"); moveInd(b); apply(b.getAttribute("data-team"));
-    });});
-    requestAnimationFrame(function(){ var a=filter.querySelector(".flt.active")||btns[0]; if(a) moveInd(a); });
+    function btnFor(team){ for(var i=0;i<btns.length;i++){ if(btns[i].getAttribute("data-team")===team) return btns[i]; } return null; }
+    function select(team, updateURL){
+      var b=btnFor(team); if(!b) return;
+      btns.forEach(function(x){x.classList.remove("active");}); b.classList.add("active"); moveInd(b); apply(team);
+      if(updateURL && window.history && history.replaceState){
+        try{ var u=new URL(window.location.href); if(team==="all"){ u.searchParams.delete("team"); } else { u.searchParams.set("team", team); } history.replaceState(null,"",u.toString()); }catch(e){}
+      }
+    }
+    btns.forEach(function(b){ b.addEventListener("click", function(){ select(b.getAttribute("data-team"), true); }); });
+    // Deep link: ?team=search|social (|all) opens the deck with that filter pre-applied.
+    // Routine 2 uses this to send each team a link straight to its own view; readers
+    // can switch to All news in the header. Unknown/absent value falls back to "all".
+    var want="all";
+    try{ var q=new URLSearchParams(window.location.search).get("team"); if(q){ q=q.toLowerCase(); if(q==="search"||q==="social"||q==="all"){ want=q; } } }catch(e){}
+    requestAnimationFrame(function(){ select(want, false); });
     window.addEventListener("resize", function(){ var a=filter.querySelector(".flt.active"); if(a) moveInd(a); });
   }
 

@@ -87,11 +87,16 @@ R1 applies it loosely (lean-include); R2 applies it strictly.
 - **Past editions:** pass prior editions as `archive` in deck-data (from
   `data/editions.json`), url = **bare `deck-YYYY-MM-DD.html`** (sibling). After a
   successful post, append the new edition to `data/editions.json`.
-- **Slack:** compose per `style/slack-summary.md` (greeting → intro w/ date range →
-  3–4 highlights → summary → link), send via `slack_send_message` to **Ivan's DM
-  `channel_id = U065VBRHYV7`** (posts as Ivan). Change the channel_id in `routine-2`
-  Open config to redirect later.
-- **presented:true** is set ONLY after a confirmed delivery; then commit + PR + merge.
+- **Slack (two teams):** compose per `style/slack-summary.md` (greeting → intro w/ date
+  range → 3–4 highlights → summary → link), and send **one message per team** via
+  `slack_send_message`: **Search** (Google Ads + Bing) → `search_channel_id`, **Social**
+  (Meta + TikTok + LinkedIn) → `social_channel_id`. Each message covers only its team's
+  platforms and links the deck with `?team=search|social` appended (opens on that team's
+  filtered view; reader can switch to *All news*). A team with no items gets no message.
+  Channels are in `routine-2` Open config — **currently both = Ivan's DM `U065VBRHYV7`
+  for testing**; posts as Ivan.
+- **presented:true** is set ONLY after a confirmed delivery, **per team** (a team whose
+  send failed/was skipped keeps its items un-presented); then commit + PR + merge.
 
 ## 6. Deck design (`style/deck-template.html`, "Zine")
 - Data-driven: only the `#deck-data` JSON changes per edition. Loads Google Fonts
@@ -106,6 +111,14 @@ R1 applies it loosely (lean-include); R2 applies it strictly.
   never use paperclip. Positions/sizes fixed so nothing shifts. Documented in
   `style/README.md`. (Open question: whether folder-star should stay in the wrap block or
   be removed entirely — currently kept per Ivan's wrap allow-list.)
+- **Interactive + responsive (template chrome, edition-agnostic):** a header **All news /
+  Search / Social** filter (shows/hides platform sections + recomputes stats; team from
+  `teamOf` — Meta/TikTok/LinkedIn = Social, else Search); a **deep link** `?team=search|
+  social` opens the deck pre-filtered (Routine 2 sends each team its own link); motion
+  (sign-off typewriter, staggered sticker entrance, section reveals) with
+  `prefers-reduced-motion` fallback; decorative stickers carry `stk-in` in the markup so
+  they never flash on load; a `≤640px` mobile pass (hide big floating stickers, center
+  footer, brand-left/filter-right header, smaller sign-off). Desktop ≥641px unaffected.
 
 ## 7. Schedule
 - Routine 1: weekly, e.g. Monday `0 7 * * 1`.
@@ -130,10 +143,14 @@ Schedules are set manually in the routine UI and do not affect any logic.
   guardrail (#22).
 
 ## 10. Current state & next step
-- `data/updates.json`: 14 items (12 `presented:true`, 2 `false`); `editions.json`: edition 1;
-  `decks/deck-2026-07-24.html` live; a temporary `decks/deck-mock-pastedition.html` exists
-  only to test the Past-editions link (to be removed in cleanup).
-- **PENDING — production cleanup** (Ivan to confirm): reset for the first real weekly run —
-  `updates.json → []`, `editions.json → []`, remove the test/mocks decks, reset
-  `state.json` `last_collected → null`. Then the system runs hands-off on schedule.
+- **Pre-test reset done** (for testing the two-team Slack flow): both test decks removed
+  (`decks/` is empty bar `.gitkeep`), `data/updates.json` = the **14 collected items with
+  `presented:false`** (news kept so there's material to present), `data/editions.json = []`.
+  `state.json` left as-is (informational). Both team channels currently point to Ivan's DM.
+- **Next — test Routine 2** (deep-link + two DMs): a run should build a fresh deck, DM Ivan
+  a **Search** message (Google Ads, capped 6–8, `?team=search`) and a **Social** message
+  (Meta + LinkedIn, `?team=social`), mark those items presented, register edition 1.
+- **Then — production cleanup** (separate Ivan go-ahead): full reset for the first real
+  run — `updates.json → []`, `editions.json → []`, remove the test deck, reset `state.json`
+  `last_collected → null`, and swap the two channel IDs to the real Search/Social channels.
 - Open question: folder-star sticker (keep in wrap block vs remove entirely).
