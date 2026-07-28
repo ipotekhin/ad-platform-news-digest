@@ -1,11 +1,20 @@
 # Slack message format (Routine 2 output)
 
-> Routine 2 sends this as a single message via `slack_send_message` to the target in
-> `routines/routine-2-presentation.md` → Open config (currently **Ivan's DM**,
-> `U065VBRHYV7`), from Ivan's own Slack identity. The deck is **linked**, never
+> Routine 2 sends **up to two messages per edition — one per team** — via
+> `slack_send_message`, from Ivan's own Slack identity. The deck is **linked**, never
 > attached. Use Slack formatting: `*bold*` and `:emoji:` shortcodes.
 >
-> **If the edition is empty (no qualifying updates), send nothing at all.**
+> - **Search** team (Google Ads + Microsoft/Bing) → `search_channel_id`.
+> - **Social** team (Meta + TikTok + LinkedIn) → `social_channel_id`.
+> - Targets live in `routines/routine-2-presentation.md` → Open config. **Currently both
+>   = Ivan's DM `U065VBRHYV7` for testing.**
+>
+> Each message covers **only its own team's platforms** (highlights + summary count), and
+> its link opens the deck **pre-filtered to that team** via a `?team=` param (see the link
+> line below). Build each message from the same structure/wording options below, but keep
+> the two messages independently randomized so they don't read identically.
+>
+> **Empty team → no message for that team.** If the whole edition is empty, send nothing.
 
 ## Structure
 
@@ -21,23 +30,30 @@
 [EMOJI] *[PLATFORM]* — [KEY UPDATE]
 [EMOJI] *[PLATFORM]* — [KEY UPDATE]   ← drop this line if only 3 highlights
 
-[DIGEST SUMMARY — total update count + platforms]
+[DIGEST SUMMARY — this team's update count + platforms]
 
-[LINK EMOJI] [LINK CTA]: <DECK_URL>
+[LINK EMOJI] [LINK CTA]: <DECK_URL>?team=<search|social>
 ```
 
 Rules:
-- Pick the **top 3–4** items by impact (high first) for the highlight lines.
-- `[DIGEST SUMMARY]` counts **all** updates in the deck, not just the highlighted ones.
+- **Per team:** highlights and the summary use **only this team's platforms** (Search =
+  Google Ads + Microsoft/Bing · Social = Meta + TikTok + LinkedIn).
+- Pick the **top 3–4** items by impact (high first) for the highlight lines — from this
+  team only (so a team with few items may have just 1–2 highlight lines).
+- `[DIGEST SUMMARY]` counts **this team's** updates in the deck, not the other team's.
 - Date range: short month names, no year — e.g. `Jul 6–22`.
-- Embed the deck URL directly (no tracking params).
-- **Rotate** the wording each edition (options below) so it never reads canned.
+- **Deep-linked deck URL:** append `?team=search` or `?team=social` to the deck URL so the
+  link opens on that team's filtered view — e.g.
+  `…/decks/deck-2026-07-24.html?team=social`. (The `?team=` param is the only param — no
+  tracking params.)
+- **Rotate** the wording each edition (options below) so it never reads canned, and keep
+  the Search and Social messages worded differently from each other.
 
 ## Wording options (rotate per edition)
 
-**[GREETING]**
+**[GREETING]** (optionally address the team — Search or Social — to make the hook fit)
 - `Hi team! Hope your week is going well 🤗`
-- `Hey team! Hope you're having a great day 🤗`
+- `Hey Search team! Hope you're having a great day 🤗` (Search) / `Hey Social team! …` (Social)
 - `Hi everyone! Hope you're having a productive but not-too-busy week 😄`
 - `Hey everyone! Hope your week is treating you well ☀️`
 - `Happy [Weekday], team! Hope you're having a good one ✨`
@@ -80,10 +96,12 @@ Rules:
 - `Take a look at the full edition here`
 - `Read the full digest here`
 
-## Worked example (edition Jul 6–22, 2026)
+## Worked examples (edition Jul 6–22, 2026) — one per team
+
+**Search channel** (Google Ads + Microsoft/Bing), link `?team=search`:
 
 ```
-Hey hey, team! Hope your week is going well 🤗
+Hey Search team! Hope your week is going well 🤗
 
 It's time for another round of *Ad Platform Updates*, covering *Jul 6–22*.
 
@@ -92,9 +110,27 @@ A few updates worth keeping on your radar:
 :mag: *Google Ads* — Local Services Ads now run inside Performance Max
 :dart: *Google Ads* — Google drops the $50K spend gate on Lead Form assets
 :bar_chart: *Google Ads* — Bulk-link multiple accounts to one GA4 property
+:gear: *Microsoft* — UET consent-mode signals expand in the UI
+
+This edition includes *10 updates* across Google Ads and Microsoft.
+
+:point_right: The full overview is available here: <DECK_URL>?team=search
+```
+
+**Social channel** (Meta + TikTok + LinkedIn), link `?team=social`:
+
+```
+Hey Social team! Hope you're having a great day 🤗
+
+A fresh batch of *Ad Platform Updates* has landed, covering *Jul 6–22*.
+
+Here's what stood out this time:
+
 :briefcase: *LinkedIn* — AI creative tools come to Campaign Manager
 
-We've included *11 updates* in total across Google Ads and LinkedIn.
+This edition includes *1 update* from LinkedIn.
 
-:point_right: The full overview is available here: <DECK_URL>
+:link: You can find the full digest here: <DECK_URL>?team=social
 ```
+
+(If a team has no items this edition, that team's message is simply not sent.)

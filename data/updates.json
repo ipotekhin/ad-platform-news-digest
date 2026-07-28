@@ -11,7 +11,7 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "cafc8d9b8090",
@@ -25,7 +25,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "3c830d030cf8",
@@ -39,7 +39,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "50e3350307a4",
@@ -53,7 +53,7 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "afedba251c70",
@@ -67,7 +67,7 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "930daa02face",
@@ -81,7 +81,7 @@
     "category": "api",
     "impact": "medium",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "42e61c7fefd7",
@@ -95,7 +95,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "76895fa85c97",
@@ -123,7 +123,7 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "91380e539f90",
@@ -137,7 +137,7 @@
     "category": "deprecation",
     "impact": "medium",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "fb2cdb044197",
@@ -165,7 +165,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "cd54bae072e2",
@@ -179,7 +179,7 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "578a67149a79",
@@ -193,7 +193,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": true
+    "presented": false
   },
   {
     "id": "56a915240e35",
