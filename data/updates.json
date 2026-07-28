@@ -11,7 +11,7 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "cafc8d9b8090",
@@ -39,7 +39,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "50e3350307a4",
@@ -53,7 +53,7 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "afedba251c70",
@@ -67,7 +67,7 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "930daa02face",
@@ -137,7 +137,7 @@
     "category": "deprecation",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "fb2cdb044197",
@@ -193,7 +193,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "56a915240e35",
@@ -249,7 +249,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "d8c3c1cb1ade",
@@ -263,6 +263,6 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   }
 ]
