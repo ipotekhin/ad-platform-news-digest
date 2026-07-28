@@ -51,13 +51,21 @@ Rules:
 
 ## Wording options (rotate per edition)
 
-**[GREETING]** — **always address the message's own team by name** (`Search team` /
-`Social team`), so both messages read as tailored, never generic. Both messages must use
-the team-named form; only vary the rest of the wording between them.
+**[GREETING]** — pick one at **random** each time (keep it varied). The pool has **both**
+common greetings and **team-named** ones; for each team, the team-named variant swaps in
+its own name (`Search team` / `Social team`). Rotate freely across both kinds — just make
+sure the team-named options below stay available for each team so it's not always generic.
+
+_Common_ (either team):
+- `Hi team! Hope your week is going well 🤗`
+- `Hey everyone! Hope your week is treating you well ☀️`
+- `Hi everyone! Hope you're having a productive but not-too-busy week 😄`
+- `Happy [Weekday], team! Hope you're having a good one ✨`
+
+_Team-named_ (use the message's own team — Search or Social):
 - `Hi Search team! Hope your week is going well 🤗`  ·  `Hi Social team! Hope your week is going well 🤗`
 - `Hey Search team! Hope you're having a great day 🤗`  ·  `Hey Social team! Hope you're having a great day 🤗`
 - `Happy [Weekday], Search team! Hope you're having a good one ✨`  ·  `Happy [Weekday], Social team! …`
-- `Hey Search team! Hope your week is treating you well ☀️`  ·  `Hey Social team! Hope your week is treating you well ☀️`
 
 **[DIGEST INTRO]** (must contain the date range)
 - `It's time for another round of *Ad Platform Updates*, covering *[DATE RANGE]*.`
