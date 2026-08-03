@@ -95,7 +95,7 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "7b0511f33213",
@@ -165,7 +165,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "930daa02face",
@@ -277,7 +277,7 @@
     "category": "beta",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "6cb91e8d28b5",
@@ -319,7 +319,7 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "5706ba0bfd9b",
@@ -333,7 +333,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "f8f7c36426bc",
@@ -347,7 +347,7 @@
     "category": "other",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "d8c3c1cb1ade",
@@ -361,7 +361,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "ab269450f871",
@@ -375,7 +375,7 @@
     "category": "deprecation",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "94496a01bf52",
@@ -389,7 +389,7 @@
     "category": "deprecation",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "07271d3b1fef",
@@ -403,7 +403,7 @@
     "category": "api",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "e4d894fc835a",
@@ -417,7 +417,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "812172e8974c",
@@ -431,7 +431,7 @@
     "category": "measurement",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "2faaff96a5cb",
@@ -445,6 +445,6 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   }
 ]
