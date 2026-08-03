@@ -32,9 +32,11 @@ keep working unchanged.
   LLM semantic match, preferring official sources over aggregators.
 - Only advance a source's `last_collected` in `state.json` if you actually read it.
 - The deck (`style/deck-template.html`) loads Google Fonts (Playfair Display, Courier
-  Prime) from the Google Fonts CDN and reads sticker PNGs from `assets/stickers/` —
-  these are the only external/local requests it makes. Don't add anything beyond that
-  (no analytics, no other third-party JS/CSS).
+  Prime) from the Google Fonts CDN, reads sticker PNGs from `assets/stickers/`, and loads
+  **Google Tag Manager** (container `GTM-M2BTR42L`) for analytics — pushing a `link_click`
+  event to the dataLayer on every `<a>` click (for GTM triggers). These are the only
+  external requests. Don't add **other** analytics or third-party JS/CSS beyond the GTM
+  container. (GTM lives in every deck because it's in the template; keep it there.)
 
 ## Data files (don't hand-corrupt)
 - `data/updates.json` — array of update records (see README schema).

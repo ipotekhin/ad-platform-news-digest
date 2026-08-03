@@ -69,6 +69,16 @@ Media Today, Bing, etc.):
   body text for the title + summary.
 - If a headline has no date on the index, still open the article to get its real date
   before applying the window.
+- **`platform: mixed` sources (PPC Land tag pages).** These aggregate several platforms
+  on one page, so there is no single source platform. For each in-window article: open
+  it, decide relevance per `criteria.md`, and **determine which platform it's about**;
+  keep it **only** if that platform is in our pipeline **and** within the source's
+  `scope` note — `ppcland_search` → **Google Ads / Microsoft (Bing)** only,
+  `ppcland_social` → **Meta / TikTok / LinkedIn** only. Set the item's `platform` to that
+  specific value (not `mixed`). Drop everything else the page carries (SEO / zero-click /
+  organic-social / creator / consumer stories) — these pages run heavy on non-ads news,
+  so filter hard. Dedup (Layers 1–2) still applies, and since these are aggregators,
+  prefer an official post as canonical when the same story is already stored.
 
 **`cadence: roundup`** (periodic digest that surfaces items late — SocialBee):
 - Do **not** apply the strict 2-week window, and do **not** date items by the underlying
