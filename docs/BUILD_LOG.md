@@ -156,14 +156,15 @@ Schedules are set manually in the routine UI and do not affect any logic.
   guardrail (#22).
 
 ## 10. Current state & next step
-- **Pre-test reset done** (for testing the two-team Slack flow): both test decks removed
-  (`decks/` is empty bar `.gitkeep`), `data/updates.json` = the **14 collected items with
-  `presented:false`** (news kept so there's material to present), `data/editions.json = []`.
-  `state.json` left as-is (informational). Both team channels currently point to Ivan's DM.
-- **Next — test Routine 2** (deep-link + two DMs): a run should build a fresh deck, DM Ivan
-  a **Search** message (Google Ads, capped 6–8, `?team=search`) and a **Social** message
-  (Meta + LinkedIn, `?team=social`), mark those items presented, register edition 1.
-- **Then — production cleanup** (separate Ivan go-ahead): full reset for the first real
-  run — `updates.json → []`, `editions.json → []`, remove the test deck, reset `state.json`
-  `last_collected → null`, and swap the two channel IDs to the real Search/Social channels.
+- **Production reset done (2026-08-03) — repo is a clean slate for the release run.**
+  `data/updates.json = []`, `data/editions.json = []`, `data/state.json` all 12 sources
+  `last_collected: null`, `decks/` empty (bar `.gitkeep`). All test artifacts removed.
+- **Release run (Ivan triggers):** (1) **Routine 1** collects fresh over the fixed 2-week
+  window across all 12 sources (incl. the two new PPC Land tags) → appends to
+  `updates.json`. (2) **Routine 2** builds edition 1, and posts one message per team —
+  **Search** (`?team=search`) + **Social** (`?team=social`) — each to its channel in Open
+  config. **Empty team → no message.** Marks presented per team, registers edition 1.
+- **Slack channels:** both `search_channel_id` / `social_channel_id` still = Ivan's DM
+  `U065VBRHYV7`. Swap to the real team channels in `routine-2` Open config when ready — no
+  other edits needed.
 - Open question: folder-star sticker (keep in wrap block vs remove entirely).
