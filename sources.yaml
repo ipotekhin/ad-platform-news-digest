@@ -34,6 +34,11 @@
 # every domain, but WebFetch's fetcher is blocked by the sites' anti-bot (403). Read
 # dates/titles from each article's JSON-LD ("datePublished") and og: meta tags.
 # Re-validate on drift.
+#
+# CONCURRENCY (verified 2026-08-03): searchengineland.com returns HTTP 504 for most
+# requests in a parallel burst (8 at once → 17/20 failed). Fetch SEL article pages at
+# a concurrency of 3 or lower and retry the stragglers; every 504 succeeded on retry.
+# The other domains tolerate 8 parallel fetches fine.
 
 sources:
   # ── Google ──────────────────────────────────────────────────────────────────
@@ -53,7 +58,9 @@ sources:
     type: official
     validation: readable
     note: Official product announcements. Large server-rendered page, all entries
-      inline (verified). High signal-to-noise for features.
+      inline (verified). High signal-to-noise for features. Updates infrequently —
+      on 2026-08-03 the newest entry was still May 20, 2026 (GML 2026), so expect
+      this source to contribute nothing on most weekly runs.
 
   - key: searchengineland_google
     platform: google_ads
@@ -61,9 +68,14 @@ sources:
     url: https://searchengineland.com/library/platforms/google
     type: aggregator
     validation: readable
-    note: ~50 article links with JSON-LD dates (verified article dated 2026-07-17).
+    note: >-
+      ~50 article links with JSON-LD dates (verified article dated 2026-07-17).
       Overlaps official Google sources; prefer official as canonical on dedup. NB the
       top links are a site-wide recent/popular block — pick platform-specific items.
+      Index dates — each card sits in `<article class="stream-article">` and carries its
+      date in the byline as `Mon D, YYYY at H:MM am/pm ET` (verified 2026-08-03); there
+      is no `datetime=` attribute and no JSON-LD on the index, so parse that byline.
+      Highest-volume source in the pipeline (~18 in-window ads items on 2026-08-03).
 
   # ── Meta ────────────────────────────────────────────────────────────────────
   - key: meta_newsroom_tech
@@ -137,8 +149,13 @@ sources:
     url: https://blogs.bing.com/search?page=1
     type: official
     validation: readable
-    note: Server-rendered; article text + <time> tags present (verified). Broad
-      Bing/search news — filter for Microsoft Advertising relevance.
+    note: >-
+      Server-rendered; article text + <time> tags present (verified). Broad
+      Bing/search news — filter for Microsoft Advertising relevance. Post URLs are
+      `/search/<Month-YYYY>/<Title-Slug>` and the index carries no `datetime=`, so the
+      month in the URL is the date signal. Publishes rarely and skews Webmaster Tools /
+      organic — on 2026-08-03 the newest post was June 2026, i.e. nothing in window.
+      searchengineland_microsoft is the reliable Microsoft Ads source.
 
   - key: searchengineland_microsoft
     platform: bing
@@ -161,7 +178,9 @@ sources:
       MIXED search-side aggregator (Google + Microsoft/Bing, plus a lot of pure SEO /
       organic-search / industry news). Verified 2026-08-03 via curl (HTTP 200): index
       cards are `<a href="/<slug>/">` with the date on the card as
-      `<time class="card-post-date" datetime="YYYY-MM-DD">`. Apply the normal 2-week
+      `<time class="card-post-date" datetime="YYYY-MM-DD">`. One index page holds only
+      ~12 cards (~1 week), so page back through `/tag/search/page/2/`, `/page/3/`, …
+      until the dates fall before window_start. Apply the normal 2-week
       window by that index date. Scope = keep ONLY ads-manager items about platforms in
       our pipeline: **Google Ads** and **Microsoft/Bing** (set each item's `platform`
       accordingly — google_ads or bing). Filter HARD per criteria.md — drop SEO / zero-
@@ -179,8 +198,9 @@ sources:
     note: >-
       MIXED social-side aggregator (Meta, TikTok, LinkedIn, plus organic-social / creator
       / industry news). Verified 2026-08-03 via curl (HTTP 200): same structure as
-      ppcland_search (index cards `<a href="/<slug>/">` + `<time … datetime>`). Apply the
-      normal 2-week window by the index date. Scope = keep ONLY ads-manager items about
+      ppcland_search (index cards `<a href="/<slug>/">` + `<time … datetime>`; ~12 cards
+      per page, so page back through `/tag/social/page/N/` until dates precede
+      window_start). Apply the normal 2-week window by the index date. Scope = keep ONLY ads-manager items about
       platforms in our pipeline: **Meta**, **TikTok**, **LinkedIn** (set each item's
       `platform` to meta / tiktok / linkedin). Filter HARD per criteria.md — drop organic-
       social / creator / consumer-app stories. Aggregator → prefer official in dedup.
