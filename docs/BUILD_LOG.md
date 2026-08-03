@@ -17,10 +17,10 @@ happens by editing repo files, never by rewriting the routine trigger prompts.
 
 Each run branches from `main` to a `claude/*` branch, commits, opens a PR, and merges.
 
-## 2. Sources (`sources.yaml`, 10 — all `readable`)
+## 2. Sources (`sources.yaml`, 12 — all `readable`)
 Domains that MUST be in the run environment's egress allowlist (exact hosts):
 `blog.google`, `support.google.com`, `searchengineland.com`, `about.fb.com`,
-`socialbee.com`, `www.socialmediatoday.com`, `blogs.bing.com`.
+`socialbee.com`, `www.socialmediatoday.com`, `blogs.bing.com`, `ppc.land`.
 
 | key | platform | type | cadence |
 |---|---|---|---|
@@ -34,6 +34,13 @@ Domains that MUST be in the run environment's egress allowlist (exact hosts):
 | socialmediatoday_linkedin | linkedin | aggregator | feed |
 | bing_blogs | bing | official | feed |
 | searchengineland_microsoft | bing | aggregator | feed |
+| ppcland_search | mixed (google_ads/bing) | aggregator | feed |
+| ppcland_social | mixed (meta/tiktok/linkedin) | aggregator | feed |
+
+**Mixed sources (PPC Land tag pages):** one page carries several platforms + lots of
+non-ads/SEO news. The collector reads each article, sets the item's real `platform`, and
+keeps only pipeline platforms within scope (`ppcland_search` → Google Ads/Bing;
+`ppcland_social` → Meta/TikTok/LinkedIn). Filter hard for ads-manager relevance.
 
 Sources that couldn't be read (official Meta business news, TikTok blog, LinkedIn Ads
 blog, Google Search blog) were **dropped** and are intentionally not tracked.
@@ -119,6 +126,11 @@ R1 applies it loosely (lean-include); R2 applies it strictly.
   `prefers-reduced-motion` fallback; decorative stickers carry `stk-in` in the markup so
   they never flash on load; a `≤640px` mobile pass (hide big floating stickers, center
   footer, brand-left/filter-right header, smaller sign-off). Desktop ≥641px unaffected.
+- **Analytics:** every deck loads **Google Tag Manager** (`GTM-M2BTR42L`, in the template
+  `<head>` + `<noscript>`) and pushes a `link_click` dataLayer event on every `<a>` click
+  with `{link_url, link_text, link_domain, link_team, link_platform, link_location,
+  active_filter}` so GTM can trigger on outbound clicks. It's in the template, so every
+  generated deck inherits it — don't strip it out.
 
 ## 7. Schedule
 - Routine 1: weekly, e.g. Monday `0 7 * * 1`.
@@ -126,8 +138,9 @@ R1 applies it loosely (lean-include); R2 applies it strictly.
 Schedules are set manually in the routine UI and do not affect any logic.
 
 ## 8. Environment prerequisites (Ivan-managed)
-- Egress allowlist: the 7 hosts in §2 (exact host, incl. `www.` where the site
-  canonicalizes to www — e.g. Social Media Today).
+- Egress allowlist: the 8 hosts in §2 (exact host, incl. `www.` where the site
+  canonicalizes to www — e.g. Social Media Today; `ppc.land` for the PPC Land tags).
+  (GTM needs no egress here — it loads in end-users' browsers, not during the routine.)
 - Slack connector enabled in the routine environment (posts as Ivan).
 - GitHub Pages serving `main` (deck URLs: `https://ipotekhin.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html`).
 - Model: run routines on **Opus 4.8** (judgment-heavy; low volume).

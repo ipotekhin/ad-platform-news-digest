@@ -117,8 +117,10 @@ embedded in the message:
 
 Deck format is a single HTML file per edition, still portable and prints cleanly to
 PDF. It is not zero-request: the "Zine" skin loads Playfair Display / Courier Prime
-from the Google Fonts CDN and sticker PNGs from `assets/stickers/` (repo-relative) —
-both are static, low-risk, and GitHub Pages serves them fine alongside the deck.
+from the Google Fonts CDN, sticker PNGs from `assets/stickers/` (repo-relative), and
+**Google Tag Manager** (container `GTM-M2BTR42L`) for analytics — the deck also pushes a
+`link_click` event to the dataLayer on every link click, so GTM can trigger on outbound
+clicks. GitHub Pages serves all of it fine alongside the deck.
 
 ---
 
@@ -131,14 +133,16 @@ the fetch fails with a `403 CONNECT` policy denial (not a code bug).
 **Fetch with an in-session client (`curl` / `requests` / browser), not the managed
 `WebFetch` tool.** Validated 2026-07-21: once egress is open, curl gets HTTP 200 from
 every source domain, but `WebFetch`'s fetcher is still blocked by the sites' anti-bot
-(403). `sources.yaml` lists **9 sources**, all confirmed readable via curl; sources that
-could not be read were dropped and are not tracked.
+(403). `sources.yaml` lists **12 sources**, all confirmed readable via curl; sources that
+could not be read were dropped and are not tracked. (The two PPC Land tag pages —
+multi-platform aggregators — were added and validated 2026-08-03.)
 
 ## Status / next actions
 - [x] 1. Architecture / workflow decided
 - [x] 2. Repo created + sources gathered
-- [x] 3. **Validate sources** — done 2026-07-21 (in-session curl). 9 sources confirmed
-      `readable`; unreadable ones dropped. Recorded in `sources.yaml`.
+- [x] 3. **Validate sources** — done 2026-07-21 (in-session curl); 2 PPC Land tags added
+      2026-08-03. **12 sources** confirmed `readable`; unreadable ones dropped. Recorded
+      in `sources.yaml`.
 - [x] 4. Repo scaffolded
 - [x] 5. Routine instruction docs written
 - [ ] 6. **Test + schedule:** manual run of Routine 1 → inspect `updates.json`; then

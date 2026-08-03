@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-M2BTR42L');</script>
+<!-- End Google Tag Manager -->
 <title>Ad Platform News Digest</title>
 <!--
   ZINE DECK TEMPLATE — used by Routine 2 (Presentation).
@@ -98,6 +105,10 @@
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2BTR42L"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <div style="min-height:100vh">
 
@@ -572,6 +583,32 @@
     var wrap=document.getElementById("wrap-title");
     if(wrap && "IntersectionObserver" in window){ var did=false; var wo=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && !did){ did=true; typewrite(wrap); wo.unobserve(e.target);} }); },{threshold:.4}); wo.observe(wrap); }
   }
+})();
+</script>
+
+<!-- Link-click tracking -> dataLayer (for GTM triggers) -->
+<script>
+(function(){
+  window.dataLayer = window.dataLayer || [];
+  document.addEventListener("click", function(e){
+    var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+    if(!a) return;
+    var host=""; try{ host=new URL(a.href).hostname; }catch(_){}
+    var sec = a.closest("#d-body > section[data-team]");
+    var h2 = sec ? sec.querySelector("h2") : null;
+    var loc = a.closest("article") ? "card" : (a.closest("#d-archive") ? "archive" : "other");
+    var af = document.querySelector("#news-filter .flt.active");
+    window.dataLayer.push({
+      event: "link_click",
+      link_url: a.href,
+      link_text: (a.textContent||"").trim().slice(0,140),
+      link_domain: host,
+      link_team: sec ? sec.getAttribute("data-team") : "",
+      link_platform: h2 ? h2.textContent.trim() : "",
+      link_location: loc,
+      active_filter: af ? af.getAttribute("data-team") : ""
+    });
+  }, true);
 })();
 </script>
 </body>

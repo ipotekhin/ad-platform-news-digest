@@ -5,7 +5,12 @@
 #
 # Fields:
 #   key         Stable identifier. MUST match the key used in data/state.json.
-#   platform    google_ads | meta | tiktok | linkedin | bing
+#   platform    google_ads | meta | tiktok | linkedin | bing | mixed
+#                 mixed = a multi-platform aggregator (e.g. ppc.land tag pages). The
+#                         SOURCE has no single platform; the collector reads EACH article
+#                         and sets that item's real platform (one of the five above),
+#                         keeping only platforms in our pipeline. The `scope` note says
+#                         which side to keep (search-side or social-side).
 #   title       Human-readable source name (goes into updates.json -> "source").
 #   url         Entry point (index / announcements page).
 #   type        official | aggregator
@@ -143,3 +148,39 @@ sources:
     validation: readable
     note: ~62 article links with dates (verified). Often higher signal for Microsoft
       Ads than the broad Bing blog.
+
+  # ── PPC Land (multi-platform aggregators) ─────────────────────────────────────
+  - key: ppcland_search
+    platform: mixed            # per-article platform: google_ads or bing
+    title: PPC Land — Search
+    url: https://ppc.land/tag/search/
+    type: aggregator
+    cadence: feed              # dated article feed; dates ARE on the index
+    validation: readable
+    note: >-
+      MIXED search-side aggregator (Google + Microsoft/Bing, plus a lot of pure SEO /
+      organic-search / industry news). Verified 2026-08-03 via curl (HTTP 200): index
+      cards are `<a href="/<slug>/">` with the date on the card as
+      `<time class="card-post-date" datetime="YYYY-MM-DD">`. Apply the normal 2-week
+      window by that index date. Scope = keep ONLY ads-manager items about platforms in
+      our pipeline: **Google Ads** and **Microsoft/Bing** (set each item's `platform`
+      accordingly — google_ads or bing). Filter HARD per criteria.md — drop SEO / zero-
+      click / organic-search / consumer stories (e.g. "AI Mode cuts Shopping listings",
+      "zero-click searches", Yelp/Gen-Z items). Aggregator → prefer an official post over
+      this in dedup Layer 2.
+
+  - key: ppcland_social
+    platform: mixed            # per-article platform: meta | tiktok | linkedin
+    title: PPC Land — Social
+    url: https://ppc.land/tag/social/
+    type: aggregator
+    cadence: feed              # dated article feed; dates ARE on the index
+    validation: readable
+    note: >-
+      MIXED social-side aggregator (Meta, TikTok, LinkedIn, plus organic-social / creator
+      / industry news). Verified 2026-08-03 via curl (HTTP 200): same structure as
+      ppcland_search (index cards `<a href="/<slug>/">` + `<time … datetime>`). Apply the
+      normal 2-week window by the index date. Scope = keep ONLY ads-manager items about
+      platforms in our pipeline: **Meta**, **TikTok**, **LinkedIn** (set each item's
+      `platform` to meta / tiktok / linkedin). Filter HARD per criteria.md — drop organic-
+      social / creator / consumer-app stories. Aggregator → prefer official in dedup.
