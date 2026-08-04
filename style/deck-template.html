@@ -230,7 +230,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
        "subtitle":       "…",                   // hero subhead; falls back to "Updates published <period_label>"
        "read_minutes":   5,                     // falls back to an estimate from item count
        "author":         "Ivan Potekhin",       // footer credit; falls back to "Ivan Potekhin"
-       "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"decks/deck-2026-07-05.html" }]  // past-editions strip; omitted -> section hidden
+       "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"deck-2026-07-05.html" }]  // past-editions strip; BARE filename (no decks/ prefix); omitted -> section hidden
   ────────────────────────────────────────────────────────────────────────── -->
   <script id="deck-data" type="application/json">
   {
@@ -304,8 +304,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     return pickFrom(FAM[fam]);
   }
   // Assign the fixed decorative slots from their allowed pools (image swaps; position/size untouched).
-  var SLOT_POOL = { "dec-hero-1":POOL_HERO, "dec-hero-2":POOL_HERO, "dec-tldr":POOL_GENERAL,
-                    "dec-archive":POOL_GENERAL, "dec-signoff-1":POOL_WRAP, "dec-signoff-2":POOL_WRAP };
+  var SLOT_POOL = { "dec-tldr":POOL_GENERAL, "dec-archive":POOL_GENERAL };
+  // Base "type" of a sticker = filename minus trailing colour tokens
+  // (blob-face-green -> blob-face, paperclip-green-pink -> paperclip, globe-blue-pink -> globe).
+  function stkType(file){ return file.replace(/\.png$/,"").replace(/(-(?:green|pink|blue))+$/,""); }
+  function pickFile(pool){ return pool[Math.floor(_rng()*pool.length)]; }
+  // Pick a file whose type differs from avoidType (fall back to any after a few tries).
+  function pickFileDistinct(pool, avoidType){
+    for(var k=0;k<16;k++){ var f=pickFile(pool); if(stkType(f)!==avoidType){ return f; } }
+    return pickFile(pool);
+  }
+  // Paired decorative slots (two stickers shown together) must be DIFFERENT types — never
+  // e.g. two smileys or two to-do lists, even in different colours. Still random per edition.
+  function assignPair(id1, id2, pool){
+    var f1=pickFile(pool), n1=document.getElementById(id1); if(n1){ n1.src=STK+f1; }
+    var f2=pickFileDistinct(pool, stkType(f1)), n2=document.getElementById(id2); if(n2){ n2.src=STK+f2; }
+  }
+  assignPair("dec-hero-1","dec-hero-2",POOL_HERO);         // hero (section:nth-child(2))
+  assignPair("dec-signoff-1","dec-signoff-2",POOL_WRAP);   // sign-off (section:nth-child(6))
+  // Single decorative slots — any sticker from their pool.
   Object.keys(SLOT_POOL).forEach(function(id){
     var n=document.getElementById(id); if(n){ n.src = pickFrom(SLOT_POOL[id]); }
   });
