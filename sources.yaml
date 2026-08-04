@@ -15,15 +15,14 @@
 #   url         Entry point (index / announcements page).
 #   type        official | aggregator
 #                 official   = the platform's own blog. Preferred canonical record.
-#                 aggregator = 3rd-party (Search Engine Land / SocialBee). Often
+#                 aggregator = 3rd-party (Search Engine Land / PPC Land). Often
 #                              repeats official stories -> resolved by dedup Layer 2.
-#   cadence     feed | roundup (optional; default feed)
+#   cadence     feed (default; the only cadence in use)
 #                 feed    = dated article stream -> apply the normal 2-week window by
-#                           each article's published date.
-#                 roundup = periodic digest that surfaces items late -> do NOT apply the
-#                           strict window; read only the current-month section (see the
-#                           SocialBee note for the exact bound) and collect items not
-#                           already in the base (dedup handles repeats).
+#                           each article's published date. EVERY source is a feed, so
+#                           the 2-week window applies to everything (nothing is exempt).
+#                 (A `roundup` cadence — monthly digests exempt from the window — used to
+#                  exist for SocialBee; that source was removed, so no source is exempt.)
 #   validation  readable = plain in-session fetch returns real, dated article text.
 #                 Every source below was confirmed readable on 2026-07-21. Sources
 #                 that could not be read were dropped and are intentionally not listed.
@@ -108,26 +107,6 @@ sources:
     note: ~57 article links with dates (verified). Primary practical TikTok-ads source.
 
   # ── LinkedIn ────────────────────────────────────────────────────────────────
-  - key: socialbee_linkedin_updates
-    platform: linkedin
-    title: SocialBee — LinkedIn Updates
-    url: https://socialbee.com/blog/linkedin-updates/
-    type: aggregator
-    cadence: roundup            # monthly digest, NOT a dated feed
-    validation: readable
-    note: >-
-      MONTHLY ROUNDUP (sections like "July 2026 LinkedIn updates"). Because it surfaces
-      items weeks after the original announcement, do NOT apply the strict 2-week window
-      here and do NOT date items by the underlying official post. Scope: read ONLY the
-      **current calendar month** section (relative to the run date) — plus the previous
-      month's section ONLY if the run date is within the first 7 days of a new month
-      (to catch end-of-month stragglers). Never read older sections. From that scope,
-      take every ads-manager-relevant item NOT already in updates.json (dedup id =
-      source + month + sha1(title)); set `published` to the roundup month (or the in-text
-      date if given). Dedup guarantees no repeats across runs. Filter to ads-manager
-      relevance per criteria.md (drop consumer/jobs items like "Suggested feeds",
-      "Easy Apply").
-
   - key: socialmediatoday_linkedin
     platform: linkedin
     title: Social Media Today — LinkedIn

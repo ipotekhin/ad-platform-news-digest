@@ -93,8 +93,7 @@ The digest serves two audiences — **Search** (Google Ads, Microsoft/Bing) and 
   dates.** Compute it as: **start** = the previous edition's date + 1 day (from
   `editions.json`); for the **first** edition, `generated − 14 days`. **end** =
   `generated`. Format `"Mon D – Mon D, YYYY"` (e.g. `Jul 20 – Aug 3, 2026`). This keeps
-  the label a clean ~2-week span — a late-surfacing roundup item (SocialBee) must **not**
-  stretch it to a whole month.
+  the label a clean ~2-week span independent of individual item dates.
 - **Past editions block:** read `data/editions.json` (the registry of prior editions)
   and pass its entries as `archive` in the deck data — each as
   `{ "no": <n>, "label": "<period_label>", "url": "deck-YYYY-MM-DD.html" }`. Use the
