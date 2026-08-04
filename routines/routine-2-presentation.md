@@ -167,9 +167,11 @@ is enough. Keep it compact; this note is for Ivan only, not the teams.
 ---
 
 ## Open config (single source of truth — edit here, routines pick it up)
-- **Slack delivery targets (two teams):** `search_channel_id` and `social_channel_id`
-  (step 6). **Currently both = Ivan's DM `U065VBRHYV7` for testing** — change each to the
-  real team channel when ready (nothing else changes). Team→platform mapping:
+- **Slack delivery targets (two teams):** the digest goes to the team channels —
+  `search_channel_id = C04PJUZMN91` (**#paid-search-team**) and
+  `social_channel_id = C04AU6G17GT` (**#paid-social-team**). Both are **private** channels,
+  so Ivan (whose identity the connector posts under) must be a member of each. Change an ID
+  here to redirect a team later (nothing else changes). Team→platform mapping:
   **Search** = Google Ads + Microsoft/Bing · **Social** = Meta + TikTok + LinkedIn.
 - **Deep-linked digest URL:** each team message links to the *same* deck with
   `?team=search` / `?team=social` appended, so it opens on that team's filtered view; the
