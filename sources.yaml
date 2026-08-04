@@ -38,6 +38,16 @@
 # requests in a parallel burst (8 at once → 17/20 failed). Fetch SEL article pages at
 # a concurrency of 3 or lower and retry the stragglers; every 504 succeeded on retry.
 # The other domains tolerate 8 parallel fetches fine.
+#
+# SEL OUTAGE (observed 2026-08-04): a retry is NOT always enough. The index pages and
+# ~14 article pages read fine, then a fixed subset of article URLs returned Cloudflare
+# 504 / connection timeouts on every attempt (4 retry rounds over ~40 min, varied UA,
+# HTTP/1.1, cache-busting query — all 504), and later the whole domain went 504 for
+# already-fetched URLs too. It is an origin-side outage, not anti-bot and not
+# concurrency. When it happens: keep the items you could read, skip the unreadable
+# ones WITHOUT writing a summary from the index headline, and flag them — the next
+# weekly window will have moved past them, so they are lost unless a human re-runs.
+# archive.org is NOT a fallback here (403 CONNECT under the egress policy).
 
 sources:
   # ── Google ──────────────────────────────────────────────────────────────────
