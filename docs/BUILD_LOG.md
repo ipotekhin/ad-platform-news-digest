@@ -81,7 +81,8 @@ R1 applies it loosely (lean-include); R2 applies it strictly.
 - **Expiry:** un-presented items older than **28 days** (`first_seen`) are retired
   (`expired:true`) so backlog can't pile up forever.
 - **Select:** `presented:false` and not `expired`.
-- **Order:** platforms Google Ads → Meta → TikTok → LinkedIn → Bing; within, high→med→low.
+- **Order:** Search block first, then Social — Google Ads → Microsoft/Bing → Meta →
+  TikTok → LinkedIn; within a platform, high→med→low. Deck renders in deck-data order.
 - **Balance (no overall cap):** **per-platform cap 6** (up to **8** to fit all `high`s),
   so no platform dominates and both teams (Search: Google/Bing · Social: Meta/TikTok/
   LinkedIn) stay represented. Overflow carries to a future edition.
@@ -95,7 +96,8 @@ R1 applies it loosely (lean-include); R2 applies it strictly.
   `data/editions.json`), url = **bare `deck-YYYY-MM-DD.html`** (sibling). After a
   successful post, append the new edition to `data/editions.json`.
 - **Slack (two teams):** compose per `style/slack-summary.md` (greeting → intro w/ date
-  range → 3–4 highlights → summary → link), and send **one message per team** via
+  range → **one highlight per platform** → summary → link; **bold via `**double**`** —
+  a single `*x*` renders italic in this connector), and send **one message per team** via
   `slack_send_message`: **Search** (Google Ads + Bing) → `search_channel_id`, **Social**
   (Meta + TikTok + LinkedIn) → `social_channel_id`. Each message covers only its team's
   platforms and links the deck with `?team=search|social` appended (opens on that team's
