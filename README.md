@@ -17,7 +17,7 @@ Two scheduled **routines** + this repo as state:
 
 | Routine | Cadence | What it does |
 |---|---|---|
-| **[Routine 1 — Collect](routines/routine-1-collect.md)** | 2×/week | Visits each source, finds new items, dedupes them, appends to `data/updates.json`. |
+| **[Routine 1 — Collect](routines/routine-1-collect.md)** | weekly | Visits each source, finds new items, dedupes them, appends to `data/updates.json`. |
 | **[Routine 2 — Presentation](routines/routine-2-presentation.md)** | every 2 weeks | Filters the un-presented items, builds the deck, posts a summary + link to Slack, then marks them `presented`. |
 
 Each routine's trigger prompt is just a short pointer to its instruction doc in
@@ -72,7 +72,7 @@ README.md / CLAUDE.md # repo context
 
 URL-only dedup catches ~10% of real-world duplicates — the same news appears on
 different sites with different URLs/wording. Heavy web-scale machinery (MinHash/LSH,
-embeddings, vector DBs) is overkill for ~a dozen items twice a week, so the LLM does
+embeddings, vector DBs) is overkill for ~a dozen items a week, so the LLM does
 the semantic dedup itself.
 
 - **Layer 1 — exact (no LLM):** canonicalize the URL (strip `utm_*`, `#fragment`,
