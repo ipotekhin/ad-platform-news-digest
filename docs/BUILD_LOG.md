@@ -104,8 +104,10 @@ R1 applies it loosely (lean-include); R2 applies it strictly.
   (Meta + TikTok + LinkedIn) → `social_channel_id`. Each message covers only its team's
   platforms and links the deck with `?team=search|social` appended (opens on that team's
   filtered view; reader can switch to *All news*). A team with no items gets no message.
-  Channels are in `routine-2` Open config — **currently both = Ivan's DM `U065VBRHYV7`
-  for testing**; posts as Ivan.
+  Channels are in `routine-2` Open config — **`search_channel_id = C04PJUZMN91`
+  (#paid-search-team)** and **`social_channel_id = C04AU6G17GT` (#paid-social-team)**, both
+  private (Ivan must be a member); posts as Ivan. The step-8 backlog note still goes to
+  Ivan's DM `U065VBRHYV7`.
 - **presented:true** is set ONLY after a confirmed delivery, **per team** (a team whose
   send failed/was skipped keeps its items un-presented); then commit + PR + merge.
 
@@ -159,17 +161,20 @@ Schedules are set manually in the routine UI and do not affect any logic.
   mismatch → readable (#14), sticker pools + reset (#19), broken LinkedIn URL + verify
   guardrail (#22).
 
-## 10. Current state & next step
-- **Reset done (2026-08-04) for a second test run** — clean slate after the first test
-  surfaced fixes (see §11). `data/updates.json = []`, `data/editions.json = []`,
-  `data/state.json` all **11** sources `last_collected: null`, `decks/` empty (bar
-  `.gitkeep`). SocialBee removed from the library.
-- **Test run (Ivan triggers):** (1) **Routine 1** collects fresh over the fixed 2-week
-  window across all 11 feed sources → `updates.json`. (2) **Routine 2** builds edition 1
-  and posts one message per team — **Search** (`?team=search`) + **Social**
-  (`?team=social`) — each to its channel in Open config. Empty team → no message.
-- **Slack channels:** both `search_channel_id` / `social_channel_id` still = Ivan's DM
-  `U065VBRHYV7`. Swap to the real team channels in `routine-2` Open config when ready.
+## 10. Current state & next step — RELEASE-READY (2026-08-04)
+- **Live team channels wired in** (verified read-only, nothing posted):
+  `search_channel_id = C04PJUZMN91` (**#paid-search-team**),
+  `social_channel_id = C04AU6G17GT` (**#paid-social-team**) — both **private**, so Ivan
+  must be a member of each (the connector posts as Ivan). The step-8 backlog/system note
+  still goes to Ivan's DM `U065VBRHYV7`.
+- **Release prep done:** the **24 collected items are kept** (Routine 1 already ran), all
+  reset to `presented: false`; `data/editions.json = []`; the test deck
+  `deck-2026-08-04.html` removed (`decks/` empty bar `.gitkeep`); `state.json` left as-is
+  (informational). So on the next Routine 2 run this becomes **edition 1**.
+- **Release run:** Routine 2 (next scheduled fire, cadence gate passes since editions is
+  empty) builds edition 1 from the un-presented items, and posts **Search** →
+  #paid-search-team, **Social** → #paid-social-team. **A team with no items sends no
+  message** (Social currently = Meta + TikTok = 2 items; Search = Google + Bing = 22).
 
 ## 11. Fixes from the first release test (2026-08-04)
 - **period_label** now = the digest window (prev edition +1 → generated; first edition

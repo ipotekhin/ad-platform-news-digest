@@ -113,7 +113,8 @@ embedded in the message:
 - Delivery is **GitHub Pages only** — no Slack Canvas.
 - The Slack messages post **from Ivan's own identity** (the connector is authorized under
   his account), not a separate bot. Channel IDs live in `routines/routine-2-presentation.md`
-  → Open config (currently both = Ivan's DM for testing).
+  → Open config (`#paid-search-team` / `#paid-social-team`; the internal backlog note still
+  goes to Ivan's DM).
 
 Deck format is a single HTML file per edition, still portable and prints cleanly to
 PDF. It is not zero-request: the "Zine" skin loads Playfair Display / Courier Prime

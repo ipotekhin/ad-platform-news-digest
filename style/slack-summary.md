@@ -8,10 +8,11 @@
 > **`**double asterisks**`** for bold; a single `*word*` renders as *italic* (that's the
 > bug the first run hit — platform names came out italic). Emoji via `:shortcode:`.
 >
-> - **Search** team (Google Ads + Microsoft/Bing) → `search_channel_id`.
-> - **Social** team (Meta + TikTok + LinkedIn) → `social_channel_id`.
-> - Targets live in `routines/routine-2-presentation.md` → Open config. **Currently both
->   = Ivan's DM `U065VBRHYV7` for testing.**
+> - **Search** team (Google Ads + Microsoft/Bing) → `search_channel_id` = **#paid-search-team**.
+> - **Social** team (Meta + TikTok + LinkedIn) → `social_channel_id` = **#paid-social-team**.
+> - Targets (channel IDs) live in `routines/routine-2-presentation.md` → Open config. The
+>   internal backlog/system note (step 8) still goes to **Ivan's DM `U065VBRHYV7`**, not the
+>   team channels.
 >
 > Each message covers **only its own team's platforms** (highlights + summary count), and
 > its link opens the deck **pre-filtered to that team** via a `?team=` param (see the link
