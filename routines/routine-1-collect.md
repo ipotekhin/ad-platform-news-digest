@@ -80,18 +80,10 @@ Media Today, Bing, etc.):
   so filter hard. Dedup (Layers 1–2) still applies, and since these are aggregators,
   prefer an official post as canonical when the same story is already stored.
 
-**`cadence: roundup`** (periodic digest that surfaces items late — SocialBee):
-- Do **not** apply the strict 2-week window, and do **not** date items by the underlying
-  official post (those are often weeks old and would be dropped every run).
-- **Scope (hard bound — do not scan the whole archive):** read only the **current
-  calendar month** section relative to the run date; additionally read the **previous
-  month** section *only* if the run date is within the first 7 days of a new month.
-  Ignore all older sections.
-- From that scope, take every **ads-manager-relevant** item **not already in
-  `updates.json`** (dedup id = `source + month + sha1(title)`); set `published` to the
-  roundup month (or an in-text date if given). Dedup guarantees no repeats across runs.
-  Follow the item's source link if you need context for the summary, but keep the
-  roundup date.
+> **No `roundup` sources.** Every source in `sources.yaml` is `cadence: feed`, so the
+> 2-week window applies to **everything** — nothing is exempt. (A monthly-`roundup`
+> exception existed for SocialBee, which let month-old items through; that source was
+> removed, so the window is now strictly enforced across the board.)
 
 If a source's real behavior changes (e.g. stops returning readable content), note it and
 flag to a human — do not silently drop items.
@@ -125,9 +117,7 @@ in `updates.json` within the current 2-week window. For each new candidate ask:
 > shorten, paraphrase, or guess any part of it (especially the slug).** Then **verify
 > the URL resolves** (a request returns 2xx/3xx, following redirects) before saving. If
 > it does not resolve (4xx/5xx), fall back to a link that does — the article's own
-> canonical URL, the source's index page, or (for roundups) the roundup page — rather
-> than storing a broken deep link. For roundup items whose cited source link is dead,
-> the roundup page URL is an acceptable fallback.
+> canonical URL or the source's index page — rather than storing a broken deep link.
 
 For each genuinely-new item, append a record to `data/updates.json`:
 ```json

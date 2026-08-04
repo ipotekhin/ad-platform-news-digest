@@ -17,10 +17,10 @@ happens by editing repo files, never by rewriting the routine trigger prompts.
 
 Each run branches from `main` to a `claude/*` branch, commits, opens a PR, and merges.
 
-## 2. Sources (`sources.yaml`, 12 — all `readable`)
+## 2. Sources (`sources.yaml`, 11 — all `readable`, all `feed`)
 Domains that MUST be in the run environment's egress allowlist (exact hosts):
 `blog.google`, `support.google.com`, `searchengineland.com`, `about.fb.com`,
-`socialbee.com`, `www.socialmediatoday.com`, `blogs.bing.com`, `ppc.land`.
+`www.socialmediatoday.com`, `blogs.bing.com`, `ppc.land`.
 
 | key | platform | type | cadence |
 |---|---|---|---|
@@ -30,12 +30,16 @@ Domains that MUST be in the run environment's egress allowlist (exact hosts):
 | meta_newsroom_tech | meta | official | feed |
 | searchengineland_meta | meta | aggregator | feed |
 | searchengineland_tiktok | tiktok | aggregator | feed |
-| socialbee_linkedin_updates | linkedin | aggregator | **roundup** |
 | socialmediatoday_linkedin | linkedin | aggregator | feed |
 | bing_blogs | bing | official | feed |
 | searchengineland_microsoft | bing | aggregator | feed |
 | ppcland_search | mixed (google_ads/bing) | aggregator | feed |
 | ppcland_social | mixed (meta/tiktok/linkedin) | aggregator | feed |
+
+**SocialBee removed (2026-08-04):** its monthly-`roundup` cadence let month-old LinkedIn
+items past the 2-week window; Social Media Today covers the same LinkedIn announcements as
+a dated feed, so SocialBee was dropped. **No `roundup` source remains — the 2-week window
+now applies to every source.**
 
 **Mixed sources (PPC Land tag pages):** one page carries several platforms + lots of
 non-ads/SEO news. The collector reads each article, sets the item's real `platform`, and
@@ -50,12 +54,10 @@ blog, Google Search blog) were **dropped** and are intentionally not tracked.
   tool (its fetcher is anti-bot-blocked even when egress is open).
 - **Window = fixed last 2 weeks** (`today − 14d`, ~2-day margin). Earlier periods are
   never revisited. This holds even though R1 runs weekly (dedup handles overlap).
-- **cadence:feed** — parse dated article links; keep those in-window; **always open the
-  article** to read the body + real date before judging relevance/writing the summary.
-- **cadence:roundup** (SocialBee) — a monthly digest that surfaces items late, so the
-  strict window does NOT apply. Read only the **current-month section** (+ previous month
-  only in the first 7 days of a month); take ads items not already in the base
-  (dedup id = `source + month + sha1(title)`); date them by the roundup month.
+- **cadence:feed (all sources)** — parse dated article links; keep those in-window;
+  **always open the article** to read the body + real date before judging relevance/
+  writing the summary. Every source is a feed now, so the 2-week window applies to all —
+  nothing is exempt (the SocialBee `roundup` exemption was removed with that source).
 - **URL rule (critical):** store the source href **verbatim** — never construct/guess a
   slug — and **verify it resolves (2xx/3xx)** before saving; else fall back to a working
   link (canonical article / source index / roundup page). (A hallucinated LinkedIn slug
@@ -158,15 +160,29 @@ Schedules are set manually in the routine UI and do not affect any logic.
   guardrail (#22).
 
 ## 10. Current state & next step
-- **Production reset done (2026-08-03) — repo is a clean slate for the release run.**
-  `data/updates.json = []`, `data/editions.json = []`, `data/state.json` all 12 sources
-  `last_collected: null`, `decks/` empty (bar `.gitkeep`). All test artifacts removed.
-- **Release run (Ivan triggers):** (1) **Routine 1** collects fresh over the fixed 2-week
-  window across all 12 sources (incl. the two new PPC Land tags) → appends to
-  `updates.json`. (2) **Routine 2** builds edition 1, and posts one message per team —
-  **Search** (`?team=search`) + **Social** (`?team=social`) — each to its channel in Open
-  config. **Empty team → no message.** Marks presented per team, registers edition 1.
+- **Reset done (2026-08-04) for a second test run** — clean slate after the first test
+  surfaced fixes (see §11). `data/updates.json = []`, `data/editions.json = []`,
+  `data/state.json` all **11** sources `last_collected: null`, `decks/` empty (bar
+  `.gitkeep`). SocialBee removed from the library.
+- **Test run (Ivan triggers):** (1) **Routine 1** collects fresh over the fixed 2-week
+  window across all 11 feed sources → `updates.json`. (2) **Routine 2** builds edition 1
+  and posts one message per team — **Search** (`?team=search`) + **Social**
+  (`?team=social`) — each to its channel in Open config. Empty team → no message.
 - **Slack channels:** both `search_channel_id` / `social_channel_id` still = Ivan's DM
-  `U065VBRHYV7`. Swap to the real team channels in `routine-2` Open config when ready — no
-  other edits needed.
+  `U065VBRHYV7`. Swap to the real team channels in `routine-2` Open config when ready.
+
+## 11. Fixes from the first release test (2026-08-04)
+- **period_label** now = the digest window (prev edition +1 → generated; first edition
+  generated−14 → generated), not the min/max of item dates — so a stray old item can't
+  stretch it to a whole month.
+- **Card stickers** appear on **every 3rd card** (`i % 3 === 1`), not on all high-impact
+  cards. Which PNG lands there is still seeded-random per edition.
+- **Platform order:** Search block first, then Social — Google Ads → Microsoft/Bing →
+  Meta → TikTok → LinkedIn (deck renders in deck-data order).
+- **Slack message:** one highlight line **per platform** (the platform's single hottest
+  item), not 3–4 updates. Bold uses **`**double asterisks**`** — this connector renders a
+  single `*word*` as italic (the italic-platform-names bug).
+- **SocialBee removed** — its monthly-roundup exemption let month-old LinkedIn items past
+  the window; Social Media Today covers the same announcements as a dated feed. No
+  `roundup` source remains, so the 2-week window applies to every source.
 - Open question: folder-star sticker (keep in wrap block vs remove entirely).

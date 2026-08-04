@@ -7,7 +7,7 @@ One-time steps to go from "repo scaffolded" to "routines running on schedule."
 ## 1. Allow the source domains in the run environment (required)
 
 A routine fetches live pages. The environment it runs in **must** permit outbound
-HTTPS to the 6 domains behind the 9 validated sources, or fetches fail with
+HTTPS to the 7 domains behind the 11 validated sources, or fetches fail with
 `403 CONNECT` (policy denial):
 
 ```
@@ -15,8 +15,9 @@ blog.google
 support.google.com
 searchengineland.com
 about.fb.com
-socialbee.com
+www.socialmediatoday.com
 blogs.bing.com
+ppc.land
 ```
 
 Configure this on the environment used by the routines. If you use "trusted"/open
