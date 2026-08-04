@@ -376,7 +376,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     pf.items.forEach(function(it, i){
       var imp = IMP[(it.impact || "low").toLowerCase()] || IMP.low;
-      var wantSticker = (it.impact === "high") || (i % 3 === 1);
+      // Cards get a sticker at random (~1 in 3), seeded off the edition date so the
+      // layout is deterministic — NOT on every card (impact no longer forces one).
+      var wantSticker = (_rng() < 0.34);
       var stickerSrc = wantSticker ? pickFrom(POOL_CARDS) : null;
       var bg = (i % 2 === 1) ? "var(--aid-blue-50)" : "#ffffff";
 

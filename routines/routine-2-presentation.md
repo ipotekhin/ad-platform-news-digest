@@ -70,7 +70,10 @@ when there is at least one qualifying update.
 ### 3. Balance & per-platform cap (keeps the deck fair across teams)
 The digest serves two audiences — **Search** (Google Ads, Microsoft/Bing) and **Social**
 (Meta, TikTok, LinkedIn) — so no single platform may dominate.
-- Group by platform: **Google Ads → Meta → TikTok → LinkedIn → Bing** (omit empty).
+- Group by platform, **Search block first, then Social block** (so All-news reads
+  Search → Social): **Google Ads → Microsoft/Bing → Meta → TikTok → LinkedIn** (omit
+  empty). Emit the `platforms` array in the deck data in exactly this order — the deck
+  renders platforms in data order, no re-sorting.
 - Within each platform, order **high → medium → low** impact.
 - **No overall cap.** **Per-platform cap = 6** items: take the top 6 by impact.
 - **`high`-impact items are always included** — if a platform has more than 6 highs, raise
@@ -86,6 +89,12 @@ The digest serves two audiences — **Search** (Google Ads, Microsoft/Bing) and 
   documented inside the template). Fill `period_label`, `generated`, `author`
   ("Ivan Potekhin"), `tldr`, and `platforms[].items[]`. Each item links to its
   **canonical** URL. `edition_no` = this run's number (see editions registry below).
+- **`period_label` = the digest window, NOT the min/max of the items' `published`
+  dates.** Compute it as: **start** = the previous edition's date + 1 day (from
+  `editions.json`); for the **first** edition, `generated − 14 days`. **end** =
+  `generated`. Format `"Mon D – Mon D, YYYY"` (e.g. `Jul 20 – Aug 3, 2026`). This keeps
+  the label a clean ~2-week span — a late-surfacing roundup item (SocialBee) must **not**
+  stretch it to a whole month.
 - **Past editions block:** read `data/editions.json` (the registry of prior editions)
   and pass its entries as `archive` in the deck data — each as
   `{ "no": <n>, "label": "<period_label>", "url": "deck-YYYY-MM-DD.html" }`. Use the
@@ -111,9 +120,14 @@ itself is a single file with all platforms; the two links only differ by a `?tea
   - **Social** = Meta + TikTok + LinkedIn.
 - **For each team that has at least one included item**, compose a message by following
   **`style/slack-summary.md`** exactly (greeting → digest intro with the date range →
-  highlights intro → 3–4 highlight lines → digest summary → link). The highlights and the
-  summary count use **only that team's platforms**. Rotate the wording per that file;
-  standard Slack formatting (`*bold*`, `:emoji:`).
+  highlights intro → **one highlight line per platform** → digest summary → link). The
+  highlights and the summary count use **only that team's platforms**. Rotate the wording
+  per that file; use **standard-markdown** Slack formatting — **`**bold**`** (double
+  asterisks; a single `*word*` renders as *italic* in this connector) and `:emoji:`.
+- **One highlight per platform (not a list of updates).** For each platform in the team
+  that has items, pick its **single hottest** item (highest impact; break ties by
+  recency) and write one line for it. Don't list several updates from the same platform —
+  the deck holds the full detail; the message is a teaser of the top change per platform.
 - **Deep-linked deck URL:** append `?team=search` or `?team=social` to the deck URL so the
   link opens straight to that team's filtered view (readers can switch to *All news* in the
   header). E.g. `https://ipotekhin.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html?team=social`.

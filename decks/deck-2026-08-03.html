@@ -235,7 +235,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script id="deck-data" type="application/json">
 {
   "edition_no": 1,
-  "period_label": "Jul 1 – Jul 31, 2026",
+  "period_label": "Jul 20 – Aug 3, 2026",
   "generated": "2026-08-03",
   "author": "Ivan Potekhin",
   "subtitle": "What changed across Google Ads, Meta, TikTok, LinkedIn and Microsoft Advertising in July — and what needs a look before mid-August.",
@@ -307,6 +307,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       ]
     },
     {
+      "name": "Microsoft Advertising",
+      "items": [
+        {
+          "title": "Microsoft retires Predictive Matching and folds it into AI Max search term matching",
+          "url": "https://ppc.land/microsoft-kills-predictive-matching-shifts-search-ads-to-ai-max/",
+          "source": "PPC Land — Search",
+          "published": "2026-07-31",
+          "category": "deprecation",
+          "impact": "high",
+          "summary": "Microsoft Advertising confirmed — via a notice inserted into help documents including the keyword match types page, with no blog post — that Predictive Matching is being retired and moved to Search term matching within AI Max. Microsoft says no action is required and gave no effective date, so advertisers who relied on the feature have no timeline for the switch."
+        },
+        {
+          "title": "Microsoft Advertising brings Ad Preview Hub to Performance Max",
+          "url": "https://searchengineland.com/microsoft-ads-adds-ad-preview-hub-to-performance-max-483607",
+          "source": "Search Engine Land — Microsoft Advertising",
+          "published": "2026-07-27",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "Ad Preview Hub, previously limited to Audience Ads, is now in Microsoft Advertising Performance Max campaigns. Open an asset group, choose Preview ads, and review eligible formats across devices and placements, then generate a secure shareable link so clients and stakeholders can approve creative without account access."
+        }
+      ]
+    },
+    {
       "name": "Meta",
       "items": [
         {
@@ -363,29 +386,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           "category": "feature",
           "impact": "high",
           "summary": "LinkedIn introduced AI-powered creative tooling in Campaign Manager: AI ad-copy generation, a Brand Kit for consistent brand assets, a new 'Flexible' campaign creation flow, and Ad Variants that generate multiple versions of an existing ad with alternative headlines and intro text. Surfaced via SocialBee's July 2026 LinkedIn roundup."
-        }
-      ]
-    },
-    {
-      "name": "Microsoft Advertising",
-      "items": [
-        {
-          "title": "Microsoft retires Predictive Matching and folds it into AI Max search term matching",
-          "url": "https://ppc.land/microsoft-kills-predictive-matching-shifts-search-ads-to-ai-max/",
-          "source": "PPC Land — Search",
-          "published": "2026-07-31",
-          "category": "deprecation",
-          "impact": "high",
-          "summary": "Microsoft Advertising confirmed — via a notice inserted into help documents including the keyword match types page, with no blog post — that Predictive Matching is being retired and moved to Search term matching within AI Max. Microsoft says no action is required and gave no effective date, so advertisers who relied on the feature have no timeline for the switch."
-        },
-        {
-          "title": "Microsoft Advertising brings Ad Preview Hub to Performance Max",
-          "url": "https://searchengineland.com/microsoft-ads-adds-ad-preview-hub-to-performance-max-483607",
-          "source": "Search Engine Land — Microsoft Advertising",
-          "published": "2026-07-27",
-          "category": "feature",
-          "impact": "medium",
-          "summary": "Ad Preview Hub, previously limited to Audience Ads, is now in Microsoft Advertising Performance Max campaigns. Open an asset group, choose Preview ads, and review eligible formats across devices and placements, then generate a secure shareable link so clients and stakeholders can approve creative without account access."
         }
       ]
     }
@@ -510,7 +510,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     pf.items.forEach(function(it, i){
       var imp = IMP[(it.impact || "low").toLowerCase()] || IMP.low;
-      var wantSticker = (it.impact === "high") || (i % 3 === 1);
+      // Cards get a sticker at random (~1 in 3), seeded off the edition date so the
+      // layout is deterministic — NOT on every card (impact no longer forces one).
+      var wantSticker = (_rng() < 0.34);
       var stickerSrc = wantSticker ? pickFrom(POOL_CARDS) : null;
       var bg = (i % 2 === 1) ? "var(--aid-blue-50)" : "#ffffff";
 

@@ -69,7 +69,8 @@ changes to `routines/routine-2-presentation.md` — the template falls back sens
 
 ## Deck content rules (applied by Routine 2)
 
-- Order platforms: **Google Ads → Meta → TikTok → LinkedIn → Bing** (drop empty ones).
+- Order platforms **Search block first, then Social**: **Google Ads → Microsoft/Bing →
+  Meta → TikTok → LinkedIn** (drop empty ones). The deck renders in deck-data order.
 - Within a platform, order items **high → medium → low** impact.
 - TL;DR: 3–5 bullets, the single most important change first.
 - No overall size cap; **per-platform cap 6** (up to 8 to fit all `high`s) keeps Search
