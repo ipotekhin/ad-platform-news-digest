@@ -72,9 +72,12 @@ sources:
       ~50 article links with JSON-LD dates (verified article dated 2026-07-17).
       Overlaps official Google sources; prefer official as canonical on dedup. NB the
       top links are a site-wide recent/popular block — pick platform-specific items.
-      Index dates — each card sits in `<article class="stream-article">` and carries its
-      date in the byline as `Mon D, YYYY at H:MM am/pm ET` (verified 2026-08-03); there
-      is no `datetime=` attribute and no JSON-LD on the index, so parse that byline.
+      Index dates — each card sits in `<article class="stream-article …">` (the class
+      carries extra tokens, e.g. `stream-article latest ps-0 my-3 pb-4 border-bottom`, so
+      don't anchor on the closing quote) and its link+title are in
+      `<h2 class="headline"><a href=…>`. The date is in the byline as
+      `Mon D, YYYY at H:MM am/pm ET` (re-verified 2026-08-04); there is no `datetime=`
+      attribute and no JSON-LD on the index, so parse that byline.
       Highest-volume source in the pipeline (~18 in-window ads items on 2026-08-03).
 
   # ── Meta ────────────────────────────────────────────────────────────────────
