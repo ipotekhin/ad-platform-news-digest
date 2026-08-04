@@ -446,5 +446,33 @@
     "impact": "high",
     "collected": true,
     "presented": true
+  },
+  {
+    "id": "cf6619df856a",
+    "platform": "google_ads",
+    "source": "Search Engine Land — Google",
+    "title": "Google Data Manager API adds bulk audience clearing and field-level ingestion warnings",
+    "url": "https://searchengineland.com/google-expands-data-manager-api-with-smarter-audience-management-484191",
+    "published": "2026-08-03",
+    "first_seen": "2026-08-04T07:22:28Z",
+    "summary": "The Data Manager API gains a RemoveAllAudienceMembers method that wipes an entire Customer Match list in one call, with an optional timestamp to drop only members added before a given date. Ingestion no longer fails wholesale on bad optional fields — valid records process and field-level warnings explain what failed — and Google Analytics destinations now accept street address, city and state alongside existing identifiers.",
+    "category": "api",
+    "impact": "medium",
+    "collected": true,
+    "presented": false
+  },
+  {
+    "id": "91380e539f90",
+    "platform": "google_ads",
+    "source": "Search Engine Land — Google",
+    "title": "Google pushes the Dynamic Search Ads sunset back: new DSA campaigns until January 2027, auto-migration to AI Max from February 2027",
+    "url": "https://searchengineland.com/prepare-google-dsa-sunset-ai-max-483290",
+    "published": "2026-07-23",
+    "first_seen": "2026-08-04T07:22:28Z",
+    "summary": "After advertiser feedback, Google revised its DSA wind-down: advertisers can keep creating standalone Dynamic Search Ads campaigns until January 2027, and automatic migration to AI Max now starts February 2027 instead of the previously signalled September 2026. AI Max targets differently — the website becomes one signal among keywords, ad copy, budget and real-time intent, and it writes its own headlines and descriptions — so DSA-reliant accounts lose the dynamic-ad-target structure and DSA search term reporting they used to organise non-brand search.",
+    "category": "deprecation",
+    "impact": "high",
+    "collected": true,
+    "presented": false
   }
 ]
