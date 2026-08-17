@@ -8,7 +8,7 @@
 > **`**double asterisks**`** for bold; a single `*word*` renders as *italic* (that's the
 > bug the first run hit — platform names came out italic). Emoji via `:shortcode:`.
 >
-> - **Search** team (Google Ads + Microsoft/Bing) → `search_channel_id` = **#paid-search-team**.
+> - **Search** team (Google Ads + Microsoft/Bing + ChatGPT Ads) → `search_channel_id` = **#paid-search-team**.
 > - **Social** team (Meta + TikTok + LinkedIn) → `social_channel_id` = **#paid-social-team**.
 > - Targets (channel IDs) live in `routines/routine-2-presentation.md` → Open config. The
 >   internal backlog/system note (step 8) still goes to **Ivan's DM `U065VBRHYV7`**, not the
@@ -40,7 +40,7 @@
 
 Rules:
 - **Per team:** highlights and the summary use **only this team's platforms** (Search =
-  Google Ads + Microsoft/Bing · Social = Meta + TikTok + LinkedIn).
+  Google Ads + Microsoft/Bing + ChatGPT Ads · Social = Meta + TikTok + LinkedIn).
 - **One highlight line per platform** — the platform's **single hottest** item (highest
   impact; break ties by recency). Do **not** list several updates from the same platform;
   the deck holds the full detail, the message is a teaser of the top change per platform.
@@ -113,7 +113,7 @@ _Team-named_ (use the message's own team — Search or Social):
 
 ## Worked examples (edition Jul 20 – Aug 3, 2026) — one per team, one line per platform
 
-**Search channel** (Google Ads + Microsoft/Bing), link `?team=search`:
+**Search channel** (Google Ads + Microsoft/Bing + ChatGPT Ads), link `?team=search`:
 
 ```
 Happy Monday, Search team! Hope you're having a good one ✨

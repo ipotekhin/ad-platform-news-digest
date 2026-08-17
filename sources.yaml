@@ -5,7 +5,7 @@
 #
 # Fields:
 #   key         Stable identifier. MUST match the key used in data/state.json.
-#   platform    google_ads | meta | tiktok | linkedin | bing | mixed
+#   platform    google_ads | meta | tiktok | linkedin | bing | chatgpt | mixed
 #                 mixed = a multi-platform aggregator (e.g. ppc.land tag pages). The
 #                         SOURCE has no single platform; the collector reads EACH article
 #                         and sets that item's real platform (one of the five above),
@@ -157,6 +157,60 @@ sources:
     validation: readable
     note: ~62 article links with dates (verified). Often higher signal for Microsoft
       Ads than the broad Bing blog.
+
+  # ── ChatGPT Ads (OpenAI) ────────────────────────────────────────────────────
+  # Search-team platform. Item `platform` = `chatgpt`; deck display name "ChatGPT Ads".
+  - key: seroundtable_chatgpt_ads
+    platform: chatgpt
+    title: Search Engine Roundtable — ChatGPT Ads
+    url: https://www.seroundtable.com/category/chatgpt-ads
+    type: aggregator
+    cadence: feed
+    validation: readable
+    note: >-
+      Dedicated ChatGPT Ads category feed — the highest-signal source for this platform.
+      Verified 2026-08-17 via curl (HTTP 200, ~99 KB): index cards are
+      `<h2 class="text-black-text font-bold text-xl"><a href="https://www.seroundtable.com/<slug>-<id>.html">`
+      and the date follows in a `<span class="text-sm …">` as `Mon D, YYYY - H:MM am/pm`.
+      Article pages read fine (HTTP 200) and carry JSON-LD `"datePublished"` — prefer that
+      over the index date. Egress host is `www.seroundtable.com`. Apply the normal 2-week
+      window. Still filter per criteria.md: this category is ads-focused, but drop pure
+      commentary/speculation with no concrete Ads Manager change.
+
+  - key: searchengineland_chatgpt
+    platform: chatgpt
+    title: Search Engine Land — ChatGPT
+    url: https://searchengineland.com/library/platforms/openai/chatgpt
+    type: aggregator
+    cadence: feed
+    validation: readable
+    note: >-
+      Verified 2026-08-17 via curl (HTTP 200): ~43 article links, same SEL index structure
+      as the other library pages (`<h2 class="headline"><a href=…>` + byline date
+      `Mon D, YYYY at H:MM am/pm ET`; no `datetime=`/JSON-LD on the index, so parse the
+      byline). **Filter HARD:** this page mixes real ChatGPT *Ads* news (e.g. "ChatGPT Ads
+      rolls out oCPC campaigns", "How to run ChatGPT ads") with lots of SEO/organic and
+      evergreen ChatGPT content ("What is ChatGPT and why SEOs should care") — keep only
+      ads-manager changes per criteria.md. As with other SEL pages, the top links can be a
+      site-wide recent/popular block, so pick platform-specific items. Same SEL fetch
+      caveats apply (concurrency ≤3; possible origin 504s — see header).
+
+  - key: searchengineland_ppc
+    platform: chatgpt          # SCOPED: only ChatGPT/OpenAI ads items (see note)
+    title: Search Engine Land — PPC
+    url: https://searchengineland.com/library/ppc
+    type: aggregator
+    cadence: feed
+    validation: readable
+    note: >-
+      Broad PPC feed. Verified 2026-08-17 via curl (HTTP 200, ~330 KB): ~46 headline
+      blocks, ~40 byline dates, same SEL index structure as above.
+      **SCOPE — ChatGPT/OpenAI ads items ONLY.** Added as a ChatGPT Ads source, and the
+      Google/Microsoft/Meta/TikTok coverage here is already served by the dedicated SEL
+      library pages, so do NOT harvest other platforms from this page (it would duplicate
+      those sources and flood the Google Ads bucket). Also drop the evergreen how-to /
+      "what is PPC" / tool-roundup content this page carries. If you keep an item, set its
+      `platform` to `chatgpt`. Same SEL fetch caveats apply (see header).
 
   # ── PPC Land (multi-platform aggregators) ─────────────────────────────────────
   - key: ppcland_search

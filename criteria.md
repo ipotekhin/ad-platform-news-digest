@@ -58,6 +58,7 @@ The official newsrooms (esp. Meta) publish a lot of non-ads news. Use this to fo
 | **TikTok** | TikTok Ads Manager features, Spark Ads / new ad formats, Smart+ / automated campaigns, targeting & optimization, Events API / attribution, commerce/Shop ads, ad policy. | Creator/consumer features, entertainment/culture posts, corporate PR. |
 | **LinkedIn** | Campaign Manager features, new ad formats (Thought Leader, Conversation, Document ads), audience/targeting, bidding, LinkedIn Insight Tag / conversion tracking, reporting, Marketing API. | Consumer feed features, hiring/talent products, corporate PR, general LinkedIn tips. |
 | **Microsoft / Bing** | Microsoft Advertising features, Performance Max, new formats/extensions, Copilot/AI ads, audience & bidding, UET / conversion tracking, reporting, Ads API, import from Google Ads, policy. | Bing consumer search/Copilot news with no ad surface, Windows/Edge, corporate PR. |
+| **ChatGPT Ads** (OpenAI) | ChatGPT Ads Manager features, campaign types & bidding (e.g. oCPC), new ad formats/placements (product carousels, chatbot-native/agentic ads), targeting & audiences (AAM), measurement & attribution (sales value, ROAS), advertiser eligibility/rollout & regions, ads API, ad policy. | Consumer ChatGPT/model news with no ad surface, SEO/AEO/"how to rank in ChatGPT" content, generic prompt/how-to guides, studies & speculation with no concrete Ads Manager change, OpenAI corporate PR. |
 
 ---
 
@@ -70,8 +71,8 @@ The official newsrooms (esp. Meta) publish a lot of non-ads news. Use this to fo
 | `low`    | Minor / informational.                                         |
 
 The deck (Routine 2) leads with `high`, then `medium`, then `low`. There is **no overall
-size cap**, but a **per-platform cap** keeps it fair across the Search (Google, Bing) and
-Social (Meta, TikTok, LinkedIn) teams: **max 6 items per platform** (up to **8** to fit
+size cap**, but a **per-platform cap** keeps it fair across the Search (Google, Bing,
+ChatGPT Ads) and Social (Meta, TikTok, LinkedIn) teams: **max 6 items per platform** (up to **8** to fit
 all `high`-impact items). Overflow carries to a future edition; un-presented items older
 than 28 days are retired. See `routines/routine-2-presentation.md` steps 1 & 3.
 

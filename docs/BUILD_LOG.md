@@ -17,10 +17,10 @@ happens by editing repo files, never by rewriting the routine trigger prompts.
 
 Each run branches from `main` to a `claude/*` branch, commits, opens a PR, and merges.
 
-## 2. Sources (`sources.yaml`, 11 — all `readable`, all `feed`)
+## 2. Sources (`sources.yaml`, 14 — all `readable`, all `feed`)
 Domains that MUST be in the run environment's egress allowlist (exact hosts):
 `blog.google`, `support.google.com`, `searchengineland.com`, `about.fb.com`,
-`www.socialmediatoday.com`, `blogs.bing.com`, `ppc.land`.
+`www.socialmediatoday.com`, `blogs.bing.com`, `ppc.land`, `www.seroundtable.com`.
 
 | key | platform | type | cadence |
 |---|---|---|---|
@@ -33,6 +33,9 @@ Domains that MUST be in the run environment's egress allowlist (exact hosts):
 | socialmediatoday_linkedin | linkedin | aggregator | feed |
 | bing_blogs | bing | official | feed |
 | searchengineland_microsoft | bing | aggregator | feed |
+| seroundtable_chatgpt_ads | chatgpt | aggregator | feed |
+| searchengineland_chatgpt | chatgpt | aggregator | feed |
+| searchengineland_ppc | chatgpt (scoped) | aggregator | feed |
 | ppcland_search | mixed (google_ads/bing) | aggregator | feed |
 | ppcland_social | mixed (meta/tiktok/linkedin) | aggregator | feed |
 
@@ -40,6 +43,17 @@ Domains that MUST be in the run environment's egress allowlist (exact hosts):
 items past the 2-week window; Social Media Today covers the same LinkedIn announcements as
 a dated feed, so SocialBee was dropped. **No `roundup` source remains — the 2-week window
 now applies to every source.**
+
+**ChatGPT Ads added (2026-08-17):** a new Search-team platform (`platform: chatgpt`,
+deck name "ChatGPT Ads"). Three sources, all validated readable via curl that day:
+Search Engine Roundtable's dedicated **ChatGPT Ads** category (highest signal),
+SEL **/platforms/openai/chatgpt**, and SEL **/library/ppc**. The SEL pages mix real Ads
+news with SEO/organic and evergreen how-to content, so filter hard per `criteria.md`.
+**`searchengineland_ppc` is deliberately SCOPED to ChatGPT/OpenAI items only** — its
+Google/Microsoft/Meta/TikTok coverage is already served by the dedicated SEL library
+pages, so harvesting it broadly would duplicate them and flood the Google Ads bucket.
+`teamOf()` needs no change (anything not Meta/TikTok/LinkedIn ⇒ Search); an explicit
+`chatgpt`/`openai` icon family was added to `PF_FAM`.
 
 **Mixed sources (PPC Land tag pages):** one page carries several platforms + lots of
 non-ads/SEO news. The collector reads each article, sets the item's real `platform`, and
@@ -83,11 +97,12 @@ R1 applies it loosely (lean-include); R2 applies it strictly.
 - **Expiry:** un-presented items older than **28 days** (`first_seen`) are retired
   (`expired:true`) so backlog can't pile up forever.
 - **Select:** `presented:false` and not `expired`.
-- **Order:** Search block first, then Social — Google Ads → Microsoft/Bing → Meta →
-  TikTok → LinkedIn; within a platform, high→med→low. Deck renders in deck-data order.
+- **Order:** Search block first, then Social — Google Ads → Microsoft/Bing → ChatGPT Ads
+  → Meta → TikTok → LinkedIn; within a platform, high→med→low. Deck renders in deck-data
+  order.
 - **Balance (no overall cap):** **per-platform cap 6** (up to **8** to fit all `high`s),
-  so no platform dominates and both teams (Search: Google/Bing · Social: Meta/TikTok/
-  LinkedIn) stay represented. Overflow carries to a future edition.
+  so no platform dominates and both teams (Search: Google/Bing/ChatGPT Ads · Social:
+  Meta/TikTok/LinkedIn) stay represented. Overflow carries to a future edition.
 - **Backlog status note:** after delivery, Routine 2 DMs Ivan (`U065VBRHYV7`) a short
   deferred/expired-by-platform summary (internal, always to Ivan even once the digest
   goes to a team channel).
@@ -100,7 +115,7 @@ R1 applies it loosely (lean-include); R2 applies it strictly.
 - **Slack (two teams):** compose per `style/slack-summary.md` (greeting → intro w/ date
   range → **one highlight per platform** → summary → link; **bold via `**double**`** —
   a single `*x*` renders italic in this connector), and send **one message per team** via
-  `slack_send_message`: **Search** (Google Ads + Bing) → `search_channel_id`, **Social**
+  `slack_send_message`: **Search** (Google Ads + Bing + ChatGPT Ads) → `search_channel_id`, **Social**
   (Meta + TikTok + LinkedIn) → `social_channel_id`. Each message covers only its team's
   platforms and links the deck with `?team=search|social` appended (opens on that team's
   filtered view; reader can switch to *All news*). A team with no items gets no message.
@@ -144,7 +159,7 @@ R1 applies it loosely (lean-include); R2 applies it strictly.
 Schedules are set manually in the routine UI and do not affect any logic.
 
 ## 8. Environment prerequisites (Ivan-managed)
-- Egress allowlist: the 8 hosts in §2 (exact host, incl. `www.` where the site
+- Egress allowlist: the hosts in §2 (exact host, incl. `www.` where the site
   canonicalizes to www — e.g. Social Media Today; `ppc.land` for the PPC Land tags).
   (GTM needs no egress here — it loads in end-users' browsers, not during the routine.)
 - Slack connector enabled in the routine environment (posts as Ivan).
@@ -161,20 +176,18 @@ Schedules are set manually in the routine UI and do not affect any logic.
   mismatch → readable (#14), sticker pools + reset (#19), broken LinkedIn URL + verify
   guardrail (#22).
 
-## 10. Current state & next step — RELEASE-READY (2026-08-04)
-- **Live team channels wired in** (verified read-only, nothing posted):
-  `search_channel_id = C04PJUZMN91` (**#paid-search-team**),
+## 10. Current state — LIVE (as of 2026-08-17)
+- **Released.** Both routines run on schedule; **edition 1 shipped 2026-08-05**
+  (`decks/deck-2026-08-05.html`, 10 items) to the real team channels.
+- **Slack targets:** `search_channel_id = C04PJUZMN91` (**#paid-search-team**),
   `social_channel_id = C04AU6G17GT` (**#paid-social-team**) — both **private**, so Ivan
   must be a member of each (the connector posts as Ivan). The step-8 backlog/system note
-  still goes to Ivan's DM `U065VBRHYV7`.
-- **Release prep done:** the **24 collected items are kept** (Routine 1 already ran), all
-  reset to `presented: false`; `data/editions.json = []`; the test deck
-  `deck-2026-08-04.html` removed (`decks/` empty bar `.gitkeep`); `state.json` left as-is
-  (informational). So on the next Routine 2 run this becomes **edition 1**.
-- **Release run:** Routine 2 (next scheduled fire, cadence gate passes since editions is
-  empty) builds edition 1 from the un-presented items, and posts **Search** →
-  #paid-search-team, **Social** → #paid-social-team. **A team with no items sends no
-  message** (Social currently = Meta + TikTok = 2 items; Search = Google + Bing = 22).
+  goes to Ivan's DM `U065VBRHYV7`.
+- **Cadence in practice:** R1 collects weekly (e.g. +18 items on 2026-08-11); R2 fires
+  every Wednesday but the step-0 gate (min 12 days) makes the digest land bi-weekly.
+- **ChatGPT Ads onboarded 2026-08-17** — 3 new sources (14 total), `platform: chatgpt`,
+  routed to the **Search** team and ordered after Microsoft/Bing. Nothing collected from
+  them yet; the next R1 run is the first that reads them.
 
 ## 11. Fixes from the first release test (2026-08-04)
 - **period_label** now = the digest window (prev edition +1 → generated; first edition

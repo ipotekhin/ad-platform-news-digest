@@ -1,8 +1,8 @@
 # Ad Platform News Digest
 
 Automatically collect marketing-relevant updates from the major ad platforms
-(Google Ads, Microsoft/Bing, Meta, LinkedIn, TikTok), keep only what matters, and
-every two weeks build an easy-to-read mini-deck that gets posted to Slack.
+(Google Ads, Microsoft/Bing, ChatGPT Ads, Meta, LinkedIn, TikTok), keep only what
+matters, and every two weeks build an easy-to-read mini-deck that gets posted to Slack.
 
 Discovery and relevance filtering are done by an **LLM agent** (two Claude routines),
 not a fixed scraper — article URLs are unknown in advance and "is this relevant" is a
@@ -103,8 +103,8 @@ The connected Slack MCP has **no file-upload tool**, so the deck is **not** atta
 Routine 2 posts a short text summary of the top items with the **GitHub Pages link**
 embedded in the message:
 - **Two team channels.** Each edition is announced to **two audiences** — **Search**
-  (Google Ads + Microsoft/Bing) and **Social** (Meta + TikTok + LinkedIn) — as a separate
-  message adapted to that team. A team with no items this edition gets no message.
+  (Google Ads + Microsoft/Bing + ChatGPT Ads) and **Social** (Meta + TikTok + LinkedIn)
+  — as a separate message adapted to that team. A team with no items this edition gets no message.
 - **Deep-linked filter.** Both messages link to the *same* deck, but with `?team=search`
   / `?team=social` appended so the page opens **pre-filtered to that team's view**; the
   reader can switch to *All news* in the header.
@@ -134,23 +134,23 @@ the fetch fails with a `403 CONNECT` policy denial (not a code bug).
 **Fetch with an in-session client (`curl` / `requests` / browser), not the managed
 `WebFetch` tool.** Validated 2026-07-21: once egress is open, curl gets HTTP 200 from
 every source domain, but `WebFetch`'s fetcher is still blocked by the sites' anti-bot
-(403). `sources.yaml` lists **11 sources**, all confirmed readable via curl; sources that
+(403). `sources.yaml` lists **14 sources**, all confirmed readable via curl; sources that
 could not be read were dropped and are not tracked. (The two PPC Land tag pages —
 multi-platform aggregators — were added and validated 2026-08-03; SocialBee was removed
-2026-08-04, so every source is now a dated feed under the 2-week window.)
+2026-08-04, so every source is now a dated feed under the 2-week window; the three
+ChatGPT Ads sources were added and validated 2026-08-17.)
 
 ## Status / next actions
 - [x] 1. Architecture / workflow decided
 - [x] 2. Repo created + sources gathered
 - [x] 3. **Validate sources** — done 2026-07-21 (in-session curl); 2 PPC Land tags added
-      2026-08-03 (SocialBee removed 2026-08-04). **11 sources** confirmed `readable`;
-      unreadable ones dropped. Recorded
-      in `sources.yaml`.
+      2026-08-03 (SocialBee removed 2026-08-04); 3 ChatGPT Ads sources added 2026-08-17.
+      **14 sources** confirmed `readable`; unreadable ones dropped. Recorded in
+      `sources.yaml`.
 - [x] 4. Repo scaffolded
 - [x] 5. Routine instruction docs written
-- [ ] 6. **Test + schedule:** manual run of Routine 1 → inspect `updates.json`; then
-      Routine 2; then put both on schedule. Full runbook in
-      [`routines/SETUP.md`](routines/SETUP.md).
+- [x] 6. **Test + schedule** — both routines tested and on schedule; first digest shipped
+      to the team channels 2026-08-05. Runbook in [`routines/SETUP.md`](routines/SETUP.md).
 
 See [`routines/SETUP.md`](routines/SETUP.md) to put the routines into operation, and
 [`CLAUDE.md`](CLAUDE.md) for the operational quick-reference.
