@@ -35,7 +35,7 @@ Domains that MUST be in the run environment's egress allowlist (exact hosts):
 | searchengineland_microsoft | bing | aggregator | feed |
 | seroundtable_chatgpt_ads | chatgpt | aggregator | feed |
 | searchengineland_chatgpt | chatgpt | aggregator | feed |
-| ppcland_search | mixed (google_ads/bing) | aggregator | feed |
+| ppcland_search | mixed (google_ads/bing/chatgpt) | aggregator | feed |
 | ppcland_social | mixed (meta/tiktok/linkedin) | aggregator | feed |
 
 **SocialBee removed (2026-08-04):** its monthly-`roundup` cadence let month-old LinkedIn
@@ -55,8 +55,9 @@ appear on the two tracked sources, so it only added duplicates plus evergreen co
 
 **Mixed sources (PPC Land tag pages):** one page carries several platforms + lots of
 non-ads/SEO news. The collector reads each article, sets the item's real `platform`, and
-keeps only pipeline platforms within scope (`ppcland_search` → Google Ads/Bing;
-`ppcland_social` → Meta/TikTok/LinkedIn). Filter hard for ads-manager relevance.
+keeps only pipeline platforms within scope (`ppcland_search` → Google Ads/Bing/ChatGPT
+Ads — that feed does carry ChatGPT Ads news; `ppcland_social` → Meta/TikTok/LinkedIn).
+Filter hard for ads-manager relevance.
 
 Sources that couldn't be read (official Meta business news, TikTok blog, LinkedIn Ads
 blog, Google Search blog) were **dropped** and are intentionally not tracked.
