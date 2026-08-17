@@ -73,7 +73,7 @@ Media Today, Bing, etc.):
   on one page, so there is no single source platform. For each in-window article: open
   it, decide relevance per `criteria.md`, and **determine which platform it's about**;
   keep it **only** if that platform is in our pipeline **and** within the source's
-  `scope` note — `ppcland_search` → **Google Ads / Microsoft (Bing)** only,
+  `scope` note — `ppcland_search` → **Google Ads / Microsoft (Bing) / ChatGPT Ads** only,
   `ppcland_social` → **Meta / TikTok / LinkedIn** only. Set the item's `platform` to that
   specific value (not `mixed`). Drop everything else the page carries (SEO / zero-click /
   organic-social / creator / consumer stories) — these pages run heavy on non-ads news,

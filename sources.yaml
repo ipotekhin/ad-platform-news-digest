@@ -201,22 +201,25 @@ sources:
 
   # ── PPC Land (multi-platform aggregators) ─────────────────────────────────────
   - key: ppcland_search
-    platform: mixed            # per-article platform: google_ads or bing
+    platform: mixed            # per-article platform: google_ads | bing | chatgpt
     title: PPC Land — Search
     url: https://ppc.land/tag/search/
     type: aggregator
     cadence: feed              # dated article feed; dates ARE on the index
     validation: readable
     note: >-
-      MIXED search-side aggregator (Google + Microsoft/Bing, plus a lot of pure SEO /
-      organic-search / industry news). Verified 2026-08-03 via curl (HTTP 200): index
+      MIXED search-side aggregator (Google + Microsoft/Bing + ChatGPT Ads, plus a lot of
+      pure SEO / organic-search / industry news). Verified 2026-08-03 via curl (HTTP 200): index
       cards are `<a href="/<slug>/">` with the date on the card as
       `<time class="card-post-date" datetime="YYYY-MM-DD">`. One index page holds only
       ~12 cards (~1 week), so page back through `/tag/search/page/2/`, `/page/3/`, …
       until the dates fall before window_start. Apply the normal 2-week
       window by that index date. Scope = keep ONLY ads-manager items about platforms in
-      our pipeline: **Google Ads** and **Microsoft/Bing** (set each item's `platform`
-      accordingly — google_ads or bing). Filter HARD per criteria.md — drop SEO / zero-
+      our pipeline: **Google Ads**, **Microsoft/Bing** and **ChatGPT Ads** (set each item's
+      `platform` accordingly — google_ads, bing or chatgpt). This feed does carry ChatGPT
+      Ads news (verified 2026-08-17: 2 of the 12 cards on page 1), so don't drop it — it
+      dedups against the dedicated ChatGPT sources via Layers 1–2.
+      Filter HARD per criteria.md — drop SEO / zero-
       click / organic-search / consumer stories (e.g. "AI Mode cuts Shopping listings",
       "zero-click searches", Yelp/Gen-Z items). Aggregator → prefer an official post over
       this in dedup Layer 2.
