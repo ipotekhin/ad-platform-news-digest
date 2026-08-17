@@ -31,5 +31,14 @@
   },
   "ppcland_social": {
     "last_collected": "2026-08-11"
+  },
+  "seroundtable_chatgpt_ads": {
+    "last_collected": null
+  },
+  "searchengineland_chatgpt": {
+    "last_collected": null
+  },
+  "searchengineland_ppc": {
+    "last_collected": null
   }
 }

@@ -68,12 +68,12 @@ not happen. (Optional: leave a one-line note in the run log.) Only continue to s
 when there is at least one qualifying update.
 
 ### 3. Balance & per-platform cap (keeps the deck fair across teams)
-The digest serves two audiences — **Search** (Google Ads, Microsoft/Bing) and **Social**
-(Meta, TikTok, LinkedIn) — so no single platform may dominate.
+The digest serves two audiences — **Search** (Google Ads, Microsoft/Bing, ChatGPT Ads) and
+**Social** (Meta, TikTok, LinkedIn) — so no single platform may dominate.
 - Group by platform, **Search block first, then Social block** (so All-news reads
-  Search → Social): **Google Ads → Microsoft/Bing → Meta → TikTok → LinkedIn** (omit
-  empty). Emit the `platforms` array in the deck data in exactly this order — the deck
-  renders platforms in data order, no re-sorting.
+  Search → Social): **Google Ads → Microsoft/Bing → ChatGPT Ads → Meta → TikTok →
+  LinkedIn** (omit empty). Emit the `platforms` array in the deck data in exactly this
+  order — the deck renders platforms in data order, no re-sorting.
 - Within each platform, order **high → medium → low** impact.
 - **No overall cap.** **Per-platform cap = 6** items: take the top 6 by impact.
 - **`high`-impact items are always included** — if a platform has more than 6 highs, raise
@@ -115,7 +115,7 @@ to that team and a link that opens the deck **already filtered to their view**. 
 itself is a single file with all platforms; the two links only differ by a `?team=` param.
 
 - **Split the included (capped) items into two teams by platform:**
-  - **Search** = Google Ads + Microsoft/Bing.
+  - **Search** = Google Ads + Microsoft/Bing + **ChatGPT Ads**.
   - **Social** = Meta + TikTok + LinkedIn.
 - **For each team that has at least one included item**, compose a message by following
   **`style/slack-summary.md`** exactly (greeting → digest intro with the date range →
@@ -172,7 +172,8 @@ is enough. Keep it compact; this note is for Ivan only, not the teams.
   `social_channel_id = C04AU6G17GT` (**#paid-social-team**). Both are **private** channels,
   so Ivan (whose identity the connector posts under) must be a member of each. Change an ID
   here to redirect a team later (nothing else changes). Team→platform mapping:
-  **Search** = Google Ads + Microsoft/Bing · **Social** = Meta + TikTok + LinkedIn.
+  **Search** = Google Ads + Microsoft/Bing + ChatGPT Ads · **Social** = Meta + TikTok +
+  LinkedIn.
 - **Deep-linked digest URL:** each team message links to the *same* deck with
   `?team=search` / `?team=social` appended, so it opens on that team's filtered view; the
   reader can switch to *All news* in the header (step 6).
