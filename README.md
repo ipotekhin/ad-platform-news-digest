@@ -134,18 +134,18 @@ the fetch fails with a `403 CONNECT` policy denial (not a code bug).
 **Fetch with an in-session client (`curl` / `requests` / browser), not the managed
 `WebFetch` tool.** Validated 2026-07-21: once egress is open, curl gets HTTP 200 from
 every source domain, but `WebFetch`'s fetcher is still blocked by the sites' anti-bot
-(403). `sources.yaml` lists **14 sources**, all confirmed readable via curl; sources that
+(403). `sources.yaml` lists **13 sources**, all confirmed readable via curl; sources that
 could not be read were dropped and are not tracked. (The two PPC Land tag pages —
 multi-platform aggregators — were added and validated 2026-08-03; SocialBee was removed
-2026-08-04, so every source is now a dated feed under the 2-week window; the three
-ChatGPT Ads sources were added and validated 2026-08-17.)
+2026-08-04, so every source is now a dated feed under the 2-week window; two ChatGPT Ads
+sources were added and validated 2026-08-17.)
 
 ## Status / next actions
 - [x] 1. Architecture / workflow decided
 - [x] 2. Repo created + sources gathered
 - [x] 3. **Validate sources** — done 2026-07-21 (in-session curl); 2 PPC Land tags added
-      2026-08-03 (SocialBee removed 2026-08-04); 3 ChatGPT Ads sources added 2026-08-17.
-      **14 sources** confirmed `readable`; unreadable ones dropped. Recorded in
+      2026-08-03 (SocialBee removed 2026-08-04); 2 ChatGPT Ads sources added 2026-08-17.
+      **13 sources** confirmed `readable`; unreadable ones dropped. Recorded in
       `sources.yaml`.
 - [x] 4. Repo scaffolded
 - [x] 5. Routine instruction docs written

@@ -195,22 +195,9 @@ sources:
       site-wide recent/popular block, so pick platform-specific items. Same SEL fetch
       caveats apply (concurrency ≤3; possible origin 504s — see header).
 
-  - key: searchengineland_ppc
-    platform: chatgpt          # SCOPED: only ChatGPT/OpenAI ads items (see note)
-    title: Search Engine Land — PPC
-    url: https://searchengineland.com/library/ppc
-    type: aggregator
-    cadence: feed
-    validation: readable
-    note: >-
-      Broad PPC feed. Verified 2026-08-17 via curl (HTTP 200, ~330 KB): ~46 headline
-      blocks, ~40 byline dates, same SEL index structure as above.
-      **SCOPE — ChatGPT/OpenAI ads items ONLY.** Added as a ChatGPT Ads source, and the
-      Google/Microsoft/Meta/TikTok coverage here is already served by the dedicated SEL
-      library pages, so do NOT harvest other platforms from this page (it would duplicate
-      those sources and flood the Google Ads bucket). Also drop the evergreen how-to /
-      "what is PPC" / tool-roundup content this page carries. If you keep an item, set its
-      `platform` to `chatgpt`. Same SEL fetch caveats apply (see header).
+  # NOTE: SEL /library/ppc was evaluated as a third ChatGPT Ads source (readable, HTTP 200)
+  # but NOT tracked — it is a broad PPC feed whose ChatGPT items also appear on the two
+  # sources above, so it only added duplicates plus evergreen "what is PPC" content.
 
   # ── PPC Land (multi-platform aggregators) ─────────────────────────────────────
   - key: ppcland_search

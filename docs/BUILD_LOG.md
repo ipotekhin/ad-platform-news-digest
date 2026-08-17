@@ -17,7 +17,7 @@ happens by editing repo files, never by rewriting the routine trigger prompts.
 
 Each run branches from `main` to a `claude/*` branch, commits, opens a PR, and merges.
 
-## 2. Sources (`sources.yaml`, 14 — all `readable`, all `feed`)
+## 2. Sources (`sources.yaml`, 13 — all `readable`, all `feed`)
 Domains that MUST be in the run environment's egress allowlist (exact hosts):
 `blog.google`, `support.google.com`, `searchengineland.com`, `about.fb.com`,
 `www.socialmediatoday.com`, `blogs.bing.com`, `ppc.land`, `www.seroundtable.com`.
@@ -35,7 +35,6 @@ Domains that MUST be in the run environment's egress allowlist (exact hosts):
 | searchengineland_microsoft | bing | aggregator | feed |
 | seroundtable_chatgpt_ads | chatgpt | aggregator | feed |
 | searchengineland_chatgpt | chatgpt | aggregator | feed |
-| searchengineland_ppc | chatgpt (scoped) | aggregator | feed |
 | ppcland_search | mixed (google_ads/bing) | aggregator | feed |
 | ppcland_social | mixed (meta/tiktok/linkedin) | aggregator | feed |
 
@@ -45,13 +44,12 @@ a dated feed, so SocialBee was dropped. **No `roundup` source remains — the 2-
 now applies to every source.**
 
 **ChatGPT Ads added (2026-08-17):** a new Search-team platform (`platform: chatgpt`,
-deck name "ChatGPT Ads"). Three sources, all validated readable via curl that day:
-Search Engine Roundtable's dedicated **ChatGPT Ads** category (highest signal),
-SEL **/platforms/openai/chatgpt**, and SEL **/library/ppc**. The SEL pages mix real Ads
-news with SEO/organic and evergreen how-to content, so filter hard per `criteria.md`.
-**`searchengineland_ppc` is deliberately SCOPED to ChatGPT/OpenAI items only** — its
-Google/Microsoft/Meta/TikTok coverage is already served by the dedicated SEL library
-pages, so harvesting it broadly would duplicate them and flood the Google Ads bucket.
+deck name "ChatGPT Ads"). **Two tracked sources**, both validated readable via curl that
+day: Search Engine Roundtable's dedicated **ChatGPT Ads** category (highest signal) and
+SEL **/platforms/openai/chatgpt**. The SEL page mixes real Ads news with SEO/organic and
+evergreen how-to content, so filter hard per `criteria.md`. SEL **/library/ppc** was
+evaluated too (readable) but **dropped**: it is a broad PPC feed whose ChatGPT items also
+appear on the two tracked sources, so it only added duplicates plus evergreen content.
 `teamOf()` needs no change (anything not Meta/TikTok/LinkedIn ⇒ Search); an explicit
 `chatgpt`/`openai` icon family was added to `PF_FAM`.
 
@@ -185,7 +183,7 @@ Schedules are set manually in the routine UI and do not affect any logic.
   goes to Ivan's DM `U065VBRHYV7`.
 - **Cadence in practice:** R1 collects weekly (e.g. +18 items on 2026-08-11); R2 fires
   every Wednesday but the step-0 gate (min 12 days) makes the digest land bi-weekly.
-- **ChatGPT Ads onboarded 2026-08-17** — 3 new sources (14 total), `platform: chatgpt`,
+- **ChatGPT Ads onboarded 2026-08-17** — 2 sources (13 total), `platform: chatgpt`,
   routed to the **Search** team and ordered after Microsoft/Bing. Nothing collected from
   them yet; the next R1 run is the first that reads them.
 
