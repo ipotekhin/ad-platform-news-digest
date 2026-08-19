@@ -361,7 +361,7 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "35db40d8d5ae",
@@ -375,7 +375,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "a9fdf956fc50",
@@ -431,7 +431,7 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "bed0e7cfb962",
@@ -512,10 +512,10 @@
     "published": "2026-08-05",
     "first_seen": "2026-08-11T07:32:08Z",
     "summary": "Twelve days before the August 17 bidding change, Google posted a structured Q&A (Ginny Marvin, plus an Ads Decoded AMA) arguing that in budget-capped campaigns the target — not the budget — becomes the efficiency lever. It landed hours after smec's Mike Ryan told advertisers the date is not a cliff and to hold steady for one to two conversion cycles.",
-    "category": "feature",
+    "category": "other",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "da8fa2d12e4d",
@@ -543,7 +543,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "042c6e1f3e54",
@@ -557,7 +557,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "f23d955df982",
@@ -571,7 +571,7 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "15dcf87d23e2",
@@ -599,7 +599,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "a56b28aa2011",
@@ -613,7 +613,7 @@
     "category": "measurement",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "deff3672031c",
@@ -627,7 +627,7 @@
     "category": "deprecation",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "8644b0db050c",
@@ -641,7 +641,7 @@
     "category": "deprecation",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "255d4f805147",
@@ -753,7 +753,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "15170d26addf",
@@ -767,7 +767,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "60ec9d1e4aaf",
@@ -781,7 +781,7 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "0774ec099c4a",
@@ -795,6 +795,6 @@
     "category": "other",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": true
   }
 ]
