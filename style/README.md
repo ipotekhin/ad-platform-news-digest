@@ -15,7 +15,9 @@ All styling lives in the `<style>` block of `deck-template.html`. Change the CSS
 variables under `:root` to re-skin. It is **not** zero-request: it loads Playfair
 Display / Courier Prime from the Google Fonts CDN and sticker PNGs from
 `../assets/stickers/` (repo-relative — works from both `style/` and `decks/`, since
-both sit one level below repo root). It also loads **Google Tag Manager** (container
+both sit one level below repo root). The header shows the brand logo
+`../assets/aidigital-icon-blue.svg` and the page favicon is
+`../assets/stickers/blob-face-pink.png` — both local files, no extra request hosts. It also loads **Google Tag Manager** (container
 `GTM-M2BTR42L`) for analytics and pushes a `link_click` event to the dataLayer on every
 `<a>` click (for GTM triggers). Don't add anything beyond fonts + local sticker assets +
 that GTM container — no other analytics or third-party JS. There is no dark-mode variant;
