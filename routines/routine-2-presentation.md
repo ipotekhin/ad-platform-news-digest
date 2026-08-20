@@ -82,6 +82,15 @@ The digest serves two audiences — **Search** (Google Ads, Microsoft/Bing, Chat
 - Items beyond the cap stay `presented: false` and carry to a future edition (subject to
   the 28-day expiry in step 1). Caps live in Open config.
 - Write a **TL;DR** of 3–5 bullets, most important change first (across platforms).
+  **Keep each bullet short — this block is skimmed, not read.** Hard rules:
+  - **One sentence, max ~20 words / ~140 characters.** If it needs a semicolon, an em-dash
+    aside or a second clause to fit, it is too long — cut it.
+  - **Lead with the change itself**, in plain words: *what changed + who it hits*. Drop
+    the supporting detail (exact dates, version numbers, rollout mechanics, caveats) —
+    that lives on the card below, and the reader opens the card for it.
+  - No preamble ("Google has announced that…") — start at the change.
+  - Example of the right length: *"Local Services Ads fold into Performance Max as
+    pay-per-lead from August; historical LSA reports don't carry over."*
 
 ### 4. Build the deck
 - Copy `style/deck-template.html` → `decks/deck-YYYY-MM-DD.html` (today's date).

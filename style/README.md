@@ -76,7 +76,9 @@ changes to `routines/routine-2-presentation.md` — the template falls back sens
   ChatGPT Ads → Meta → TikTok → LinkedIn** (drop empty ones). The deck renders in
   deck-data order.
 - Within a platform, order items **high → medium → low** impact.
-- TL;DR: 3–5 bullets, the single most important change first.
+- TL;DR: 3–5 bullets, the single most important change first. **One sentence each, max
+  ~20 words / ~140 characters** — it's a skim block; detail belongs on the card. On phones
+  the TL;DR grid drops to a single column (two columns squeeze the text unreadably).
 - No overall size cap; **per-platform cap 6** (up to 8 to fit all `high`s) keeps Search
   vs Social balanced. Overflow carries to a future edition (see `criteria.md`).
 - Every item links to its **canonical** source URL (official over aggregator).

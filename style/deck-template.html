@@ -105,6 +105,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     header>div>div:first-child span:last-child{font-size:11px;letter-spacing:.09em;line-height:1.25}
     #news-filter{flex:none}
     #news-filter .flt{padding:6px 8px;letter-spacing:.02em}
+    /* TL;DR: one column on phones — two columns squeeze each bullet into a narrow
+       ribbon of text that is hard to read. */
+    #d-tldr{grid-template-columns:1fr!important;gap:14px!important}
   }
 </style>
 </head>
