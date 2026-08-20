@@ -8,16 +8,25 @@
 
 ## Scope — what this digest is about
 
-**Only updates that change how a paid-advertising account / ads manager works.**
-If a change would make a PPC/SEM specialist open the ads manager, adjust a campaign,
-a report, or a tracking setup — it's in. If it wouldn't, it's out.
+**Only updates that change how a paid-advertising account / ads manager works — on the
+official ad platforms we actually run.** If a change would make a PPC/SEM specialist open
+the ads manager, adjust a campaign, a report, or a tracking setup — it's in. If it
+wouldn't, it's out.
 
 The test for every candidate:
-> "Does this change something I can see or do inside the ad account (campaign setup,
-> targeting, bidding, budgets, creative/format, reporting, tracking, policy/eligibility,
-> or the ads API)?"
+> "Does this change something I can see or do in **our own advertising stack** — the
+> official ads manager (campaign setup, targeting, bidding, budgets, creative/format,
+> reporting, policy/eligibility, ads API), the **ad-analytics / tracking** that feeds it
+> (GA4, GTM, conversion tracking, tags/pixels, consent mode, attribution), or an
+> **external change that measurably hits ads or tracking on those platforms** (browser /
+> OS / privacy changes such as iOS or Safari blocking a pixel)?"
 
 If **no** → drop it, however big the headline.
+
+**Ownership test (important).** The news must be about the **official platform** (or the
+analytics/ecosystem that feeds it), **not** about a third-party vendor's own product.
+"Vendor X can now buy ads on / measure data from Platform Y" is **not** an update to
+Platform Y — see the third-party exclusion below.
 
 ## Include if it is one of
 
@@ -29,6 +38,15 @@ If **no** → drop it, however big the headline.
   defaults, PMax / Advantage+ / Demand Gen behavior.
 - **Reporting / measurement / attribution change** — new reports, columns, metrics,
   dashboards; conversion tracking, tags, consent mode, attribution models.
+- **Ad-analytics stack change** — even when it isn't the ads manager itself: **GA4**,
+  **Google Tag Manager**, conversion tracking / offline conversions, the platforms' own
+  tags & pixels (UET, Meta Pixel/CAPI, LinkedIn Insight Tag), consent mode, data/audience
+  connections between analytics and the ad accounts.
+- **External / ecosystem change that hits our ads or tracking** — browser, OS or privacy
+  changes that affect delivery, targeting or measurement on our platforms (e.g. an iOS or
+  Safari release blocking cookies/pixels, Chrome tracking changes, a privacy regulation
+  that gates ad personalisation). Include when the impact on a platform we run is
+  concrete; skip generic "the industry is changing" commentary.
 - **Algorithm / delivery / auction change** that affects performance or optimization.
 - **Policy / compliance / eligibility change** that gates what ads can run or how.
 - **Deprecation / sunset** of an ad feature, setting, report, or metric.
@@ -36,6 +54,15 @@ If **no** → drop it, however big the headline.
 
 ## Exclude (even if it's from an ad platform)
 
+- **Third-party vendors, resellers and tools — always out.** We run the official ad
+  accounts only, so news about *someone else's* product is not our news, even when it
+  names our platforms. This covers: a vendor/agency platform gaining access to buy ads on
+  a platform (e.g. "AdRoll opens a ChatGPT ad-buying pilot"), third-party measurement /
+  clean-room / attribution tools ingesting platform data (e.g. "LiveRamp now ingests Meta
+  campaign data"), martech integrations, partner announcements, and vendor product
+  launches, funding or pricing. **The exception is the platforms' own analytics stack**
+  (GA4, GTM, UET, Meta CAPI, LinkedIn Insight Tag …), which is in scope per the Include
+  list — that is our stack, not a third-party one.
 - Consumer-product / app news with **no ad surface** (e.g. a new messaging feature).
 - Corporate PR: earnings, hiring, awards, events, partnerships, brand campaigns.
 - Case studies, customer success stories, generic "best practices" / inspiration.
@@ -43,7 +70,9 @@ If **no** → drop it, however big the headline.
 - Safety/policy news that doesn't touch advertiser-facing rules or eligibility.
 
 When in doubt at **collection** time (Routine 1), lean include; the strict filter and
-impact scoring at **presentation** time (Routine 2) do the trimming.
+impact scoring at **presentation** time (Routine 2) do the trimming. **The third-party
+exclusion is the exception — apply it at both stages:** don't even collect vendor news,
+since it would only sit in the backlog until it expires.
 
 ---
 

@@ -84,9 +84,18 @@ blog, Google Search blog) were **dropped** and are intentionally not tracked.
 
 ## 4. Relevance (`criteria.md`)
 Only **ad-account / ads-manager** changes (features, formats, reporting, targeting,
-bidding, algorithms, policy/eligibility, deprecations, ads API). Excludes consumer/PR,
-case studies, generic tips, organic-social. Per-platform GRAB/IGNORE table included.
-R1 applies it loosely (lean-include); R2 applies it strictly.
+bidding, algorithms, policy/eligibility, deprecations, ads API) **on the official
+platforms we run** — plus the **ad-analytics stack** that feeds them (GA4, GTM, conversion
+tracking, UET / Meta CAPI / LinkedIn Insight Tag, consent mode) and **external ecosystem
+changes** that concretely hit ads or tracking there (iOS/Safari/Chrome privacy changes).
+Excludes consumer/PR, case studies, generic tips, organic-social.
+**Third-party vendors/resellers/tools are always out** (added 2026-08-20): news about
+someone else's product is not our news even when it names our platforms — e.g. a vendor
+gaining ad-buying access ("AdRoll opens a ChatGPT ad-buying pilot") or a clean-room
+ingesting platform data ("LiveRamp now ingests Meta campaign data"). This one exclusion
+applies at **both** stages, so R1 doesn't collect vendor news that R2 would always drop.
+Per-platform GRAB/IGNORE table included. Otherwise R1 applies the rules loosely
+(lean-include); R2 applies them strictly.
 
 ## 5. Presentation rules (Routine 2)
 - **Cadence gate (step 0):** trigger fires **every Wednesday** (`0 7 * * 3`); if the
