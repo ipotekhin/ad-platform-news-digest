@@ -260,3 +260,41 @@ Verified on `decks/deck-i18n-test.html` (a copy of edition 2, not in the archive
 1280px and 390px: all four languages, Cyrillic and Serbian/Spanish diacritics, dropdowns,
 filter + language composing, localStorage persistence, no card overflow, no console
 errors. **Still English:** the two published editions — they get translated separately.
+
+### Review fixes + rollout (2026-08-31)
+Two rounds of fixes on the test page, then the rollout.
+
+**Round 1.** The hero **subtitle** is translated too (new `subtitle_i18n`) — four things
+now, not three. TL;DR capped at **4 bullets** for future editions (5 left an odd gap in
+the two-column grid); the two published editions keep their 5. The language pill was
+6px shorter than the filter slider. And the stored language preference was dropped:
+language comes from `?lang=` **only**, exactly like `?team=`, so a plain link always
+opens in English and a shared link renders the same for whoever opens it.
+
+**Round 2.**
+- *Pill height.* Still ~1px off with the real webfont: the pill used `line-height:1`
+  while the filter buttons used `line-height:normal`, so the two heights diverged once
+  Courier Prime loaded. Both controls now carry an **explicit height** (36px / 30px),
+  which no font can shift.
+- *No blur in the dropdown.* Proved by rendering the panel with a transparent
+  background — content behind stayed razor sharp. The sticky header sets its own
+  `backdrop-filter`, making it a **backdrop root**; a `backdrop-filter` nested inside one
+  samples an empty backdrop. The panel is now **moved onto `<body>` while open**
+  (positioned `fixed` under its pill, right-aligned) and returned to its control on
+  close; scroll and resize close it, since the placement is a one-shot measurement.
+  Click handling matches `.opts` rather than `.dd`, because an open panel is no longer a
+  descendant of its control.
+- *Slack labels* are language codes (`SR`, not `RS`); only the flag shortcode stays
+  country-based (`:flag-rs:`).
+- *Translation quality.* The first pass produced calques that only parse if you know the
+  English — e.g. "goes video-only and on by default" → "станет только видео", where
+  "видео" reads as the medium rather than the ad format. Routine 2 step 3a gained a
+  **"How to translate"** block: translate the fact rather than the word order, expand
+  English's compressed noun stacks and dropped words, use the platform's own localized
+  terminology (but keep the borrowed term the industry actually says), never invent a
+  name for a UI control, and read it back cold.
+
+**Rollout.** Both published editions were rebuilt on the new template and translated
+(edition 1: 10 items, edition 2: 15). Their TL;DR bullet counts are unchanged at 5 —
+the 3–4 rule applies to future editions only. The test page `decks/deck-i18n-test.html`
+is deleted. Slack messages now carry four language links embedded next to flag emoji.

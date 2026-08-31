@@ -33,8 +33,10 @@ keep working unchanged.
 - Dedup: Layer 1 = canonical-URL exact match (`sha1(canonical_url)[:12]`); Layer 2 =
   LLM semantic match, preferring official sources over aggregators.
 - **i18n:** Routine 2 pre-translates at build time (EN base → RU / ES / SR-**Latin**) and
-  translates **only** card titles, card summaries and TL;DR bullets — never the interface
-  chrome, platform names, chips, dates or footer. Length limits are set in English.
+  translates **only** the hero subtitle, card titles, card summaries and TL;DR bullets —
+  never the interface chrome, platform names, chips, dates or footer. Length limits are set
+  in English, and translations must read naturally, never as a calque (see Routine 2 step
+  3a). Language comes from `?lang=` only — no param means English, nothing is stored.
 - Only advance a source's `last_collected` in `state.json` if you actually read it.
 - The deck (`style/deck-template.html`) loads Google Fonts (Playfair Display, Courier
   Prime) from the Google Fonts CDN, reads sticker PNGs from `assets/stickers/` (plus the

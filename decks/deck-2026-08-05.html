@@ -64,11 +64,43 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     img[style*="floaty"]{animation:none}
   }
 
-  /* ── News filter (segmented slider) ── */
-  #news-filter{position:relative;display:inline-flex;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;padding:3px}
-  #news-filter .flt{position:relative;z-index:1;border:0;background:transparent;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:6px 14px;border-radius:999px;transition:color .2s;white-space:nowrap}
-  #news-filter .flt.active{color:#fff}
-  #news-filter .flt-ind{position:absolute;left:0;top:3px;bottom:3px;z-index:0;border-radius:999px;background:var(--aid-blue);transform:translateX(3px);transition:transform .3s cubic-bezier(.5,1.5,.4,1),width .3s cubic-bezier(.5,1.5,.4,1)}
+  /* ── Header controls: news filter + language (shared dropdown chrome) ──
+     Both controls are pills of the same family. The language pill is always a
+     dropdown; the news filter is the original segmented slider on desktop
+     (≥641px) and collapses to the same dropdown pill on phones, so the header
+     keeps a fixed, compact footprint however many filters we add later. */
+  .hdr-ctl{display:flex;align-items:center;gap:10px;flex:none}
+  .dd{position:relative;flex:none}
+  /* Height is set explicitly (not left to font metrics) so the pill matches the
+     desktop filter slider exactly whether or not the webfont has loaded. The 1px
+     of top-only padding optically centres the label: uppercase has no descenders,
+     so a strictly box-centred line reads as sitting high. */
+  .dd-toggle{display:inline-flex;align-items:center;gap:7px;height:36px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:1px 13px 0;line-height:1;white-space:nowrap;transition:background .18s}
+  .dd-toggle:hover{background:var(--aid-lime)}
+  .dd-car{font-size:9px;line-height:1;transition:transform .22s}
+  .dd.open .dd-car{transform:rotate(180deg)}
+  /* Frosted-glass popup. It is position:fixed and gets moved to <body> when it
+     opens — see openPanel() below. The header sets its own backdrop-filter, which
+     makes it a backdrop root, and a backdrop-filter nested inside one samples an
+     empty backdrop: the popup would render with no blur at all. Living on <body>
+     while open puts it back over the real page content. */
+  .opts{position:fixed;z-index:80;display:none;flex-direction:column;gap:2px;padding:6px;border:2px solid var(--aid-ink);border-radius:16px;background:rgba(255,255,255,.55);backdrop-filter:blur(16px) saturate(1.35);-webkit-backdrop-filter:blur(16px) saturate(1.35);box-shadow:4px 5px 0 rgba(26,26,26,.16)}
+  .opts.open{display:flex}
+  .opts button{display:flex;align-items:center;gap:8px;border:0;background:transparent;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:8px 12px;border-radius:999px;white-space:nowrap;text-align:left;transition:background .15s,color .15s}
+  .opts button:hover{background:rgba(43,90,224,.14)}
+  .opts button.active{background:var(--aid-blue);color:#fff}
+  .flt-ind{display:none}
+  /* Desktop: the news filter goes back to being a segmented slider — its panel
+     stays in place (never portaled) because its toggle is hidden here. */
+  @media (min-width:641px){
+    #news-filter{display:inline-flex;height:36px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;padding:3px}
+    #news-filter>.dd-toggle{display:none}
+    #news-filter .opts{position:relative;z-index:auto;display:inline-flex;flex-direction:row;gap:0;padding:0;border:0;border-radius:0;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
+    #news-filter .opts button{position:relative;z-index:1;height:100%;padding:6px 14px;transition:color .2s}
+    #news-filter .opts button:hover{background:transparent}
+    #news-filter .opts button.active{background:transparent;color:#fff}
+    #news-filter .flt-ind{display:block;position:absolute;left:0;top:0;bottom:0;z-index:0;border-radius:999px;background:var(--aid-blue);transition:transform .3s cubic-bezier(.5,1.5,.4,1),width .3s cubic-bezier(.5,1.5,.4,1)}
+  }
   /* ── Typewriter caret ── */
   .tw-caret::after{content:"";display:inline-block;width:.055em;height:.92em;background:currentColor;margin-left:.05em;vertical-align:-.06em;animation:tw-blink .8s steps(1) infinite}
   @keyframes tw-blink{50%{opacity:0}}
@@ -103,8 +135,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
        both fit on narrow phones without running off the edge. */
     header>div>div:first-child{min-width:0}
     header>div>div:first-child span:last-child{font-size:11px;letter-spacing:.09em;line-height:1.25}
-    #news-filter{flex:none}
-    #news-filter .flt{padding:6px 8px;letter-spacing:.02em}
+    /* Both header controls are dropdown pills here — see the .dd rules above.
+       Shorter pill (30px), same explicit height + 1px top bias as desktop. */
+    .hdr-ctl{gap:7px}
+    .dd-toggle{height:30px;padding:1px 10px 0;gap:5px;letter-spacing:.02em}
     /* TL;DR: one column on phones — two columns squeeze each bullet into a narrow
        ribbon of text that is hard to read. */
     #d-tldr{grid-template-columns:1fr!important;gap:14px!important}
@@ -126,10 +160,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <img class="stk-static" src="../assets/aidigital-icon-blue.svg" alt="AI Digital" style="height:22px;width:auto;flex:none;display:block">
       <span style="font-family:'Courier Prime',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:700">Ad Platform Digest</span>
     </div>
-    <div id="news-filter" role="tablist" aria-label="Filter news">
-      <button class="flt active" data-team="all" role="tab">All news</button>
-      <button class="flt" data-team="search" role="tab">Search</button>
-      <button class="flt" data-team="social" role="tab">Social</button>
+    <div class="hdr-ctl">
+      <div id="news-filter" class="dd" role="group" aria-label="Filter news">
+        <button class="dd-toggle" type="button" aria-haspopup="true" aria-expanded="false"><span class="dd-cur">All news</span><span class="dd-car">▾</span></button>
+        <div class="opts" role="tablist">
+          <button class="flt active" data-team="all" role="tab">All news</button>
+          <button class="flt" data-team="search" role="tab">Search</button>
+          <button class="flt" data-team="social" role="tab">Social</button>
+        </div>
+      </div>
+      <div id="lang-dd" class="dd">
+        <button class="dd-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Language"><span class="dd-cur">🇺🇸 EN</span><span class="dd-car">▾</span></button>
+        <div class="opts">
+          <button class="lng active" data-lang="en">🇺🇸 EN</button>
+          <button class="lng" data-lang="ru">🇷🇺 RU</button>
+          <button class="lng" data-lang="es">🇪🇸 ES</button>
+          <button class="lng" data-lang="sr">🇷🇸 SR</button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
@@ -236,6 +284,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
        "read_minutes":   5,                     // falls back to an estimate from item count
        "author":         "Ivan Potekhin",       // footer credit; falls back to "Ivan Potekhin"
        "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"deck-2026-07-05.html" }]  // past-editions strip; BARE filename (no decks/ prefix); omitted -> section hidden
+
+     TRANSLATIONS (optional; the header language pill offers EN / RU / ES / SR).
+     English is the base language and is always what `subtitle`/`title`/`summary`/
+     `tldr` hold. Routine 2 pre-translates at build time — there is no runtime
+     API — and supplies EXACTLY FOUR things per language: the hero subtitle, card
+     titles, card summaries and TL;DR bullets. Everything else on the page is
+     fixed English chrome. Serbian is written in LATIN script (`sr`). A missing
+     language, item or field silently falls back to English, so pre-i18n decks
+     still render.
+       "subtitle_i18n": { "ru":"…", "es":"…", "sr":"…" }
+       "tldr_i18n":     { "ru":[ … ], "es":[ … ], "sr":[ … ] }  // same count & order as "tldr"
+       …and on each item:
+       "i18n": { "ru":{"title":"…","summary":"…"}, "es":{…}, "sr":{…} }
+     Deep link with ?lang=ru|es|sr. The URL is the ONLY source of language (same
+     as ?team=): no param — or ?lang=en — always opens in English, and nothing is
+     stored, so a shared link renders the same for everyone who opens it.
   ────────────────────────────────────────────────────────────────────────── -->
   <script id="deck-data" type="application/json">
 {
@@ -262,7 +326,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           "published": "2026-07-29",
           "category": "feature",
           "impact": "high",
-          "summary": "Google's July Demand Gen Drop makes Checkout Links available in nine new markets (Switzerland, Australia, South Korea, Indonesia, Mexico, France, Poland, Israel, Argentina) and ships an upgraded Target ROAS bidding behaviour that is less cautious early in a campaign so targets are hit faster. It also pushes product-feed integration, an affiliate partnerships boost for creator content, and US-only Universal Commerce Protocol purchases from YouTube ads."
+          "summary": "Google's July Demand Gen Drop makes Checkout Links available in nine new markets (Switzerland, Australia, South Korea, Indonesia, Mexico, France, Poland, Israel, Argentina) and ships an upgraded Target ROAS bidding behaviour that is less cautious early in a campaign so targets are hit faster. It also pushes product-feed integration, an affiliate partnerships boost for creator content, and US-only Universal Commerce Protocol purchases from YouTube ads.",
+          "i18n": {
+            "ru": {
+              "title": "Июльский Demand Gen Drop открывает Checkout Links в девяти странах и обновляет ставки по tROAS",
+              "summary": "Июльский выпуск Demand Gen Drop открывает Checkout Links ещё в девяти странах (Швейцария, Австралия, Южная Корея, Индонезия, Мексика, Франция, Польша, Израиль, Аргентина) и меняет поведение стратегии «Целевая рентабельность инвестиций в рекламу»: она осторожничает меньше в начале кампании, поэтому целевые показатели достигаются быстрее. В том же выпуске — интеграция товарных фидов, поддержка партнёрских программ для контента авторов и покупки по Universal Commerce Protocol прямо из объявлений на YouTube, пока только в США."
+            },
+            "es": {
+              "title": "El Demand Gen Drop de julio amplía Checkout Links a nueve mercados y mejora las pujas por tROAS",
+              "summary": "La entrega de julio de Demand Gen Drop habilita Checkout Links en nueve mercados más (Suiza, Australia, Corea del Sur, Indonesia, México, Francia, Polonia, Israel y Argentina) y cambia el comportamiento de la puja por ROAS objetivo: es menos cautelosa al principio de la campaña, de modo que los objetivos se alcanzan antes. La misma entrega impulsa la integración con feeds de productos, un refuerzo de las colaboraciones de afiliación para contenido de creadores y compras mediante Universal Commerce Protocol desde anuncios de YouTube, solo en EE. UU."
+            },
+            "sr": {
+              "title": "Julski Demand Gen Drop širi Checkout Links na devet tržišta i unapređuje licitiranje po tROAS",
+              "summary": "Julsko izdanje Demand Gen Drop otvara Checkout Links na još devet tržišta (Švajcarska, Australija, Južna Koreja, Indonezija, Meksiko, Francuska, Poljska, Izrael, Argentina) i menja ponašanje licitiranja po ciljnom ROAS-u: manje je oprezno na početku kampanje, pa se ciljevi dostižu brže. Isto izdanje donosi integraciju feedova proizvoda, podršku za affiliate saradnje na sadržaju kreatora i kupovinu preko Universal Commerce Protocol direktno iz YouTube oglasa, zasad samo u SAD."
+            }
+          }
         },
         {
           "title": "Google rolls out AI content labels for ad creatives in asset studio",
@@ -271,7 +349,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           "published": "2026-07-28",
           "category": "policy",
           "impact": "high",
-          "summary": "Advertisers can now attach text or visual AI labels to eligible image and video creatives, or switch on an AI label setting, to disclose AI-generated or AI-modified assets — aimed at transparency rules in the EU, India and New York. Google may auto-apply labels to assets made with its own AI tools, and the labels are exempt from the usual ban on text overlays and watermarks. The rollout has been seen across Google Ads, Merchant Center and asset studio."
+          "summary": "Advertisers can now attach text or visual AI labels to eligible image and video creatives, or switch on an AI label setting, to disclose AI-generated or AI-modified assets — aimed at transparency rules in the EU, India and New York. Google may auto-apply labels to assets made with its own AI tools, and the labels are exempt from the usual ban on text overlays and watermarks. The rollout has been seen across Google Ads, Merchant Center and asset studio.",
+          "i18n": {
+            "ru": {
+              "title": "Google запускает маркировку ИИ-контента для рекламных креативов в asset studio",
+              "summary": "Рекламодатели теперь могут добавлять к подходящим изображениям и видео текстовую или визуальную пометку об ИИ либо включить соответствующую настройку, чтобы раскрыть, что креатив создан или изменён нейросетью, — это ответ на требования прозрачности в ЕС, Индии и Нью-Йорке. Google может проставлять пометку автоматически на материалах, сделанных его собственными ИИ-инструментами, и на такие подписи не распространяется обычный запрет на текст и водяные знаки поверх изображения. Функцию заметили в Google Ads, Merchant Center и asset studio."
+            },
+            "es": {
+              "title": "Google lanza etiquetas de contenido de IA para creatividades publicitarias en asset studio",
+              "summary": "Los anunciantes ya pueden añadir una etiqueta de IA, textual o visual, a las imágenes y vídeos admitidos, o activar el ajuste correspondiente, para revelar que la creatividad fue generada o modificada por IA, en respuesta a las normas de transparencia de la UE, India y Nueva York. Google puede aplicar la etiqueta automáticamente a los recursos creados con sus propias herramientas de IA, y esas etiquetas quedan exentas de la prohibición habitual de superponer texto o marcas de agua. Se ha visto en Google Ads, Merchant Center y asset studio."
+            },
+            "sr": {
+              "title": "Google uvodi oznake za AI sadržaj na reklamnim kreativama u asset studiju",
+              "summary": "Oglašivači sada mogu da na podobne slike i video snimke dodaju tekstualnu ili vizuelnu oznaku o veštačkoj inteligenciji, ili da uključe odgovarajuće podešavanje, kako bi otkrili da je kreativa napravljena ili izmenjena pomoću AI — što je odgovor na pravila o transparentnosti u EU, Indiji i Njujorku. Google oznaku može primeniti automatski na materijale napravljene sopstvenim AI alatima, a na te oznake se ne odnosi uobičajena zabrana teksta i vodenih žigova preko slike. Funkcija je viđena u Google Ads-u, Merchant Centru i asset studiju."
+            }
+          }
         },
         {
           "title": "PMax alpha lets selected advertisers switch off Search Partners and Display",
@@ -280,7 +372,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           "published": "2026-07-28",
           "category": "beta",
           "impact": "high",
-          "summary": "Google is running an alpha in which selected Performance Max buyers can untick two previously compulsory inventory sources — the Search Partner Network and the Google Display Network — via checkboxes in the campaign console that are enabled by default. Agencies report access from late June 2026; it reverses the lack of inventory control that has been the core complaint about PMax since launch."
+          "summary": "Google is running an alpha in which selected Performance Max buyers can untick two previously compulsory inventory sources — the Search Partner Network and the Google Display Network — via checkboxes in the campaign console that are enabled by default. Agencies report access from late June 2026; it reverses the lack of inventory control that has been the core complaint about PMax since launch.",
+          "i18n": {
+            "ru": {
+              "title": "В альфе PMax отдельные рекламодатели могут отключить Search Partners и контекстно-медийную сеть",
+              "summary": "Google проводит альфа-тест, в котором часть покупателей Performance Max может снять галочки с двух ранее обязательных источников трафика — сети поисковых партнёров и контекстно-медийной сети; чекбоксы в интерфейсе кампании включены по умолчанию. Агентства сообщают о доступе с конца июня 2026 года. Это разворот в главной претензии к PMax с момента запуска — в отсутствии контроля над площадками."
+            },
+            "es": {
+              "title": "Una alfa de PMax permite a anunciantes seleccionados desactivar Search Partners y Display",
+              "summary": "Google está ejecutando una alfa en la que parte de los compradores de Performance Max pueden desmarcar dos fuentes de inventario antes obligatorias —la red de socios de búsqueda y la Red de Display— mediante casillas del panel de campaña que vienen activadas por defecto. Las agencias informan de acceso desde finales de junio de 2026. Es un giro en la queja principal sobre PMax desde su lanzamiento: la falta de control sobre el inventario."
+            },
+            "sr": {
+              "title": "Alfa verzija PMax omogućava odabranim oglašivačima da isključe Search Partners i Display",
+              "summary": "Google sprovodi alfa test u kojem deo kupaca Performance Max može da isključi dva ranije obavezna izvora inventara — mrežu partnera u pretrazi i Google Display mrežu — preko polja u konzoli kampanje koja su podrazumevano uključena. Agencije javljaju o pristupu od kraja juna 2026. To je preokret u glavnoj zamerci na PMax od lansiranja: nedostatku kontrole nad inventarom."
+            }
+          }
         },
         {
           "title": "Local Services Ads fold into Google Ads as pay-per-lead PMax; historical reports are lost",
@@ -289,7 +395,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           "published": "2026-07-20",
           "category": "feature",
           "impact": "high",
-          "summary": "Google will retire the standalone Local Services Ads dashboard and convert LSA campaigns into a pay-per-lead Performance Max campaign type inside Google Ads, starting August 2026 with US home and storefront service advertisers (non-US in 2027). The migration is automatic and account-by-account, manual bidding ends, and past LSA performance reports do not carry over unless exported before the transition date."
+          "summary": "Google will retire the standalone Local Services Ads dashboard and convert LSA campaigns into a pay-per-lead Performance Max campaign type inside Google Ads, starting August 2026 with US home and storefront service advertisers (non-US in 2027). The migration is automatic and account-by-account, manual bidding ends, and past LSA performance reports do not carry over unless exported before the transition date.",
+          "i18n": {
+            "ru": {
+              "title": "Local Services Ads переезжают в Google Ads как PMax с оплатой за лид, старые отчёты не сохранятся",
+              "summary": "Google закроет отдельный кабинет Local Services Ads и превратит LSA-кампании в тип кампании Performance Max с оплатой за лид внутри Google Ads. Старт — август 2026 года, сначала для американских рекламодателей из сферы услуг на дому и в помещениях, за пределами США — в 2027-м. Переезд идёт автоматически, аккаунт за аккаунтом, ручные ставки отключаются, а прошлая статистика LSA не переносится, если не выгрузить её до даты перехода."
+            },
+            "es": {
+              "title": "Local Services Ads se integra en Google Ads como PMax con pago por lead; los informes antiguos se pierden",
+              "summary": "Google cerrará el panel independiente de Local Services Ads y convertirá las campañas de LSA en un tipo de campaña Performance Max con pago por lead dentro de Google Ads. Empieza en agosto de 2026 con anunciantes estadounidenses de servicios a domicilio y en local; fuera de EE. UU., en 2027. La migración es automática, cuenta por cuenta, se acaban las pujas manuales y el histórico de LSA no se traslada salvo que se exporte antes de la fecha de transición."
+            },
+            "sr": {
+              "title": "Local Services Ads se sele u Google Ads kao PMax sa plaćanjem po lidu; stari izveštaji se gube",
+              "summary": "Google će ugasiti zaseban panel Local Services Ads i pretvoriti LSA kampanje u tip Performance Max kampanje sa plaćanjem po lidu unutar Google Ads-a. Kreće u avgustu 2026. sa američkim oglašivačima usluga na kućnoj adresi i u objektu, a van SAD tokom 2027. Selidba je automatska, nalog po nalog, ručno licitiranje se gasi, a prethodni LSA izveštaji se ne prenose osim ako se izvezu pre datuma prelaska."
+            }
+          }
         },
         {
           "title": "Google Data Manager API adds bulk audience clearing and field-level ingestion warnings",
@@ -298,7 +418,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           "published": "2026-08-03",
           "category": "api",
           "impact": "medium",
-          "summary": "The Data Manager API gains a RemoveAllAudienceMembers method (optionally scoped by timestamp) that wipes a Customer Match list in one call, plus field-level ingestion warnings so a request with a bad optional field no longer fails wholesale. Street address, city and state can now be sent to Google Analytics destinations, and user-provided data can satisfy identifier requirements for some multi-source events."
+          "summary": "The Data Manager API gains a RemoveAllAudienceMembers method (optionally scoped by timestamp) that wipes a Customer Match list in one call, plus field-level ingestion warnings so a request with a bad optional field no longer fails wholesale. Street address, city and state can now be sent to Google Analytics destinations, and user-provided data can satisfy identifier requirements for some multi-source events.",
+          "i18n": {
+            "ru": {
+              "title": "Google Data Manager API добавил массовую очистку аудиторий и предупреждения по отдельным полям",
+              "summary": "В Data Manager API появился метод RemoveAllAudienceMembers, который одним вызовом очищает список Customer Match (при желании — только записи до определённого времени), и предупреждения на уровне полей: запрос с ошибкой в необязательном поле больше не отклоняется целиком. Улицу, город и штат теперь можно передавать в Google Analytics, а данные, предоставленные пользователем, могут закрывать требования по идентификаторам для части событий из нескольких источников."
+            },
+            "es": {
+              "title": "La API de Google Data Manager añade borrado masivo de audiencias y avisos por campo",
+              "summary": "La Data Manager API incorpora el método RemoveAllAudienceMembers, que vacía una lista de Customer Match en una sola llamada (opcionalmente acotado por marca temporal), y avisos a nivel de campo: una solicitud con un campo opcional erróneo ya no falla por completo. Ahora se pueden enviar calle, ciudad y estado a destinos de Google Analytics, y los datos aportados por el usuario pueden cubrir los requisitos de identificadores de algunos eventos de varias fuentes."
+            },
+            "sr": {
+              "title": "Google Data Manager API dodaje masovno brisanje publika i upozorenja po pojedinačnim poljima",
+              "summary": "Data Manager API dobija metod RemoveAllAudienceMembers, koji jednim pozivom prazni Customer Match listu (opciono ograničeno vremenskom oznakom), i upozorenja na nivou polja: zahtev sa greškom u opcionom polju više ne pada u celini. Ulica, grad i savezna država sada se mogu slati na Google Analytics odredišta, a podaci koje daje korisnik mogu ispuniti zahteve za identifikatorima kod dela događaja iz više izvora."
+            }
+          }
         },
         {
           "title": "Google documents text disclaimer assets for Search ads",
@@ -307,7 +441,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           "published": "2026-08-03",
           "category": "feature",
           "impact": "medium",
-          "summary": "Google published a Help Center page for text disclaimer assets, which place required terms, conditions and legal disclosures inside Search ads. The feature is available globally and supports AI Max campaigns; if a disclaimer asset is disapproved the ad keeps serving without the disclaimer rather than stopping."
+          "summary": "Google published a Help Center page for text disclaimer assets, which place required terms, conditions and legal disclosures inside Search ads. The feature is available globally and supports AI Max campaigns; if a disclaimer asset is disapproved the ad keeps serving without the disclaimer rather than stopping.",
+          "i18n": {
+            "ru": {
+              "title": "Google описал текстовые дисклеймеры для поисковых объявлений",
+              "summary": "Google опубликовал страницу справки о текстовых дисклеймерах — объектах, которые размещают обязательные условия и юридические оговорки прямо в поисковом объявлении. Функция доступна во всём мире и поддерживает кампании AI Max. Если такой объект отклонят на модерации, объявление продолжит показываться без дисклеймера, а не остановится."
+            },
+            "es": {
+              "title": "Google documenta los recursos de aviso legal en texto para anuncios de búsqueda",
+              "summary": "Google publicó una página de ayuda sobre los recursos de aviso legal en texto, que colocan los términos, condiciones y advertencias legales obligatorios dentro del propio anuncio de búsqueda. Está disponible en todo el mundo y admite campañas de AI Max; si el recurso se rechaza, el anuncio sigue publicándose sin el aviso en lugar de detenerse."
+            },
+            "sr": {
+              "title": "Google dokumentovao tekstualna pravna obaveštenja za pretraživačke oglase",
+              "summary": "Google je objavio stranicu pomoći o tekstualnim pravnim obaveštenjima — sredstvima koja obavezne uslove i pravne napomene smeštaju unutar samog pretraživačkog oglasa. Funkcija je dostupna globalno i podržava AI Max kampanje. Ako takvo sredstvo bude odbijeno, oglas nastavlja da se prikazuje bez obaveštenja umesto da stane."
+            }
+          }
         }
       ]
     },
@@ -321,7 +469,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           "published": "2026-07-31",
           "category": "deprecation",
           "impact": "high",
-          "summary": "Microsoft Advertising confirmed — via a notice slipped into help documents including the keyword match types page — that Predictive Matching is being retired and moved to Search term matching within AI Max. No action is required yet and no effective date was given, so accounts that relied on Predictive Matching alongside keyword targeting should watch for the switch."
+          "summary": "Microsoft Advertising confirmed — via a notice slipped into help documents including the keyword match types page — that Predictive Matching is being retired and moved to Search term matching within AI Max. No action is required yet and no effective date was given, so accounts that relied on Predictive Matching alongside keyword targeting should watch for the switch.",
+          "i18n": {
+            "ru": {
+              "title": "Microsoft сворачивает Predictive Matching и переносит его в подбор поисковых запросов AI Max",
+              "summary": "Microsoft Advertising подтвердил — заметкой, вставленной в справочные документы, включая страницу о типах соответствия ключевых слов, — что Predictive Matching сворачивается и переезжает в подбор поисковых запросов внутри AI Max. Никаких действий пока не требуется, дату не назвали, поэтому аккаунтам, где Predictive Matching работал вместе с таргетингом по ключевым словам, стоит следить за переключением."
+            },
+            "es": {
+              "title": "Microsoft retira Predictive Matching y lo integra en la coincidencia de términos de búsqueda de AI Max",
+              "summary": "Microsoft Advertising confirmó —mediante una nota deslizada en documentos de ayuda, entre ellos la página de tipos de concordancia de palabras clave— que Predictive Matching se retira y pasa a la coincidencia de términos de búsqueda dentro de AI Max. De momento no hay que hacer nada y no se dio fecha, así que las cuentas que apoyaban Predictive Matching en la segmentación por palabras clave deberían estar atentas al cambio."
+            },
+            "sr": {
+              "title": "Microsoft ukida Predictive Matching i prebacuje ga u uparivanje pojmova pretrage u AI Max",
+              "summary": "Microsoft Advertising je potvrdio — napomenom ubačenom u dokumente pomoći, uključujući stranicu o tipovima podudaranja ključnih reči — da se Predictive Matching ukida i seli u uparivanje pojmova pretrage unutar AI Max. Zasad nije potrebna nikakva akcija i datum nije naveden, pa nalozi koji su se oslanjali na Predictive Matching uz ciljanje ključnim rečima treba da prate prelazak."
+            }
+          }
         },
         {
           "title": "Microsoft Advertising brings Ad Preview Hub to Performance Max",
@@ -330,7 +492,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           "published": "2026-08-02",
           "category": "feature",
           "impact": "medium",
-          "summary": "Ad Preview Hub is live in Microsoft Advertising Performance Max campaigns, letting advertisers see how auto-assembled creative renders on MSN, Bing Search and Outlook before spend starts. Previews sit behind a 'Preview ads' button in the asset group editor and generate shareable links that expire after 30 days; more publishers are slated to follow."
+          "summary": "Ad Preview Hub is live in Microsoft Advertising Performance Max campaigns, letting advertisers see how auto-assembled creative renders on MSN, Bing Search and Outlook before spend starts. Previews sit behind a 'Preview ads' button in the asset group editor and generate shareable links that expire after 30 days; more publishers are slated to follow.",
+          "i18n": {
+            "ru": {
+              "title": "Microsoft Advertising добавил Ad Preview Hub в кампании Performance Max",
+              "summary": "Ad Preview Hub заработал в кампаниях Performance Max у Microsoft Advertising: рекламодатель может посмотреть, как собранный автоматически креатив выглядит на MSN, в поиске Bing и в Outlook, ещё до старта расходов. Предпросмотр открывается кнопкой Preview ads в редакторе группы объектов и даёт ссылки, которыми можно поделиться, — они живут 30 дней. Обещают добавить и другие площадки."
+            },
+            "es": {
+              "title": "Microsoft Advertising lleva Ad Preview Hub a Performance Max",
+              "summary": "Ad Preview Hub ya funciona en las campañas Performance Max de Microsoft Advertising: permite ver cómo se renderiza la creatividad ensamblada automáticamente en MSN, la búsqueda de Bing y Outlook antes de empezar a gastar. La vista previa se abre con el botón Preview ads en el editor de grupos de recursos y genera enlaces para compartir que caducan a los 30 días; está previsto sumar más publishers."
+            },
+            "sr": {
+              "title": "Microsoft Advertising dovodi Ad Preview Hub u Performance Max",
+              "summary": "Ad Preview Hub je uživo u Performance Max kampanjama Microsoft Advertising-a: oglašivač može da vidi kako se automatski sastavljena kreativa prikazuje na MSN-u, Bing pretrazi i u Outlooku pre nego što potrošnja krene. Pregled se otvara dugmetom Preview ads u editoru grupe sredstava i pravi linkove za deljenje koji ističu nakon 30 dana; najavljeno je i dodavanje drugih publishera."
+            }
+          }
         }
       ]
     },
@@ -344,7 +520,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           "published": "2026-07-30",
           "category": "api",
           "impact": "high",
-          "summary": "Effective July 29, 2026, Graph API v26.0 blocks 47 Commerce Order Management endpoints (order listing, shipment tracking, refunds, tax settings) with no successor, as the Shops checkout infrastructure retires. The same release removes the Instagram Explore Feed ad placement, strips Messenger Stories from targeting, and blocks creation of new poll ad creatives; the restrictions extend to all remaining API versions on October 27, 2026."
+          "summary": "Effective July 29, 2026, Graph API v26.0 blocks 47 Commerce Order Management endpoints (order listing, shipment tracking, refunds, tax settings) with no successor, as the Shops checkout infrastructure retires. The same release removes the Instagram Explore Feed ad placement, strips Messenger Stories from targeting, and blocks creation of new poll ad creatives; the restrictions extend to all remaining API versions on October 27, 2026.",
+          "i18n": {
+            "ru": {
+              "title": "Graph/Marketing API v26.0 закрывает 47 коммерческих эндпоинтов и убирает Explore Feed и опросы",
+              "summary": "С 29 июля 2026 года Graph API v26.0 закрывает 47 эндпоинтов управления заказами (список заказов, отслеживание отправлений, возвраты, налоговые настройки) без замены — вместе с отключением инфраструктуры оплаты в Shops. Тот же релиз убирает рекламный плейсмент Instagram Explore Feed, вырезает Messenger Stories из таргетинга и запрещает создавать новые креативы с опросами. С 27 октября 2026 года ограничения распространятся на все остальные версии API."
+            },
+            "es": {
+              "title": "La Graph/Marketing API v26.0 bloquea 47 endpoints de comercio y elimina Explore Feed y los anuncios de encuesta",
+              "summary": "Desde el 29 de julio de 2026, la Graph API v26.0 bloquea 47 endpoints de gestión de pedidos (listado de pedidos, seguimiento de envíos, reembolsos, ajustes de impuestos) sin sustituto, coincidiendo con la retirada de la infraestructura de pago de Shops. La misma versión elimina el emplazamiento publicitario de Instagram Explore Feed, saca Messenger Stories de la segmentación y bloquea la creación de nuevas creatividades de encuesta; las restricciones se extenderán a todas las versiones restantes de la API el 27 de octubre de 2026."
+            },
+            "sr": {
+              "title": "Graph/Marketing API v26.0 blokira 47 komercijalnih endpointa i uklanja Explore Feed i anketne oglase",
+              "summary": "Od 29. jula 2026. Graph API v26.0 blokira 47 endpointa za upravljanje porudžbinama (lista porudžbina, praćenje pošiljki, povraćaji, poreska podešavanja) bez zamene, uporedo sa gašenjem infrastrukture za plaćanje u Shops. Isto izdanje uklanja reklamnu poziciju Instagram Explore Feed, izbacuje Messenger Stories iz ciljanja i zabranjuje kreiranje novih anketnih kreativa; ograničenja se 27. oktobra 2026. proširuju na sve preostale verzije API-ja."
+            }
+          }
         }
       ]
     },
@@ -358,11 +548,53 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           "published": "2026-07-28",
           "category": "feature",
           "impact": "high",
-          "summary": "TikTok's third 2026 quarterly product preview (July 28) bundles eight sets of ad changes across premium reservation buys, catalog automation, commerce bidding, contextual inventory, generative creative and agent tooling. The most concrete new lever: national TopView campaigns can now exclude up to 40% of a market's sub-regions; GMV Max Pro optimises coupons, affiliate fees and commissions, and an Agentic Hub opens an MCP entry point into TikTok Ads Manager."
+          "summary": "TikTok's third 2026 quarterly product preview (July 28) bundles eight sets of ad changes across premium reservation buys, catalog automation, commerce bidding, contextual inventory, generative creative and agent tooling. The most concrete new lever: national TopView campaigns can now exclude up to 40% of a market's sub-regions; GMV Max Pro optimises coupons, affiliate fees and commissions, and an Agentic Hub opens an MCP entry point into TikTok Ads Manager.",
+          "i18n": {
+            "ru": {
+              "title": "В квартальном анонсе TikTok кампании TopView могут исключать до 40% суб-регионов",
+              "summary": "Третий квартальный анонс продуктов TikTok за 2026 год (28 июля) собрал восемь наборов рекламных изменений: премиальные резервные закупки, автоматизация каталога, ставки в коммерции, контекстный инвентарь, генеративные креативы и агентские инструменты. Самый ощутимый новый рычаг — национальные кампании TopView теперь могут исключать до 40% суб-регионов рынка. GMV Max Pro оптимизирует купоны, партнёрские выплаты и комиссии, а Agentic Hub открывает точку входа по MCP в TikTok Ads Manager."
+            },
+            "es": {
+              "title": "La previsualización trimestral de TikTok permite excluir hasta el 40 % de las subregiones en compras de TopView",
+              "summary": "La tercera previsualización trimestral de producto de TikTok de 2026 (28 de julio) agrupa ocho bloques de cambios publicitarios: compras premium por reserva, automatización de catálogo, pujas en comercio, inventario contextual, creatividades generativas y herramientas de agentes. La palanca nueva más concreta: las campañas nacionales de TopView ya pueden excluir hasta el 40 % de las subregiones de un mercado. GMV Max Pro optimiza cupones, tarifas de afiliación y comisiones, y un Agentic Hub abre un punto de entrada MCP a TikTok Ads Manager."
+            },
+            "sr": {
+              "title": "TikTok-ov kvartalni pregled omogućava da TopView kampanje isključe do 40% podregiona",
+              "summary": "Treći kvartalni pregled proizvoda TikTok-a u 2026. (28. jul) obuhvata osam grupa reklamnih izmena: premium rezervacijske zakupe, automatizaciju kataloga, licitiranje u trgovini, kontekstualni inventar, generativne kreative i alate za agente. Najkonkretnija nova poluga: nacionalne TopView kampanje sada mogu da isključe do 40% podregiona jednog tržišta. GMV Max Pro optimizuje kupone, affiliate naknade i provizije, a Agentic Hub otvara MCP ulaznu tačku u TikTok Ads Manager."
+            }
+          }
         }
       ]
     }
-  ]
+  ],
+  "subtitle_i18n": {
+    "ru": "Контроль над площадками, маркировка ИИ-креативов и переезд Local Services — изменения этих двух недель, которые затрагивают работающие кампании.",
+    "es": "Control de inventario, etiquetas de IA y la migración de Local Services: los cambios de la quincena que afectan a campañas en marcha.",
+    "sr": "Kontrola inventara, oznake za AI kreative i selidba Local Services — promene ove dve nedelje koje se tiču kampanja koje već rade."
+  },
+  "tldr_i18n": {
+    "ru": [
+      "С августа Local Services Ads становятся типом кампании Performance Max с оплатой за лид внутри Google Ads: переезд автоматический, ручные ставки отключаются, а старые отчёты LSA пропадут, если не выгрузить их заранее.",
+      "В альфе Performance Max отдельные рекламодатели наконец могут отключить Search Partners и контекстно-медийную сеть — тот самый контроль над площадками, которого от PMax просят с самого запуска.",
+      "Microsoft сворачивает Predictive Matching и переносит его в подбор поисковых запросов внутри AI Max — дату не назвали, так что аккаунты, которые на него опираются, стоит держать под наблюдением.",
+      "Graph/Marketing API v26.0 у Meta закрывает 47 коммерческих эндпоинтов и убирает плейсмент Instagram Explore Feed, таргетинг на Messenger Stories и создание новых креативов с опросами.",
+      "Google добавляет маркировку ИИ-контента для креативов (ЕС, Индия, Нью-Йорк) и отдельно закрывает апелляции в интерфейсе по решениям модерации старше шести месяцев."
+    ],
+    "es": [
+      "Desde agosto, Local Services Ads pasa a ser un tipo de campaña Performance Max con pago por lead dentro de Google Ads: la migración es automática, se acaban las pujas manuales y los informes antiguos de LSA se pierden si no se exportan antes.",
+      "Una alfa de Performance Max por fin permite a anunciantes seleccionados desmarcar Search Partners y la Red de Display: el control de inventario que los compradores de PMax piden desde el lanzamiento.",
+      "Microsoft retira Predictive Matching y lo integra en la coincidencia de términos de búsqueda de AI Max; no hay fecha, así que conviene vigilar las cuentas que dependen de él.",
+      "La Graph/Marketing API v26.0 de Meta bloquea 47 endpoints de comercio y elimina el emplazamiento de Instagram Explore Feed, la segmentación en Messenger Stories y las nuevas creatividades de encuesta.",
+      "Google añade etiquetas de contenido de IA para las creatividades (UE, India, Nueva York) y, por separado, deja de admitir apelaciones desde la cuenta para decisiones de políticas de más de seis meses."
+    ],
+    "sr": [
+      "Od avgusta Local Services Ads postaje tip Performance Max kampanje sa plaćanjem po lidu unutar Google Ads-a: selidba je automatska, ručno licitiranje se gasi, a stari LSA izveštaji nestaju ako se ne izvezu unapred.",
+      "Alfa verzija Performance Max konačno omogućava odabranim oglašivačima da isključe Search Partners i Display mrežu — kontrolu inventara koju kupci PMax traže od samog lansiranja.",
+      "Microsoft ukida Predictive Matching i prebacuje ga u uparivanje pojmova pretrage unutar AI Max — datum nije naveden, pa treba pratiti naloge koji se na njega oslanjaju.",
+      "Meta-in Graph/Marketing API v26.0 blokira 47 komercijalnih endpointa i uklanja poziciju Instagram Explore Feed, ciljanje na Messenger Stories i kreiranje novih anketnih kreativa.",
+      "Google dodaje oznake za AI sadržaj na kreativama (EU, Indija, Njujork) i, zasebno, ukida žalbe iz naloga za odluke o pravilima starije od šest meseci."
+    ]
+  }
 }
   </script>
 
@@ -399,11 +631,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     notepad:["todo-notepad-blue.png","todo-notepad-green.png","todo-notepad-pink.png"],
     doc:    ["document-sparkle-blue.png","document-sparkle-green.png","document-sparkle-pink.png"]
   };
-  var PF_FAM = [{k:"linkedin",f:"notepad"},{k:"tiktok",f:"doc"},{k:"meta",f:"globe"},{k:"facebook",f:"globe"},{k:"microsoft",f:"globe"},{k:"bing",f:"globe"},{k:"google",f:"globe"}];
+  var PF_FAM = [{k:"linkedin",f:"notepad"},{k:"tiktok",f:"doc"},{k:"meta",f:"globe"},{k:"facebook",f:"globe"},{k:"microsoft",f:"globe"},{k:"bing",f:"globe"},{k:"google",f:"globe"},{k:"chatgpt",f:"doc"},{k:"openai",f:"doc"}];
   function hashStr(s){var h=2166136261>>>0;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h>>>0;}
   function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
-  var _rng = mulberry32(hashStr(String((typeof data!=="undefined" && (data.generated||data.period_label)) || "seed")));
+  var SEED = String((typeof data!=="undefined" && (data.generated||data.period_label)) || "seed");
+  var _rng = mulberry32(hashStr(SEED));
   function pickFrom(pool){ return STK + pool[Math.floor(_rng()*pool.length)]; }
+  // Social = Meta / TikTok / LinkedIn; everything else (Google Ads, Microsoft/Bing,
+  // ChatGPT Ads, …) belongs to the Search team.
   function teamOf(name){var n=(name||"").toLowerCase();return (n.indexOf("meta")>=0||n.indexOf("tiktok")>=0||n.indexOf("linkedin")>=0||n.indexOf("facebook")>=0)?"social":"search";}
   function iconFor(name){
     var n=(name||"").toLowerCase(), fam="globe";
@@ -451,6 +686,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     return i;
   }
 
+  // ── Language (i18n) ──────────────────────────────────────────────────────
+  // Only FOUR things are translated: the hero subtitle, card titles, card
+  // summaries and TL;DR bullets. Everything else — brand, filters, hero
+  // headline, dates, counters, platform names, category/impact chips, card
+  // meta, archive, sign-off, footer — is pre-baked English chrome and is
+  // never regenerated.
+  //   item.i18n         = { ru:{title,summary}, es:{…}, sr:{…} }
+  //   data.tldr_i18n     = { ru:[…], es:[…], sr:[…] }
+  //   data.subtitle_i18n = { ru:"…", es:"…", sr:"…" }
+  // All optional: a missing language (or field) falls back to the English
+  // base, so decks built before i18n keep rendering unchanged.
+  var LANGS = ["en","ru","es","sr"];
+  function txt(it, field, lang){
+    if(lang !== "en" && it.i18n && it.i18n[lang] && it.i18n[lang][field]) return it.i18n[lang][field];
+    return it[field] || "";
+  }
+  function tldrFor(lang){
+    if(lang !== "en" && data.tldr_i18n && data.tldr_i18n[lang] && data.tldr_i18n[lang].length) return data.tldr_i18n[lang];
+    return data.tldr || [];
+  }
+  function subtitleFor(lang){
+    if(lang !== "en" && data.subtitle_i18n && data.subtitle_i18n[lang]) return data.subtitle_i18n[lang];
+    return data.subtitle || (data.period_label ? ("Updates published " + data.period_label) : "");
+  }
+  // Language comes from ?lang= ONLY — exactly like ?team=. No stored preference:
+  // a plain link (no param) always opens in English, so the URL alone decides
+  // what a reader sees and a shared link never renders differently for them.
+  function resolveLang(){
+    try { var q = new URLSearchParams(window.location.search).get("lang");
+          if(q && LANGS.indexOf(q.toLowerCase()) >= 0) return q.toLowerCase(); } catch(e){}
+    return "en";
+  }
+
   var platforms = (data.platforms || []).filter(function(p){ return p.items && p.items.length; });
   var total = platforms.reduce(function(a, p){ return a + p.items.length; }, 0);
 
@@ -459,18 +727,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     ? "● No. " + data.edition_no + " · " + (data.period_label || "")
     : "● " + (data.period_label || "");
   document.getElementById("d-badge").textContent = badge;
-  document.getElementById("d-subtitle").textContent =
-    data.subtitle || (data.period_label ? ("Updates published " + data.period_label) : "");
 
   document.getElementById("stat-updates").textContent = total;
   document.getElementById("stat-platforms").textContent = platforms.length;
   document.getElementById("stat-readmin").textContent =
     data.read_minutes || Math.max(2, Math.round(total * 0.5));
 
-  // TL;DR
+  // ── Content render (language-aware) ──────────────────────────────────────
+  // Everything a reader can re-translate is built here, so switching language
+  // just re-runs this function; the chrome above is written once. The sticker
+  // RNG is re-seeded from a fixed sub-seed at the top of every run, so card
+  // stickers and platform icons are identical in all four languages.
   var tldrList = document.getElementById("d-tldr");
-  if (data.tldr && data.tldr.length) {
-    data.tldr.forEach(function(text, i){
+  var body = document.getElementById("d-body");
+
+  function renderContent(lang){
+  _rng = mulberry32(hashStr(SEED + "|body"));
+  document.documentElement.lang = lang;
+  tldrList.textContent = "";
+  body.textContent = "";
+
+  // Hero subtitle (the one line of hero copy that IS translated)
+  document.getElementById("d-subtitle").textContent = subtitleFor(lang);
+
+  // TL;DR
+  var bullets = tldrFor(lang);
+  if (bullets.length) {
+    document.getElementById("d-tldr-wrap").style.display = "";
+    bullets.forEach(function(text, i){
       tldrList.appendChild(
         el("li", { display:"flex", gap:"14px", alignItems:"flex-start", color:"var(--aid-ink)", fontSize:"16px", lineHeight:"1.5" },
           el("span", { flex:"none", fontFamily:"'Playfair Display',serif", fontWeight:"800", fontSize:"22px", color:"var(--aid-blue)", lineHeight:"1.25" }, String(i + 1).padStart(2, "0")),
@@ -483,11 +767,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   // Updates, grouped by platform
-  var body = document.getElementById("d-body");
   if (!platforms.length) {
     body.appendChild(el("p", { color:"var(--aid-mute)", fontStyle:"italic" }, "No qualifying updates in this period."));
   }
-  var peekI = 0;
   platforms.forEach(function(pf){
     var heading = el("div", { display:"flex", alignItems:"center", flexWrap:"wrap", gap:"14px", marginBottom:"24px" },
       (function(){var _pi=img(iconFor(pf.name),{width:"46px",flex:"none",filter:"drop-shadow(0 6px 10px rgba(0,0,0,.14))"});_pi.className="pf-icon";return _pi;})(),
@@ -506,7 +788,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var stickerSrc = wantSticker ? pickFrom(POOL_CARDS) : null;
       var bg = (i % 2 === 1) ? "var(--aid-blue-50)" : "#ffffff";
 
-      var link = el("a", { color:"inherit" }, it.title || "");
+      var link = el("a", { color:"inherit" }, txt(it, "title", lang));
       link.href = it.url || "#";
       link.target = "_blank";
       link.rel = "noopener";
@@ -518,7 +800,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           el("span", { fontFamily:"'Courier Prime',monospace", fontSize:"10.5px", letterSpacing:".06em", textTransform:"uppercase", color:imp.fg, background:imp.bg, border:"1.5px solid var(--aid-ink)", borderRadius:"7px", padding:"3px 10px" }, imp.label)
         ),
         el("h3", { fontFamily:"'Playfair Display',Georgia,serif", fontWeight:"700", fontSize:"23px", lineHeight:"1.14", margin:"0 0 12px", color:"var(--aid-ink)" }, link),
-        el("p", { margin:"0", fontSize:"14.5px", lineHeight:"1.56", color:"var(--aid-slate)" }, it.summary || ""),
+        el("p", { margin:"0", fontSize:"14.5px", lineHeight:"1.56", color:"var(--aid-slate)" }, txt(it, "summary", lang)),
         el("div", { fontFamily:"'Courier Prime',monospace", fontSize:"11px", color:"var(--aid-mute)", marginTop:"16px", display:"flex", gap:"8px", alignItems:"center" },
           el("span", { color:"var(--aid-blue)" }, "↳"), el("span", null, it.published || ""), el("span", null, "·"), el("span", null, it.source || "")
         )
@@ -529,6 +811,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     var _sec=el("section",{marginBottom:"56px"},heading,grid);_sec.className="reveal";_sec.setAttribute("data-team",teamOf(pf.name));body.appendChild(_sec);
   });
+
+  // Lets the chrome script re-apply the team filter and show the new nodes.
+  document.dispatchEvent(new CustomEvent("deck:rendered", { detail:{ lang:lang } }));
+  }
+
+  var initialLang = resolveLang();
+  renderContent(initialLang);
+  // Handed to the chrome script below (which owns the header dropdowns).
+  window.__deck = { render: renderContent, langs: LANGS, lang: initialLang };
 
   // Archive (optional)
   if (data.archive && data.archive.length) {
@@ -554,11 +845,73 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 (function(){
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // ── Header dropdowns ──
+  // One open at a time; click outside or Esc closes. On desktop the news filter
+  // renders as a segmented slider and its toggle is hidden, so this only drives
+  // the language pill there; on phones it drives both.
+  var openDD=null;
+  function panelFor(dd){ if(!dd.__panel) dd.__panel=dd.querySelector(".opts"); return dd.__panel; }
+  function closeDD(){
+    if(!openDD) return;
+    var dd=openDD, panel=panelFor(dd);
+    panel.classList.remove("open");
+    panel.style.cssText="";                       // drop the fixed-position placement
+    if(panel.parentNode!==dd) dd.appendChild(panel);   // return it to its control
+    dd.classList.remove("open");
+    var t=dd.querySelector(".dd-toggle"); if(t) t.setAttribute("aria-expanded","false");
+    openDD=null;
+  }
+  function openPanel(dd){
+    var panel=panelFor(dd), tog=dd.querySelector(".dd-toggle");
+    // Move the panel onto <body> before showing it. The sticky header has its own
+    // backdrop-filter, and a backdrop-filter nested inside another one sees an empty
+    // backdrop — the popup would show zero blur. On <body> it frosts the real page.
+    if(panel.parentNode!==document.body) document.body.appendChild(panel);
+    var r=tog.getBoundingClientRect();
+    panel.style.position="fixed";
+    panel.style.top=(r.bottom+9)+"px";
+    panel.style.right=(window.innerWidth-r.right)+"px";
+    panel.style.minWidth=r.width+"px";
+    panel.classList.add("open");
+    dd.classList.add("open");
+    tog.setAttribute("aria-expanded","true");
+    openDD=dd;
+  }
+  document.addEventListener("click", function(e){
+    if(!e.target.closest) return;
+    var tog=e.target.closest(".dd-toggle");
+    if(tog){
+      var dd=tog.closest(".dd"), wasOpen=(openDD===dd);
+      closeDD();
+      if(!wasOpen) openPanel(dd);
+      return;
+    }
+    // An open panel lives on <body>, so "inside" means inside .opts, not inside .dd.
+    if(!e.target.closest(".opts")) closeDD();
+  });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeDD(); });
+  // The placement is a one-shot measurement, so anything that moves the toggle
+  // closes the panel rather than leaving it stranded.
+  window.addEventListener("scroll", closeDD, true);
+
+  // ?team= / ?lang= stay in the address bar so a reader can copy the link they see.
+  function setParam(key, val, dflt){
+    if(!(window.history && history.replaceState)) return;
+    try{
+      var u=new URL(window.location.href);
+      if(val===dflt){ u.searchParams.delete(key); } else { u.searchParams.set(key, val); }
+      history.replaceState(null,"",u.toString());
+    }catch(e){}
+  }
+
   // News filter
   var filter=document.getElementById("news-filter");
+  var curTeam="all";
   if(filter){
+    var opts=filter.querySelector(".opts");
     var btns=[].slice.call(filter.querySelectorAll(".flt"));
-    var ind=document.createElement("div"); ind.className="flt-ind"; filter.insertBefore(ind, filter.firstChild);
+    var fcur=filter.querySelector(".dd-cur");
+    var ind=document.createElement("div"); ind.className="flt-ind"; opts.insertBefore(ind, opts.firstChild);
     function moveInd(btn){ ind.style.width=btn.offsetWidth+"px"; ind.style.transform="translateX("+btn.offsetLeft+"px)"; }
     function apply(team){
       var secs=[].slice.call(document.querySelectorAll('#d-body > section'));
@@ -571,19 +924,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function btnFor(team){ for(var i=0;i<btns.length;i++){ if(btns[i].getAttribute("data-team")===team) return btns[i]; } return null; }
     function select(team, updateURL){
       var b=btnFor(team); if(!b) return;
-      btns.forEach(function(x){x.classList.remove("active");}); b.classList.add("active"); moveInd(b); apply(team);
-      if(updateURL && window.history && history.replaceState){
-        try{ var u=new URL(window.location.href); if(team==="all"){ u.searchParams.delete("team"); } else { u.searchParams.set("team", team); } history.replaceState(null,"",u.toString()); }catch(e){}
-      }
+      curTeam=team;
+      btns.forEach(function(x){x.classList.remove("active");}); b.classList.add("active");
+      moveInd(b); if(fcur) fcur.textContent=b.textContent; apply(team);
+      if(updateURL) setParam("team", team, "all");
     }
-    btns.forEach(function(b){ b.addEventListener("click", function(){ select(b.getAttribute("data-team"), true); }); });
+    btns.forEach(function(b){ b.addEventListener("click", function(){ select(b.getAttribute("data-team"), true); closeDD(); }); });
     // Deep link: ?team=search|social (|all) opens the deck with that filter pre-applied.
     // Routine 2 uses this to send each team a link straight to its own view; readers
     // can switch to All news in the header. Unknown/absent value falls back to "all".
     var want="all";
     try{ var q=new URLSearchParams(window.location.search).get("team"); if(q){ q=q.toLowerCase(); if(q==="search"||q==="social"||q==="all"){ want=q; } } }catch(e){}
     requestAnimationFrame(function(){ select(want, false); });
-    window.addEventListener("resize", function(){ var a=filter.querySelector(".flt.active"); if(a) moveInd(a); });
+    // A language switch rebuilds #d-body, so re-apply the current filter to it.
+    document.addEventListener("deck:rendered", function(){ apply(curTeam); });
+    window.addEventListener("resize", function(){ closeDD(); var a=filter.querySelector(".flt.active"); if(a) moveInd(a); });
+  }
+
+  // Language switcher — swaps card titles/summaries + TL;DR bullets (see the
+  // render script above); every other string on the page stays English.
+  var langDD=document.getElementById("lang-dd");
+  if(langDD && window.__deck){
+    var lbtns=[].slice.call(langDD.querySelectorAll(".lng"));
+    var lcur=langDD.querySelector(".dd-cur");
+    function selectLang(lang, rerender){
+      var b=null;
+      lbtns.forEach(function(x){ var on=x.getAttribute("data-lang")===lang; x.classList.toggle("active",on); if(on) b=x; });
+      if(!b) return;
+      if(lcur) lcur.textContent=b.textContent;
+      if(rerender){
+        window.__deck.render(lang);
+        setParam("lang", lang, "en");   // URL only — the choice is not stored
+      }
+    }
+    lbtns.forEach(function(b){ b.addEventListener("click", function(){ selectLang(b.getAttribute("data-lang"), true); closeDD(); }); });
+    selectLang(window.__deck.lang, false);   // first render already used this language
   }
 
   // Sticker entrance (exclude platform icons and always-static stickers like Past editions)
@@ -600,6 +975,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   var reveals=[].slice.call(document.querySelectorAll(".reveal"));
   if(reduce || !("IntersectionObserver" in window)){ reveals.forEach(function(r){ r.classList.add("shown"); }); }
   else { var ro=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("shown"); ro.unobserve(e.target);} }); },{threshold:.08}); reveals.forEach(function(r){ ro.observe(r); }); }
+
+  // On a language switch the whole body is replaced. Show the new nodes at once
+  // instead of replaying the scroll entrance — the reader is mid-page and would
+  // otherwise watch the deck blank out and fade back in.
+  document.addEventListener("deck:rendered", function(){
+    [].forEach.call(document.querySelectorAll("#d-body img"), function(i){ if(!i.classList.contains("pf-icon")) i.classList.add("stk-in","shown"); });
+    [].forEach.call(document.querySelectorAll("#d-body .reveal"), function(r){ r.classList.add("shown"); });
+  });
 
   // Typewriter (preserves inline-styled segments like the italic "Bi-Weekly")
   function typewrite(node){

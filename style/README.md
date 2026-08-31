@@ -35,11 +35,15 @@ deck-data changes needed:
   → *Social*, everything else (Google Ads, Microsoft/Bing, ChatGPT Ads) → *Search*.
 - **Language pill.** A dropdown next to the filter offers 🇺🇸 EN / 🇷🇺 RU / 🇪🇸 ES /
   🇷🇸 SR (Serbian in **Latin** script). Picking one re-renders the content from the
-  translations baked into the deck data — see *Translations* below. English is the
-  default; `?lang=ru|es|sr` deep-links a language (it wins over the reader's stored
-  choice), and the pick is remembered in `localStorage` under `apd_lang`. Both header
-  controls collapse to dropdown pills below 640px, so the header keeps a fixed
-  footprint however many controls we add later.
+  translations baked into the deck data — see *Translations* below. **The URL is the only
+  source of language**, exactly like `?team=`: `?lang=ru|es|sr` selects one, and a link
+  with no param always opens in English. Nothing is stored, so a shared link renders the
+  same for whoever opens it. Both header controls collapse to dropdown pills below 640px,
+  so the header keeps a fixed footprint however many controls we add later.
+  The open dropdown panel is moved onto `<body>` and positioned `fixed` under its pill:
+  the sticky header sets its own `backdrop-filter`, and a `backdrop-filter` nested inside
+  another one samples an empty backdrop, so in place the panel rendered with **no blur at
+  all**. It returns to its control on close, and scroll/resize close it.
 - **Motion.** A typewriter reveal on the sign-off heading, sticker entrance
   (fade + scale, staggered on scroll), and section reveals. Platform-heading icons
   (`.pf-icon`) and the Past-editions sticker (`.stk-static`) are excluded from the
@@ -53,8 +57,8 @@ deck-data changes needed:
 ### Translations
 
 The deck is **pre-translated at build time** by Routine 2 — there is no runtime
-translation API and no key to leak. Only **three** things are translated: card titles,
-card summaries and TL;DR bullets. Everything else is fixed English chrome baked into
+translation API and no key to leak. Only **four** things are translated: the hero
+subtitle, card titles, card summaries and TL;DR bullets. Everything else is fixed English chrome baked into
 this template and is never regenerated per edition. Switching language re-runs the
 content render from the same deck data, so stickers, layout and stats stay identical
 across languages (the sticker RNG is re-seeded from a language-independent sub-seed).
@@ -84,7 +88,8 @@ Required fields are unchanged (`period_label`, `generated`, `tldr`, `platforms[]
 — see the schema comment inside `deck-template.html`). The Zine skin also accepts
 optional fields that degrade gracefully if Routine 2 doesn't supply them:
 `edition_no`, `subtitle`, `read_minutes`, `author`, `archive`, plus the translation
-fields `tldr_i18n` and per-item `i18n` (see the schema comment in the template). None of these require
+fields `subtitle_i18n`, `tldr_i18n` and per-item `i18n` (see the schema comment in the
+template). None of these require
 changes to `routines/routine-2-presentation.md` — the template falls back sensibly
 (e.g. no "No. N" prefix without `edition_no`, an estimated read time without
 `read_minutes`) so the existing automation keeps working unmodified.
@@ -95,7 +100,8 @@ changes to `routines/routine-2-presentation.md` — the template falls back sens
   ChatGPT Ads → Meta → TikTok → LinkedIn** (drop empty ones). The deck renders in
   deck-data order.
 - Within a platform, order items **high → medium → low** impact.
-- TL;DR: 3–5 bullets, the single most important change first. **One sentence each, max
+- TL;DR: **3–4 bullets** (4 is the ceiling — 5 leaves an odd gap in the two-column grid),
+  the single most important change first. **One sentence each, max
   ~20 words / ~140 characters** — it's a skim block; detail belongs on the card. On phones
   the TL;DR grid drops to a single column (two columns squeeze the text unreadably).
   Length limits are defined **in English** (the base language); translations match the
