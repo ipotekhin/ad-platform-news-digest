@@ -35,7 +35,7 @@
 
 [DIGEST SUMMARY — this team's update count + platforms]
 
-[LINK EMOJI] [LINK CTA]: :us: [EN](<DECK_URL>?team=<T>), :ru: [RU](<DECK_URL>?team=<T>&lang=ru), :es: [ES](<DECK_URL>?team=<T>&lang=es) and :flag-rs: [RS](<DECK_URL>?team=<T>&lang=sr)
+[LINK EMOJI] [LINK CTA]: :us: [EN](<DECK_URL>?team=<T>), :ru: [RU](<DECK_URL>?team=<T>&lang=ru), :es: [ES](<DECK_URL>?team=<T>&lang=es) and :flag-rs: [SR](<DECK_URL>?team=<T>&lang=sr)
 ```
 
 Rules:
@@ -54,11 +54,12 @@ Rules:
 - **Four language links on one line.** The deck ships in English, Russian, Spanish and
   Serbian, so the CTA carries **four links, embedded in the text next to a flag** — not a
   bare URL:
-  `:us: [EN](…?team=T), :ru: [RU](…?team=T&lang=ru), :es: [ES](…?team=T&lang=es) and :flag-rs: [RS](…?team=T&lang=sr)`
+  `:us: [EN](…?team=T), :ru: [RU](…?team=T&lang=ru), :es: [ES](…?team=T&lang=es) and :flag-rs: [SR](…?team=T&lang=sr)`
   - `T` = this message's own team (`search` / `social`), the same on all four links.
   - **English carries no `lang` param** — it is the deck's default.
-  - The **label** is `RS` (as the flag reads) but the **param is `lang=sr`** — that is the
-    language code the deck expects. Don't "fix" one to match the other.
+  - Labels are **language** codes — `EN`, `RU`, `ES`, `SR` — matching the deck's own
+    language pill and the `lang=` param. (The Serbian flag shortcode is `:flag-rs:`
+    because that is the country code; the label next to it stays `SR`.)
   - Markdown links (`[EN](url)`) — this connector renders standard markdown, so the URL
     itself never appears in the message text.
 - **Rotate** the wording each edition (options below) so it never reads canned, and keep
@@ -136,7 +137,7 @@ A few updates worth keeping on your radar:
 
 This edition includes **8 updates** across Google Ads and Microsoft.
 
-:point_right: The full overview is available here: :us: [EN](<DECK_URL>?team=search), :ru: [RU](<DECK_URL>?team=search&lang=ru), :es: [ES](<DECK_URL>?team=search&lang=es) and :flag-rs: [RS](<DECK_URL>?team=search&lang=sr)
+:point_right: The full overview is available here: :us: [EN](<DECK_URL>?team=search), :ru: [RU](<DECK_URL>?team=search&lang=ru), :es: [ES](<DECK_URL>?team=search&lang=es) and :flag-rs: [SR](<DECK_URL>?team=search&lang=sr)
 ```
 
 **Social channel** (Meta + TikTok + LinkedIn), link `?team=social`:
@@ -154,7 +155,7 @@ Here's what stood out this time:
 
 This edition includes **5 updates** from Meta, TikTok and LinkedIn.
 
-:link: You can find the full digest here: :us: [EN](<DECK_URL>?team=social), :ru: [RU](<DECK_URL>?team=social&lang=ru), :es: [ES](<DECK_URL>?team=social&lang=es) and :flag-rs: [RS](<DECK_URL>?team=social&lang=sr)
+:link: You can find the full digest here: :us: [EN](<DECK_URL>?team=social), :ru: [RU](<DECK_URL>?team=social&lang=ru), :es: [ES](<DECK_URL>?team=social&lang=es) and :flag-rs: [SR](<DECK_URL>?team=social&lang=sr)
 ```
 
 (If a team has no items this edition, that team's message is simply not sent. One line

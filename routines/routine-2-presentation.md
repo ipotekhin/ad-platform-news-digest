@@ -115,6 +115,40 @@ the deck file.
 - **Leave in English inside translated text:** product and feature names (Performance
   Max, AI Max, Demand Gen, Audience Ads, oCPC), UI paths (`Tools > Content suitability`),
   company and publication names. Translate the surrounding prose around them.
+
+#### How to translate (this is the part that goes wrong)
+
+**Translate the meaning for a PPC specialist, never the English word order.** The output
+has to read like it was written in that language by someone who runs ad accounts. A
+sentence a reader can only decode by mentally reconstructing the English original has
+failed, even if every word in it is "correct".
+
+- **Read the whole item first** (title + summary together, plus its TL;DR bullet if it
+  has one), then write the translation from the *fact*, not from the sentence. You are
+  re-stating what changed, not substituting words.
+- **Expand English's compressed constructions.** English stacks nouns and drops words
+  that other languages need. Restore them:
+  - *"goes video-only"* is not *"станет только видео"* — video **what**? Write
+    *"останется только для видеообъявлений"*.
+  - *"on by default"* → *"будет включена по умолчанию"*, not *"включится по умолчанию"*
+    where the subject is a setting someone else flips.
+  - Noun stacks like *"view-through conversion optimization"* become a normal phrase:
+    *"оптимизация по post-view конверсиям"*.
+- **Use the term the platform's own localized UI uses** where one exists (Google Ads RU
+  says *объекты* for assets, *широкое соответствие* for broad match, *назначение ставок*
+  for bidding). Where the industry keeps the English term in daily speech (post-view,
+  oCPC, Performance Max, brand safety), keep it — a forced native coinage is worse than
+  the borrowed word everyone actually says.
+- **Never invent a translation for a UI control's name.** Name it descriptively in the
+  target language and keep the exact English control name where the reader would go
+  looking for it (e.g. *"…в разделе Tools > Content suitability > Excluded content
+  terms"*).
+- **Read it back cold.** If a phrase would make a specialist stop and re-read, or if it
+  only parses because you know the English, rewrite it. Prefer two clear clauses over
+  one clever compressed one.
+- The same applies to **Spanish and Serbian** — no *"pasa a ser solo vídeo"* /
+  *"postaje samo video"* either; say *"queda limitada a los anuncios de vídeo"* /
+  *"ostaje samo za video oglase"*.
 - Write the translations into the deck data as:
   - `"subtitle_i18n": { "ru":"…", "es":"…", "sr":"…" }`
   - `"tldr_i18n": { "ru":[…], "es":[…], "sr":[…] }` — **same count and order** as `tldr`.
@@ -176,10 +210,11 @@ itself is a single file with all platforms; the two links only differ by a `?tea
 - **Four language links, not one.** The CTA line carries **four markdown links embedded
   next to flag emoji** — English plus the three translations, all pointing at this team's
   filtered view:
-  `:us: [EN](URL?team=T), :ru: [RU](URL?team=T&lang=ru), :es: [ES](URL?team=T&lang=es) and :flag-rs: [RS](URL?team=T&lang=sr)`
-  English takes **no** `lang` param (it is the deck's default). The label reads `RS` while
-  the param is `lang=sr` — that mismatch is intentional, don't "fix" it. Never paste a bare
-  URL; the link text is the language code.
+  `:us: [EN](URL?team=T), :ru: [RU](URL?team=T&lang=ru), :es: [ES](URL?team=T&lang=es) and :flag-rs: [SR](URL?team=T&lang=sr)`
+  English takes **no** `lang` param (it is the deck's default). Labels are language codes
+  (`EN` / `RU` / `ES` / `SR`), matching the deck's language pill; only the Serbian flag
+  shortcode is country-based (`:flag-rs:`). Never paste a bare URL — the link text is the
+  language code.
 - **Send** each team's message via `slack_send_message` to that team's channel from Open
   config (`search_channel_id` / `social_channel_id`). Posts from Ivan's own Slack identity.
 - **Empty team = skip:** if a team has **no** included items this edition, **do not post to
