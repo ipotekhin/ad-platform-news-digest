@@ -71,7 +71,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      keeps a fixed, compact footprint however many filters we add later. */
   .hdr-ctl{display:flex;align-items:center;gap:10px;flex:none}
   .dd{position:relative;flex:none}
-  .dd-toggle{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:7px 13px;line-height:1;white-space:nowrap;transition:background .18s}
+  /* Padding is asymmetric on purpose: it makes the pill exactly as tall as the
+     desktop filter slider (36px), and the extra 1px on top optically centres the
+     all-caps label — uppercase has no descenders, so a box-centred line sits high. */
+  .dd-toggle{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:10.5px 13px 9.5px;line-height:1;white-space:nowrap;transition:background .18s}
   .dd-toggle:hover{background:var(--aid-lime)}
   .dd-car{font-size:9px;line-height:1;transition:transform .22s}
   .dd.open .dd-car{transform:rotate(180deg)}
@@ -126,9 +129,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
        both fit on narrow phones without running off the edge. */
     header>div>div:first-child{min-width:0}
     header>div>div:first-child span:last-child{font-size:11px;letter-spacing:.09em;line-height:1.25}
-    /* Both header controls are dropdown pills here — see the .dd rules above. */
+    /* Both header controls are dropdown pills here — see the .dd rules above.
+       Same 1px top bias as desktop, on a shorter pill (30px). */
     .hdr-ctl{gap:7px}
-    .dd-toggle{padding:7px 10px;gap:5px;letter-spacing:.02em}
+    .dd-toggle{padding:7.5px 10px 6.5px;gap:5px;letter-spacing:.02em}
     /* TL;DR: one column on phones — two columns squeeze each bullet into a narrow
        ribbon of text that is hard to read. */
     #d-tldr{grid-template-columns:1fr!important;gap:14px!important}
@@ -276,17 +280,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
        "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"deck-2026-07-05.html" }]  // past-editions strip; BARE filename (no decks/ prefix); omitted -> section hidden
 
      TRANSLATIONS (optional; the header language pill offers EN / RU / ES / SR).
-     English is the base language and is always what `title`/`summary`/`tldr`
-     hold. Routine 2 pre-translates at build time — there is no runtime API —
-     and supplies EXACTLY THREE things per language: card titles, card summaries
-     and TL;DR bullets. Everything else on the page is fixed English chrome.
-     Serbian is written in LATIN script (`sr`). A missing language, item or
-     field silently falls back to English, so pre-i18n decks still render.
-       "tldr_i18n": { "ru":[ … ], "es":[ … ], "sr":[ … ] }   // same count & order as "tldr"
+     English is the base language and is always what `subtitle`/`title`/`summary`/
+     `tldr` hold. Routine 2 pre-translates at build time — there is no runtime
+     API — and supplies EXACTLY FOUR things per language: the hero subtitle, card
+     titles, card summaries and TL;DR bullets. Everything else on the page is
+     fixed English chrome. Serbian is written in LATIN script (`sr`). A missing
+     language, item or field silently falls back to English, so pre-i18n decks
+     still render.
+       "subtitle_i18n": { "ru":"…", "es":"…", "sr":"…" }
+       "tldr_i18n":     { "ru":[ … ], "es":[ … ], "sr":[ … ] }  // same count & order as "tldr"
        …and on each item:
        "i18n": { "ru":{"title":"…","summary":"…"}, "es":{…}, "sr":{…} }
-     Deep link with ?lang=ru|es|sr (?lang=en or absent = English); the reader's
-     choice is remembered in localStorage and the URL param wins over it.
+     Deep link with ?lang=ru|es|sr. The URL is the ONLY source of language (same
+     as ?team=): no param — or ?lang=en — always opens in English, and nothing is
+     stored, so a shared link renders the same for everyone who opens it.
   ────────────────────────────────────────────────────────────────────────── -->
   <script id="deck-data" type="application/json">
   {
@@ -404,13 +411,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   // ── Language (i18n) ──────────────────────────────────────────────────────
-  // Only THREE things are translated: card titles, card summaries and TL;DR
-  // bullets. Everything else — brand, filters, hero headline/subtitle, dates,
-  // counters, platform names, category/impact chips, card meta, archive,
-  // sign-off, footer — is pre-baked English chrome and never regenerated.
-  //   item.i18n     = { ru:{title,summary}, es:{…}, sr:{…} }
-  //   data.tldr_i18n = { ru:[…], es:[…], sr:[…] }
-  // Both are optional: a missing language (or field) falls back to the English
+  // Only FOUR things are translated: the hero subtitle, card titles, card
+  // summaries and TL;DR bullets. Everything else — brand, filters, hero
+  // headline, dates, counters, platform names, category/impact chips, card
+  // meta, archive, sign-off, footer — is pre-baked English chrome and is
+  // never regenerated.
+  //   item.i18n         = { ru:{title,summary}, es:{…}, sr:{…} }
+  //   data.tldr_i18n     = { ru:[…], es:[…], sr:[…] }
+  //   data.subtitle_i18n = { ru:"…", es:"…", sr:"…" }
+  // All optional: a missing language (or field) falls back to the English
   // base, so decks built before i18n keep rendering unchanged.
   var LANGS = ["en","ru","es","sr"];
   function txt(it, field, lang){
@@ -421,14 +430,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if(lang !== "en" && data.tldr_i18n && data.tldr_i18n[lang] && data.tldr_i18n[lang].length) return data.tldr_i18n[lang];
     return data.tldr || [];
   }
-  // ?lang=xx wins (Slack/deep links), then the reader's saved choice, then English.
+  function subtitleFor(lang){
+    if(lang !== "en" && data.subtitle_i18n && data.subtitle_i18n[lang]) return data.subtitle_i18n[lang];
+    return data.subtitle || (data.period_label ? ("Updates published " + data.period_label) : "");
+  }
+  // Language comes from ?lang= ONLY — exactly like ?team=. No stored preference:
+  // a plain link (no param) always opens in English, so the URL alone decides
+  // what a reader sees and a shared link never renders differently for them.
   function resolveLang(){
-    var l = null;
     try { var q = new URLSearchParams(window.location.search).get("lang");
-          if(q && LANGS.indexOf(q.toLowerCase()) >= 0) l = q.toLowerCase(); } catch(e){}
-    if(!l){ try { var s = localStorage.getItem("apd_lang");
-                  if(s && LANGS.indexOf(s) >= 0) l = s; } catch(e){} }
-    return l || "en";
+          if(q && LANGS.indexOf(q.toLowerCase()) >= 0) return q.toLowerCase(); } catch(e){}
+    return "en";
   }
 
   var platforms = (data.platforms || []).filter(function(p){ return p.items && p.items.length; });
@@ -439,8 +451,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     ? "● No. " + data.edition_no + " · " + (data.period_label || "")
     : "● " + (data.period_label || "");
   document.getElementById("d-badge").textContent = badge;
-  document.getElementById("d-subtitle").textContent =
-    data.subtitle || (data.period_label ? ("Updates published " + data.period_label) : "");
 
   document.getElementById("stat-updates").textContent = total;
   document.getElementById("stat-platforms").textContent = platforms.length;
@@ -460,6 +470,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   document.documentElement.lang = lang;
   tldrList.textContent = "";
   body.textContent = "";
+
+  // Hero subtitle (the one line of hero copy that IS translated)
+  document.getElementById("d-subtitle").textContent = subtitleFor(lang);
 
   // TL;DR
   var bullets = tldrFor(lang);
@@ -640,8 +653,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if(lcur) lcur.textContent=b.textContent;
       if(rerender){
         window.__deck.render(lang);
-        setParam("lang", lang, "en");
-        try{ localStorage.setItem("apd_lang", lang); }catch(e){}
+        setParam("lang", lang, "en");   // URL only — the choice is not stored
       }
     }
     lbtns.forEach(function(b){ b.addEventListener("click", function(){ selectLang(b.getAttribute("data-lang"), true); closeDD(); }); });
