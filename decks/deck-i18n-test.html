@@ -71,7 +71,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      keeps a fixed, compact footprint however many filters we add later. */
   .hdr-ctl{display:flex;align-items:center;gap:10px;flex:none}
   .dd{position:relative;flex:none}
-  .dd-toggle{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:7px 13px;line-height:1;white-space:nowrap;transition:background .18s}
+  /* Padding is asymmetric on purpose: it makes the pill exactly as tall as the
+     desktop filter slider (36px), and the extra 1px on top optically centres the
+     all-caps label — uppercase has no descenders, so a box-centred line sits high. */
+  .dd-toggle{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:10.5px 13px 9.5px;line-height:1;white-space:nowrap;transition:background .18s}
   .dd-toggle:hover{background:var(--aid-lime)}
   .dd-car{font-size:9px;line-height:1;transition:transform .22s}
   .dd.open .dd-car{transform:rotate(180deg)}
@@ -126,9 +129,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
        both fit on narrow phones without running off the edge. */
     header>div>div:first-child{min-width:0}
     header>div>div:first-child span:last-child{font-size:11px;letter-spacing:.09em;line-height:1.25}
-    /* Both header controls are dropdown pills here — see the .dd rules above. */
+    /* Both header controls are dropdown pills here — see the .dd rules above.
+       Same 1px top bias as desktop, on a shorter pill (30px). */
     .hdr-ctl{gap:7px}
-    .dd-toggle{padding:7px 10px;gap:5px;letter-spacing:.02em}
+    .dd-toggle{padding:7.5px 10px 6.5px;gap:5px;letter-spacing:.02em}
     /* TL;DR: one column on phones — two columns squeeze each bullet into a narrow
        ribbon of text that is hard to read. */
     #d-tldr{grid-template-columns:1fr!important;gap:14px!important}
@@ -276,17 +280,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
        "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"deck-2026-07-05.html" }]  // past-editions strip; BARE filename (no decks/ prefix); omitted -> section hidden
 
      TRANSLATIONS (optional; the header language pill offers EN / RU / ES / SR).
-     English is the base language and is always what `title`/`summary`/`tldr`
-     hold. Routine 2 pre-translates at build time — there is no runtime API —
-     and supplies EXACTLY THREE things per language: card titles, card summaries
-     and TL;DR bullets. Everything else on the page is fixed English chrome.
-     Serbian is written in LATIN script (`sr`). A missing language, item or
-     field silently falls back to English, so pre-i18n decks still render.
-       "tldr_i18n": { "ru":[ … ], "es":[ … ], "sr":[ … ] }   // same count & order as "tldr"
+     English is the base language and is always what `subtitle`/`title`/`summary`/
+     `tldr` hold. Routine 2 pre-translates at build time — there is no runtime
+     API — and supplies EXACTLY FOUR things per language: the hero subtitle, card
+     titles, card summaries and TL;DR bullets. Everything else on the page is
+     fixed English chrome. Serbian is written in LATIN script (`sr`). A missing
+     language, item or field silently falls back to English, so pre-i18n decks
+     still render.
+       "subtitle_i18n": { "ru":"…", "es":"…", "sr":"…" }
+       "tldr_i18n":     { "ru":[ … ], "es":[ … ], "sr":[ … ] }  // same count & order as "tldr"
        …and on each item:
        "i18n": { "ru":{"title":"…","summary":"…"}, "es":{…}, "sr":{…} }
-     Deep link with ?lang=ru|es|sr (?lang=en or absent = English); the reader's
-     choice is remembered in localStorage and the URL param wins over it.
+     Deep link with ?lang=ru|es|sr. The URL is the ONLY source of language (same
+     as ?team=): no param — or ?lang=en — always opens in English, and nothing is
+     stored, so a shared link renders the same for everyone who opens it.
   ────────────────────────────────────────────────────────────────────────── -->
   <script id="deck-data" type="application/json">
 {
@@ -299,8 +306,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     "The AI Max migration timeline is set: from September 1 Google auto-upgrades Search campaigns that use campaign-level broad match or standalone Automatically Created Assets, with Dynamic Search Ads following in February 2027 — creating those legacy structures is already blocked in the UI, Editor and API.",
     "Campaign-level language targeting is being removed from Search and AI Max for Search from late September, and stops applying to Google Search inventory in Performance Max — matching moves to Google's own language signals.",
     "Two Google defaults flip without you: generative AI will extend Performance Max video assets into missing aspect ratios (opt out by September 4), and Demand Gen view-through optimization goes video-only, on by default for new campaigns, and expands to the Display Network.",
-    "ChatGPT Ads is maturing fast — oCPC campaigns in beta for product feeds, a multi-product carousel test, automatic advanced matching switched on for existing pixels on August 17, and ads reaching Free and Go plans in Europe this month.",
-    "Limited Ad Serving expands from Search to every Google Ads product from August, capping impressions for accounts judged unqualified instead of disapproving them; separately, ads for government documents and services need proof of government authorisation from October 5."
+    "ChatGPT Ads is maturing fast — oCPC campaigns in beta for product feeds, a multi-product carousel test, automatic advanced matching switched on for existing pixels on August 17, and ads reaching Free and Go plans in Europe this month."
   ],
   "platforms": [
     {
@@ -686,23 +692,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       "Сроки миграции на AI Max определены: с 1 сентября Google автоматически обновляет поисковые кампании с широким соответствием на уровне кампании или отдельными автосозданными объявлениями, DSA — в феврале 2027; создавать старые структуры уже нельзя в интерфейсе, Editor и API.",
       "С конца сентября таргетинг по языку на уровне кампании убирают из Search и AI Max for Search, а в Performance Max он перестаёт действовать на инвентарь Google Поиска — подбор переходит на языковые сигналы Google.",
       "Две настройки Google меняются сами: генеративный ИИ достроит видео Performance Max до недостающих форматов (отказ — до 4 сентября), а оптимизация по post-view конверсиям в Demand Gen станет только видео, включённой по умолчанию для новых кампаний и расширится на КМС.",
-      "ChatGPT Ads быстро взрослеет: oCPC-кампании в бете для товарных фидов, тест карусели с несколькими товарами, автоматическое расширенное сопоставление для существующих пикселей с 17 августа и реклама на планах Free и Go в Европе в этом месяце.",
-      "Limited Ad Serving с августа распространяется с Поиска на все продукты Google Ads: неквалифицированным аккаунтам ограничивают показы вместо отклонения; отдельно, с 5 октября реклама госдокументов и услуг требует подтверждения госаккредитации."
+      "ChatGPT Ads быстро взрослеет: oCPC-кампании в бете для товарных фидов, тест карусели с несколькими товарами, автоматическое расширенное сопоставление для существующих пикселей с 17 августа и реклама на планах Free и Go в Европе в этом месяце."
     ],
     "es": [
       "El calendario de migración a AI Max está fijado: desde el 1 de septiembre Google actualiza solo las campañas de Search con concordancia amplia a nivel de campaña o recursos creados automáticamente independientes, y los anuncios dinámicos en febrero de 2027; crear esas estructuras antiguas ya está bloqueado en la interfaz, Editor y API.",
       "Desde finales de septiembre se elimina la segmentación por idioma a nivel de campaña en Search y AI Max for Search, y deja de aplicarse al inventario de Google Search en Performance Max: la coincidencia pasa a las señales de idioma de Google.",
       "Dos valores predeterminados de Google cambian solos: la IA generativa extenderá los vídeos de Performance Max a las relaciones de aspecto que faltan (exclusión hasta el 4 de septiembre) y la optimización por conversiones post-impresión de Demand Gen pasa a ser solo vídeo, activada por defecto en campañas nuevas y ampliada a Display.",
-      "ChatGPT Ads madura rápido: campañas oCPC en beta para feeds de productos, una prueba de carrusel multiproducto, la concordancia avanzada automática activada en los píxeles existentes el 17 de agosto y anuncios llegando a los planes Free y Go en Europa este mes.",
-      "Limited Ad Serving se amplía desde Search a todos los productos de Google Ads a partir de agosto, limitando las impresiones de las cuentas no cualificadas en lugar de rechazarlas; aparte, desde el 5 de octubre los anuncios de documentos y servicios gubernamentales exigen prueba de autorización oficial."
+      "ChatGPT Ads madura rápido: campañas oCPC en beta para feeds de productos, una prueba de carrusel multiproducto, la concordancia avanzada automática activada en los píxeles existentes el 17 de agosto y anuncios llegando a los planes Free y Go en Europa este mes."
     ],
     "sr": [
       "Raspored migracije na AI Max je utvrđen: od 1. septembra Google automatski nadograđuje Search kampanje sa širokim podudaranjem na nivou kampanje ili samostalnim automatski kreiranim sredstvima, a dinamički pretraživački oglasi slede u februaru 2027 — kreiranje tih starih struktura već je blokirano u interfejsu, Editoru i API-ju.",
       "Od kraja septembra ciljanje po jeziku na nivou kampanje uklanja se iz Search i AI Max for Search kampanja, a u Performance Max prestaje da važi za inventar Google pretrage — uparivanje prelazi na Google-ove jezičke signale.",
       "Dva Google podrazumevana podešavanja menjaju se sama od sebe: generativni AI će proširiti Performance Max video sredstva na formate koji nedostaju (odjava do 4. septembra), a Demand Gen optimizacija za post-view konverzije postaje samo video, podrazumevano uključena za nove kampanje i širi se na Display mrežu.",
-      "ChatGPT Ads brzo sazreva — oCPC kampanje u beta fazi za feedove proizvoda, test karusela sa više proizvoda, automatsko napredno uparivanje uključeno za postojeće piksele 17. avgusta i oglasi koji ovog meseca stižu na Free i Go planove u Evropi.",
-      "Limited Ad Serving se od avgusta širi sa Search-a na sve Google Ads proizvode, ograničavajući prikaze nalozima ocenjenim kao nekvalifikovani umesto da ih odbija; zasebno, od 5. oktobra oglasi za državne dokumente i usluge traže dokaz o državnom ovlašćenju."
+      "ChatGPT Ads brzo sazreva — oCPC kampanje u beta fazi za feedove proizvoda, test karusela sa više proizvoda, automatsko napredno uparivanje uključeno za postojeće piksele 17. avgusta i oglasi koji ovog meseca stižu na Free i Go planove u Evropi."
     ]
+  },
+  "subtitle_i18n": {
+    "ru": "AI Max поглощает старые настройки Поиска, две настройки Google меняются сами, а реклама ChatGPT приходит в Европу.",
+    "es": "AI Max se traga los ajustes antiguos de Search, dos valores predeterminados de Google cambian solos y ChatGPT Ads llega a Europa.",
+    "sr": "AI Max guta stara podešavanja Search-a, dva Google podrazumevana podešavanja menjaju se sama, a ChatGPT Ads stiže u Evropu."
   }
 }
   </script>
@@ -796,13 +804,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   // ── Language (i18n) ──────────────────────────────────────────────────────
-  // Only THREE things are translated: card titles, card summaries and TL;DR
-  // bullets. Everything else — brand, filters, hero headline/subtitle, dates,
-  // counters, platform names, category/impact chips, card meta, archive,
-  // sign-off, footer — is pre-baked English chrome and never regenerated.
-  //   item.i18n     = { ru:{title,summary}, es:{…}, sr:{…} }
-  //   data.tldr_i18n = { ru:[…], es:[…], sr:[…] }
-  // Both are optional: a missing language (or field) falls back to the English
+  // Only FOUR things are translated: the hero subtitle, card titles, card
+  // summaries and TL;DR bullets. Everything else — brand, filters, hero
+  // headline, dates, counters, platform names, category/impact chips, card
+  // meta, archive, sign-off, footer — is pre-baked English chrome and is
+  // never regenerated.
+  //   item.i18n         = { ru:{title,summary}, es:{…}, sr:{…} }
+  //   data.tldr_i18n     = { ru:[…], es:[…], sr:[…] }
+  //   data.subtitle_i18n = { ru:"…", es:"…", sr:"…" }
+  // All optional: a missing language (or field) falls back to the English
   // base, so decks built before i18n keep rendering unchanged.
   var LANGS = ["en","ru","es","sr"];
   function txt(it, field, lang){
@@ -813,14 +823,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if(lang !== "en" && data.tldr_i18n && data.tldr_i18n[lang] && data.tldr_i18n[lang].length) return data.tldr_i18n[lang];
     return data.tldr || [];
   }
-  // ?lang=xx wins (Slack/deep links), then the reader's saved choice, then English.
+  function subtitleFor(lang){
+    if(lang !== "en" && data.subtitle_i18n && data.subtitle_i18n[lang]) return data.subtitle_i18n[lang];
+    return data.subtitle || (data.period_label ? ("Updates published " + data.period_label) : "");
+  }
+  // Language comes from ?lang= ONLY — exactly like ?team=. No stored preference:
+  // a plain link (no param) always opens in English, so the URL alone decides
+  // what a reader sees and a shared link never renders differently for them.
   function resolveLang(){
-    var l = null;
     try { var q = new URLSearchParams(window.location.search).get("lang");
-          if(q && LANGS.indexOf(q.toLowerCase()) >= 0) l = q.toLowerCase(); } catch(e){}
-    if(!l){ try { var s = localStorage.getItem("apd_lang");
-                  if(s && LANGS.indexOf(s) >= 0) l = s; } catch(e){} }
-    return l || "en";
+          if(q && LANGS.indexOf(q.toLowerCase()) >= 0) return q.toLowerCase(); } catch(e){}
+    return "en";
   }
 
   var platforms = (data.platforms || []).filter(function(p){ return p.items && p.items.length; });
@@ -831,8 +844,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     ? "● No. " + data.edition_no + " · " + (data.period_label || "")
     : "● " + (data.period_label || "");
   document.getElementById("d-badge").textContent = badge;
-  document.getElementById("d-subtitle").textContent =
-    data.subtitle || (data.period_label ? ("Updates published " + data.period_label) : "");
 
   document.getElementById("stat-updates").textContent = total;
   document.getElementById("stat-platforms").textContent = platforms.length;
@@ -852,6 +863,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   document.documentElement.lang = lang;
   tldrList.textContent = "";
   body.textContent = "";
+
+  // Hero subtitle (the one line of hero copy that IS translated)
+  document.getElementById("d-subtitle").textContent = subtitleFor(lang);
 
   // TL;DR
   var bullets = tldrFor(lang);
@@ -1032,8 +1046,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if(lcur) lcur.textContent=b.textContent;
       if(rerender){
         window.__deck.render(lang);
-        setParam("lang", lang, "en");
-        try{ localStorage.setItem("apd_lang", lang); }catch(e){}
+        setParam("lang", lang, "en");   // URL only — the choice is not stored
       }
     }
     lbtns.forEach(function(b){ b.addEventListener("click", function(){ selectLang(b.getAttribute("data-lang"), true); closeDD(); }); });

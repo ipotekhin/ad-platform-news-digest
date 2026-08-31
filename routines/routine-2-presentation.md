@@ -81,7 +81,9 @@ The digest serves two audiences — **Search** (Google Ads, Microsoft/Bing, Chat
   6 normally, up to 8 only when highs demand it.)
 - Items beyond the cap stay `presented: false` and carry to a future edition (subject to
   the 28-day expiry in step 1). Caps live in Open config.
-- Write a **TL;DR** of 3–5 bullets, most important change first (across platforms).
+- Write a **TL;DR** of **3–4 bullets** (never 5+), most important change first (across
+  platforms). Four is the ceiling: the block is a two-column grid, so five leaves an odd
+  gap and more than that stops being skimmable.
   **Keep each bullet short — this block is skimmed, not read.** Hard rules:
   - **One sentence, max ~20 words / ~140 characters.** If it needs a semicolon, an em-dash
     aside or a second clause to fit, it is too long — cut it.
@@ -97,10 +99,11 @@ The deck ships in four languages behind a header language pill. There is **no ru
 translation API** — you pre-translate here, at build time, and the result is baked into
 the deck file.
 
-- **Translate exactly three things**, and nothing else:
-  1. every item's **`title`**, 2. every item's **`summary`**, 3. every **TL;DR bullet**.
+- **Translate exactly four things**, and nothing else:
+  1. the **hero subtitle** (`subtitle` — the line under "The Bi-Weekly Brief"),
+  2. every item's **`title`**, 3. every item's **`summary`**, 4. every **TL;DR bullet**.
   Everything else on the page is fixed English chrome that lives in the template —
-  brand, filters, hero headline and subtitle, dates, counters, platform names,
+  brand, filters, the hero headline itself, dates, counters, platform names,
   category/impact chips, card meta, Past editions, sign-off, footer. **Never translate
   those, and never touch the template to do it.**
 - **Languages:** `ru` (Cyrillic), `es`, `sr` — **Serbian in LATIN script**, not Cyrillic.
@@ -113,6 +116,7 @@ the deck file.
   Max, AI Max, Demand Gen, Audience Ads, oCPC), UI paths (`Tools > Content suitability`),
   company and publication names. Translate the surrounding prose around them.
 - Write the translations into the deck data as:
+  - `"subtitle_i18n": { "ru":"…", "es":"…", "sr":"…" }`
   - `"tldr_i18n": { "ru":[…], "es":[…], "sr":[…] }` — **same count and order** as `tldr`.
   - on each item: `"i18n": { "ru":{"title":"…","summary":"…"}, "es":{…}, "sr":{…} }`.
 - A missing language, item or field falls back to English on the page, so a partial
@@ -124,7 +128,8 @@ the deck file.
   documented inside the template). Fill `period_label`, `generated`, `author`
   ("Ivan Potekhin"), `tldr`, and `platforms[].items[]`. Each item links to its
   **canonical** URL. `edition_no` = this run's number (see editions registry below).
-  Add the step-3a translations: `tldr_i18n` at the top level and `i18n` on each item.
+  Add the step-3a translations: `subtitle_i18n` and `tldr_i18n` at the top level, and
+  `i18n` on each item.
 - **`period_label` = the digest window, NOT the min/max of the items' `published`
   dates.** Compute it as: **start** = the previous edition's date + 1 day (from
   `editions.json`); for the **first** edition, `generated − 14 days`. **end** =
@@ -136,8 +141,9 @@ the deck file.
   **bare filename** for `url` (decks are siblings in `decks/`, so `deck-….html`
   resolves correctly; do NOT prefix `decks/`). If the registry is empty, omit `archive`
   and the section stays hidden.
-- Sanity check: open/parse the file; ensure valid JSON in the data block, and that every
-  item carries `i18n` for all three languages and `tldr_i18n` matches `tldr` in length.
+- Sanity check: open/parse the file; ensure valid JSON in the data block, that every item
+  carries `i18n` for all three languages, that `subtitle_i18n` has all three, and that
+  `tldr_i18n` matches `tldr` in length (and that `tldr` is 3–4 bullets).
 
 ### 5. Publish the deck (GitHub Pages)
 - Commit the deck to `main` (via the PR flow); the Pages URL is
@@ -167,6 +173,13 @@ itself is a single file with all platforms; the two links only differ by a `?tea
 - **Deep-linked deck URL:** append `?team=search` or `?team=social` to the deck URL so the
   link opens straight to that team's filtered view (readers can switch to *All news* in the
   header). E.g. `https://ipotekhin.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html?team=social`.
+- **Four language links, not one.** The CTA line carries **four markdown links embedded
+  next to flag emoji** — English plus the three translations, all pointing at this team's
+  filtered view:
+  `:us: [EN](URL?team=T), :ru: [RU](URL?team=T&lang=ru), :es: [ES](URL?team=T&lang=es) and :flag-rs: [RS](URL?team=T&lang=sr)`
+  English takes **no** `lang` param (it is the deck's default). The label reads `RS` while
+  the param is `lang=sr` — that mismatch is intentional, don't "fix" it. Never paste a bare
+  URL; the link text is the language code.
 - **Send** each team's message via `slack_send_message` to that team's channel from Open
   config (`search_channel_id` / `social_channel_id`). Posts from Ivan's own Slack identity.
 - **Empty team = skip:** if a team has **no** included items this edition, **do not post to
