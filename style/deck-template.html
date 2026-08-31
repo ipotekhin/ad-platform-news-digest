@@ -71,26 +71,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      keeps a fixed, compact footprint however many filters we add later. */
   .hdr-ctl{display:flex;align-items:center;gap:10px;flex:none}
   .dd{position:relative;flex:none}
-  /* Padding is asymmetric on purpose: it makes the pill exactly as tall as the
-     desktop filter slider (36px), and the extra 1px on top optically centres the
-     all-caps label — uppercase has no descenders, so a box-centred line sits high. */
-  .dd-toggle{display:inline-flex;align-items:center;gap:7px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:10.5px 13px 9.5px;line-height:1;white-space:nowrap;transition:background .18s}
+  /* Height is set explicitly (not left to font metrics) so the pill matches the
+     desktop filter slider exactly whether or not the webfont has loaded. The 1px
+     of top-only padding optically centres the label: uppercase has no descenders,
+     so a strictly box-centred line reads as sitting high. */
+  .dd-toggle{display:inline-flex;align-items:center;gap:7px;height:36px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:1px 13px 0;line-height:1;white-space:nowrap;transition:background .18s}
   .dd-toggle:hover{background:var(--aid-lime)}
   .dd-car{font-size:9px;line-height:1;transition:transform .22s}
   .dd.open .dd-car{transform:rotate(180deg)}
-  /* Frosted-glass popup, right-aligned under its pill. */
-  .dd .opts{position:absolute;right:0;top:calc(100% + 9px);z-index:60;display:none;flex-direction:column;gap:2px;min-width:100%;padding:6px;border:2px solid var(--aid-ink);border-radius:16px;background:rgba(255,255,255,.8);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);box-shadow:4px 5px 0 rgba(26,26,26,.16)}
-  .dd.open .opts{display:flex}
-  .dd .opts button{display:flex;align-items:center;gap:8px;border:0;background:transparent;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:8px 12px;border-radius:999px;white-space:nowrap;text-align:left;transition:background .15s,color .15s}
-  .dd .opts button:hover{background:rgba(43,90,224,.14)}
-  .dd .opts button.active{background:var(--aid-blue);color:#fff}
+  /* Frosted-glass popup. It is position:fixed and gets moved to <body> when it
+     opens — see openPanel() below. The header sets its own backdrop-filter, which
+     makes it a backdrop root, and a backdrop-filter nested inside one samples an
+     empty backdrop: the popup would render with no blur at all. Living on <body>
+     while open puts it back over the real page content. */
+  .opts{position:fixed;z-index:80;display:none;flex-direction:column;gap:2px;padding:6px;border:2px solid var(--aid-ink);border-radius:16px;background:rgba(255,255,255,.55);backdrop-filter:blur(16px) saturate(1.35);-webkit-backdrop-filter:blur(16px) saturate(1.35);box-shadow:4px 5px 0 rgba(26,26,26,.16)}
+  .opts.open{display:flex}
+  .opts button{display:flex;align-items:center;gap:8px;border:0;background:transparent;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:8px 12px;border-radius:999px;white-space:nowrap;text-align:left;transition:background .15s,color .15s}
+  .opts button:hover{background:rgba(43,90,224,.14)}
+  .opts button.active{background:var(--aid-blue);color:#fff}
   .flt-ind{display:none}
-  /* Desktop: the news filter goes back to being a segmented slider. */
+  /* Desktop: the news filter goes back to being a segmented slider — its panel
+     stays in place (never portaled) because its toggle is hidden here. */
   @media (min-width:641px){
-    #news-filter{display:inline-flex;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;padding:3px}
+    #news-filter{display:inline-flex;height:36px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;padding:3px}
     #news-filter>.dd-toggle{display:none}
-    #news-filter .opts{position:relative;right:auto;top:auto;display:inline-flex;flex-direction:row;gap:0;min-width:0;padding:0;border:0;border-radius:0;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
-    #news-filter .opts button{position:relative;z-index:1;padding:6px 14px;transition:color .2s}
+    #news-filter .opts{position:relative;z-index:auto;display:inline-flex;flex-direction:row;gap:0;padding:0;border:0;border-radius:0;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
+    #news-filter .opts button{position:relative;z-index:1;height:100%;padding:6px 14px;transition:color .2s}
     #news-filter .opts button:hover{background:transparent}
     #news-filter .opts button.active{background:transparent;color:#fff}
     #news-filter .flt-ind{display:block;position:absolute;left:0;top:0;bottom:0;z-index:0;border-radius:999px;background:var(--aid-blue);transition:transform .3s cubic-bezier(.5,1.5,.4,1),width .3s cubic-bezier(.5,1.5,.4,1)}
@@ -130,9 +136,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     header>div>div:first-child{min-width:0}
     header>div>div:first-child span:last-child{font-size:11px;letter-spacing:.09em;line-height:1.25}
     /* Both header controls are dropdown pills here — see the .dd rules above.
-       Same 1px top bias as desktop, on a shorter pill (30px). */
+       Shorter pill (30px), same explicit height + 1px top bias as desktop. */
     .hdr-ctl{gap:7px}
-    .dd-toggle{padding:7.5px 10px 6.5px;gap:5px;letter-spacing:.02em}
+    .dd-toggle{height:30px;padding:1px 10px 0;gap:5px;letter-spacing:.02em}
     /* TL;DR: one column on phones — two columns squeeze each bullet into a narrow
        ribbon of text that is hard to read. */
     #d-tldr{grid-template-columns:1fr!important;gap:14px!important}
@@ -574,24 +580,49 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // renders as a segmented slider and its toggle is hidden, so this only drives
   // the language pill there; on phones it drives both.
   var openDD=null;
+  function panelFor(dd){ if(!dd.__panel) dd.__panel=dd.querySelector(".opts"); return dd.__panel; }
   function closeDD(){
     if(!openDD) return;
-    openDD.classList.remove("open");
-    var t=openDD.querySelector(".dd-toggle"); if(t) t.setAttribute("aria-expanded","false");
+    var dd=openDD, panel=panelFor(dd);
+    panel.classList.remove("open");
+    panel.style.cssText="";                       // drop the fixed-position placement
+    if(panel.parentNode!==dd) dd.appendChild(panel);   // return it to its control
+    dd.classList.remove("open");
+    var t=dd.querySelector(".dd-toggle"); if(t) t.setAttribute("aria-expanded","false");
     openDD=null;
+  }
+  function openPanel(dd){
+    var panel=panelFor(dd), tog=dd.querySelector(".dd-toggle");
+    // Move the panel onto <body> before showing it. The sticky header has its own
+    // backdrop-filter, and a backdrop-filter nested inside another one sees an empty
+    // backdrop — the popup would show zero blur. On <body> it frosts the real page.
+    if(panel.parentNode!==document.body) document.body.appendChild(panel);
+    var r=tog.getBoundingClientRect();
+    panel.style.position="fixed";
+    panel.style.top=(r.bottom+9)+"px";
+    panel.style.right=(window.innerWidth-r.right)+"px";
+    panel.style.minWidth=r.width+"px";
+    panel.classList.add("open");
+    dd.classList.add("open");
+    tog.setAttribute("aria-expanded","true");
+    openDD=dd;
   }
   document.addEventListener("click", function(e){
     if(!e.target.closest) return;
-    var dd=e.target.closest(".dd"), tog=e.target.closest(".dd-toggle");
-    if(tog && dd){
-      var wasOpen=dd.classList.contains("open");
+    var tog=e.target.closest(".dd-toggle");
+    if(tog){
+      var dd=tog.closest(".dd"), wasOpen=(openDD===dd);
       closeDD();
-      if(!wasOpen){ dd.classList.add("open"); tog.setAttribute("aria-expanded","true"); openDD=dd; }
+      if(!wasOpen) openPanel(dd);
       return;
     }
-    if(!dd) closeDD();
+    // An open panel lives on <body>, so "inside" means inside .opts, not inside .dd.
+    if(!e.target.closest(".opts")) closeDD();
   });
   document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeDD(); });
+  // The placement is a one-shot measurement, so anything that moves the toggle
+  // closes the panel rather than leaving it stranded.
+  window.addEventListener("scroll", closeDD, true);
 
   // ?team= / ?lang= stay in the address bar so a reader can copy the link they see.
   function setParam(key, val, dflt){
@@ -637,7 +668,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     requestAnimationFrame(function(){ select(want, false); });
     // A language switch rebuilds #d-body, so re-apply the current filter to it.
     document.addEventListener("deck:rendered", function(){ apply(curTeam); });
-    window.addEventListener("resize", function(){ var a=filter.querySelector(".flt.active"); if(a) moveInd(a); });
+    window.addEventListener("resize", function(){ closeDD(); var a=filter.querySelector(".flt.active"); if(a) moveInd(a); });
   }
 
   // Language switcher — swaps card titles/summaries + TL;DR bullets (see the
