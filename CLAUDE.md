@@ -15,7 +15,9 @@ The routines are meant to run **hands-off from the repo**: the trigger prompts a
 pointers, and every decision lives in these repo files. All tuning happens by editing
 the repo (via chat) — never by rewriting the routine prompts:
 - **Sources** → `sources.yaml`   ·   **Relevance** → `criteria.md`
-- **Design** → `style/deck-template.html` (+ `assets/stickers/`)
+- **Design** → `style/deck-template.html` (+ `assets/stickers/`)   ·   **UI strings in
+  other languages** → also `style/deck-template.html` (interface chrome is pre-baked and
+  English-only; only card titles/summaries + TL;DR bullets are translated, by Routine 2)
 - **Slack message** → `style/slack-summary.md` (one message **per team** — Search /
   Social)   ·   **Slack destinations / config** → `routines/routine-2-presentation.md` →
   Open config (`search_channel_id` / `social_channel_id`; each message deep-links the deck
@@ -30,6 +32,9 @@ keep working unchanged.
 - Routine 1 **never** builds a deck; Routine 2 **never** collects.
 - Dedup: Layer 1 = canonical-URL exact match (`sha1(canonical_url)[:12]`); Layer 2 =
   LLM semantic match, preferring official sources over aggregators.
+- **i18n:** Routine 2 pre-translates at build time (EN base → RU / ES / SR-**Latin**) and
+  translates **only** card titles, card summaries and TL;DR bullets — never the interface
+  chrome, platform names, chips, dates or footer. Length limits are set in English.
 - Only advance a source's `last_collected` in `state.json` if you actually read it.
 - The deck (`style/deck-template.html`) loads Google Fonts (Playfair Display, Courier
   Prime) from the Google Fonts CDN, reads sticker PNGs from `assets/stickers/` (plus the

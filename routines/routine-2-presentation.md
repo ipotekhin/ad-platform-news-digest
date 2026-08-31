@@ -92,12 +92,39 @@ The digest serves two audiences — **Search** (Google Ads, Microsoft/Bing, Chat
   - Example of the right length: *"Local Services Ads fold into Performance Max as
     pay-per-lead from August; historical LSA reports don't carry over."*
 
+### 3a. Translate the content (EN → RU / ES / SR)
+The deck ships in four languages behind a header language pill. There is **no runtime
+translation API** — you pre-translate here, at build time, and the result is baked into
+the deck file.
+
+- **Translate exactly three things**, and nothing else:
+  1. every item's **`title`**, 2. every item's **`summary`**, 3. every **TL;DR bullet**.
+  Everything else on the page is fixed English chrome that lives in the template —
+  brand, filters, hero headline and subtitle, dates, counters, platform names,
+  category/impact chips, card meta, Past editions, sign-off, footer. **Never translate
+  those, and never touch the template to do it.**
+- **Languages:** `ru` (Cyrillic), `es`, `sr` — **Serbian in LATIN script**, not Cyrillic.
+  English is the base and stays in the plain `title` / `summary` / `tldr` fields.
+- **Length rule:** the limits in step 3 are defined **in English**. A translation must
+  carry the **same meaning at the same length** — same one-sentence TL;DR, same 2–3
+  sentence summary. Don't pad, don't compress, and don't apply a per-language character
+  cap; match the English.
+- **Leave in English inside translated text:** product and feature names (Performance
+  Max, AI Max, Demand Gen, Audience Ads, oCPC), UI paths (`Tools > Content suitability`),
+  company and publication names. Translate the surrounding prose around them.
+- Write the translations into the deck data as:
+  - `"tldr_i18n": { "ru":[…], "es":[…], "sr":[…] }` — **same count and order** as `tldr`.
+  - on each item: `"i18n": { "ru":{"title":"…","summary":"…"}, "es":{…}, "sr":{…} }`.
+- A missing language, item or field falls back to English on the page, so a partial
+  translation degrades gracefully — but ship all three languages for every item.
+
 ### 4. Build the deck
 - Copy `style/deck-template.html` → `decks/deck-YYYY-MM-DD.html` (today's date).
 - Replace the `<script id="deck-data">` JSON block with the real data (schema is
   documented inside the template). Fill `period_label`, `generated`, `author`
   ("Ivan Potekhin"), `tldr`, and `platforms[].items[]`. Each item links to its
   **canonical** URL. `edition_no` = this run's number (see editions registry below).
+  Add the step-3a translations: `tldr_i18n` at the top level and `i18n` on each item.
 - **`period_label` = the digest window, NOT the min/max of the items' `published`
   dates.** Compute it as: **start** = the previous edition's date + 1 day (from
   `editions.json`); for the **first** edition, `generated − 14 days`. **end** =
@@ -109,7 +136,8 @@ The digest serves two audiences — **Search** (Google Ads, Microsoft/Bing, Chat
   **bare filename** for `url` (decks are siblings in `decks/`, so `deck-….html`
   resolves correctly; do NOT prefix `decks/`). If the registry is empty, omit `archive`
   and the section stays hidden.
-- Sanity check: open/parse the file; ensure valid JSON in the data block.
+- Sanity check: open/parse the file; ensure valid JSON in the data block, and that every
+  item carries `i18n` for all three languages and `tldr_i18n` matches `tldr` in length.
 
 ### 5. Publish the deck (GitHub Pages)
 - Commit the deck to `main` (via the PR flow); the Pages URL is

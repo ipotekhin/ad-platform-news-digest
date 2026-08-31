@@ -32,15 +32,33 @@ deck-data changes needed:
 - **Team filter.** The header holds an **All news / Search / Social** segmented
   control. Selecting a team shows/hides platform sections and recomputes the header
   stats. Teams are derived from the platform name (`teamOf`): Meta / TikTok / LinkedIn
-  → *Social*, everything else (Google Ads, Microsoft/Bing) → *Search*.
+  → *Social*, everything else (Google Ads, Microsoft/Bing, ChatGPT Ads) → *Search*.
+- **Language pill.** A dropdown next to the filter offers 🇺🇸 EN / 🇷🇺 RU / 🇪🇸 ES /
+  🇷🇸 SR (Serbian in **Latin** script). Picking one re-renders the content from the
+  translations baked into the deck data — see *Translations* below. English is the
+  default; `?lang=ru|es|sr` deep-links a language (it wins over the reader's stored
+  choice), and the pick is remembered in `localStorage` under `apd_lang`. Both header
+  controls collapse to dropdown pills below 640px, so the header keeps a fixed
+  footprint however many controls we add later.
 - **Motion.** A typewriter reveal on the sign-off heading, sticker entrance
   (fade + scale, staggered on scroll), and section reveals. Platform-heading icons
   (`.pf-icon`) and the Past-editions sticker (`.stk-static`) are excluded from the
   entrance; decorative stickers carry `stk-in` in the markup so they never flash on
   load. All motion is disabled under `prefers-reduced-motion`.
 - **Mobile.** A `≤640px` media query hides the large floating stickers (they overlap
-  text on narrow screens), centers the footer, keeps the brand left / filter right,
-  and shrinks the sign-off heading. Desktop (≥641px) is unaffected.
+  text on narrow screens), centers the footer, keeps the brand left / controls right,
+  drops the TL;DR to one column, and shrinks the sign-off heading. Desktop (≥641px) is
+  unaffected.
+
+### Translations
+
+The deck is **pre-translated at build time** by Routine 2 — there is no runtime
+translation API and no key to leak. Only **three** things are translated: card titles,
+card summaries and TL;DR bullets. Everything else is fixed English chrome baked into
+this template and is never regenerated per edition. Switching language re-runs the
+content render from the same deck data, so stickers, layout and stats stay identical
+across languages (the sticker RNG is re-seeded from a language-independent sub-seed).
+Decks built before this feature have no translations and simply stay English.
 
 ### Stickers (randomized per edition)
 
@@ -65,7 +83,8 @@ edit the pool arrays; positions/sizes are fixed in the HTML so nothing shifts.
 Required fields are unchanged (`period_label`, `generated`, `tldr`, `platforms[].items[]`
 — see the schema comment inside `deck-template.html`). The Zine skin also accepts
 optional fields that degrade gracefully if Routine 2 doesn't supply them:
-`edition_no`, `subtitle`, `read_minutes`, `author`, `archive`. None of these require
+`edition_no`, `subtitle`, `read_minutes`, `author`, `archive`, plus the translation
+fields `tldr_i18n` and per-item `i18n` (see the schema comment in the template). None of these require
 changes to `routines/routine-2-presentation.md` — the template falls back sensibly
 (e.g. no "No. N" prefix without `edition_no`, an estimated read time without
 `read_minutes`) so the existing automation keeps working unmodified.
@@ -79,6 +98,8 @@ changes to `routines/routine-2-presentation.md` — the template falls back sens
 - TL;DR: 3–5 bullets, the single most important change first. **One sentence each, max
   ~20 words / ~140 characters** — it's a skim block; detail belongs on the card. On phones
   the TL;DR grid drops to a single column (two columns squeeze the text unreadably).
+  Length limits are defined **in English** (the base language); translations match the
+  English in meaning and length rather than having their own character caps.
 - No overall size cap; **per-platform cap 6** (up to 8 to fit all `high`s) keeps Search
   vs Social balanced. Overflow carries to a future edition (see `criteria.md`).
 - Every item links to its **canonical** source URL (official over aggregator).

@@ -212,3 +212,51 @@ Schedules are set manually in the routine UI and do not affect any logic.
   the window; Social Media Today covers the same announcements as a dated feed. No
   `roundup` source remains, so the 2-week window applies to every source.
 - Open question: folder-star sticker (keep in wrap block vs remove entirely).
+
+## 12. Multi-language support (2026-08-31)
+The deck now ships in **four languages** behind a header language pill —
+🇺🇸 EN (base) / 🇷🇺 RU / 🇪🇸 ES / 🇷🇸 SR (**Latin** script).
+
+**Approach: pre-translate at build time.** GitHub Pages is static, so there is no
+backend and no place to hold a translation-API key. Routine 2 writes the translations
+into the deck data when it builds the edition (new step 3a); the page just re-renders
+from that data. No new external request, no key, no runtime dependency.
+
+**Scope — exactly three things are translated:** card titles, card summaries and TL;DR
+bullets. Everything else is fixed English chrome baked into the template and never
+regenerated per edition: brand, filters, hero headline/subtitle, dates, counters,
+platform names, category/impact chips, card meta, Past editions, sign-off, footer.
+That keeps the interface identical edition to edition and keeps Courier Prime (which we
+only use for chrome) off any non-Latin text.
+
+**Data schema** (both optional; a missing language/item/field falls back to English, so
+the two already-published editions keep rendering):
+```
+"tldr_i18n": { "ru":[…], "es":[…], "sr":[…] }      // same count & order as "tldr"
+item.i18n:   { "ru":{"title","summary"}, "es":{…}, "sr":{…} }
+```
+
+**Behaviour:** English by default · `?lang=ru|es|sr` deep-links a language and wins over
+the reader's stored choice · the pick is remembered in `localStorage` (`apd_lang`) ·
+`<html lang>` is updated · `?lang=` and `?team=` compose, so a Slack team link keeps its
+filter when the reader switches language.
+
+**Template changes:** the render is now a re-callable `renderContent(lang)` that rebuilds
+`#d-tldr` + `#d-body` and fires a `deck:rendered` event; the chrome script re-applies the
+current team filter and shows the new nodes at once (replaying the scroll entrance would
+blank the page mid-read). The sticker RNG is re-seeded from a language-independent
+sub-seed at the top of every render, so all four languages get an identical sticker and
+icon layout.
+
+**Header controls** share one dropdown component: the language pill is always a dropdown
+(frosted-glass popup); the news filter is the original segmented slider on desktop and
+collapses to the same pill below 640px — a fixed header footprint that stays workable if
+more filters arrive.
+
+**Length rule:** limits stay defined **in English** (the base language). Translations
+match the English in meaning and length; no per-language character cap.
+
+Verified on `decks/deck-i18n-test.html` (a copy of edition 2, not in the archive) at
+1280px and 390px: all four languages, Cyrillic and Serbian/Spanish diacritics, dropdowns,
+filter + language composing, localStorage persistence, no card overflow, no console
+errors. **Still English:** the two published editions — they get translated separately.
