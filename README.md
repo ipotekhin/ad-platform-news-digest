@@ -108,6 +108,10 @@ embedded in the message:
 - **Deep-linked filter.** Both messages link to the *same* deck, but with `?team=search`
   / `?team=social` appended so the page opens **pre-filtered to that team's view**; the
   reader can switch to *All news* in the header.
+- **Four languages.** A header pill switches the deck between 🇺🇸 EN (base), 🇷🇺 RU,
+  🇪🇸 ES and 🇷🇸 SR (Latin). Routine 2 pre-translates the card titles, card summaries
+  and TL;DR bullets when it builds the edition — the interface itself stays English.
+  `?lang=ru|es|sr` deep-links a language and composes with `?team=`.
 - **GitHub Pages** — enable once in *Settings → Pages* (serve `main` / root); deck URL is
   `https://ipotekhin.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html`.
 - Delivery is **GitHub Pages only** — no Slack Canvas.
