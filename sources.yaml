@@ -39,6 +39,18 @@
 # a concurrency of 3 or lower and retry the stragglers; every 504 succeeded on retry.
 # The other domains tolerate 8 parallel fetches fine.
 #
+# PPC LAND TAG-PAGE LAG (observed 2026-09-01): `/tag/search/` and `/tag/social/` went
+# STALE while the site kept publishing daily — on 2026-09-01 the newest card on
+# /tag/search/ was Aug 19 and on /tag/social/ Aug 17, yet the homepage and `/tag/news/`
+# carried Aug 31 stories. Not a fetch problem (HTTP 200, cache-busting query and
+# `Cache-Control: no-cache` changed nothing) and there are no per-platform tags
+# (/tag/google-ads/, /tag/meta/, … all 404). FALLBACK USED: page back through
+# `https://ppc.land/tag/news/page/N/` (~12 cards/page, ~12 pages ≈ 2 weeks; page 14 falls
+# off a cliff into 2016 archive posts) and apply the same scope filter — search-side
+# platforms for ppcland_search, social-side for ppcland_social. Items found that way are
+# still recorded under the `PPC Land — Search` / `PPC Land — Social` source titles.
+# Re-check the tag pages on the next run; if they are current again, drop the fallback.
+#
 # SEL OUTAGE (observed 2026-08-04): a retry is NOT always enough. The index pages and
 # ~14 article pages read fine, then a fixed subset of article URLs returned Cloudflare
 # 504 / connection timeouts on every attempt (4 retry rounds over ~40 min, varied UA,
