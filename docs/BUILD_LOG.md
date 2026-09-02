@@ -298,3 +298,25 @@ opens in English and a shared link renders the same for whoever opens it.
 (edition 1: 10 items, edition 2: 15). Their TL;DR bullet counts are unchanged at 5 —
 the 3–4 rule applies to future editions only. The test page `decks/deck-i18n-test.html`
 is deleted. Slack messages now carry four language links embedded next to flag emoji.
+
+## 13. Edition 3 run notes (2026-09-02)
+Edition 3 shipped clean (14 items, both team channels, four language links per message).
+The run surfaced two config gaps, both now closed in the docs:
+
+- **`ipotekhin.github.io` was not in the run environment's egress allowlist**, so step 5
+  could not verify the deck URL and the link was announced unchecked
+  (`connect_rejected`). Ivan added the domain. The preconditions now name this domain
+  explicitly, and step 5 says to verify a 2xx before posting — and, if the refusal is the
+  egress policy rather than Pages, to post anyway but flag it in the step-8 note.
+- **The stored trigger prompt had drifted from the doc.** It still read "deliver the Slack
+  message to the target in the doc's Open config (currently Ivan's DM)" — a stale
+  parenthetical from before the two-channel split, and it also predated the backlog
+  expiry, per-platform caps and per-team messages. CLAUDE.md makes the doc the source of
+  truth, so the run correctly posted to the two team channels, but the contradiction was
+  live. Root cause: `routines/SETUP.md` carried that same old prompt, and it is what got
+  pasted into the UI. Both files now hold one identical, destination-free prompt, plus a
+  note that the stored copy must be re-pasted whenever the doc's block changes.
+
+Not changed: **Google Ads backlog pressure** (6 shipped, 27 deferred, 14 retired unseen at
+the 28-day expiry). The lever is its per-platform cap in Open config — left as-is pending
+a decision.
