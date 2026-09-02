@@ -53,6 +53,12 @@ deck-data changes needed:
   Links in this strip carry the reader's current `?lang=` so a language survives moving
   between editions — the language is written into the link's own URL, not stored, so the
   "a bare link always opens in English" rule is untouched.
+  The strip **collapses to one row** with a *View all N editions* toggle beneath it, so a
+  long run of editions never becomes a wall of cards. Which cards fit is measured rather
+  than a fixed count (a desktop row holds ~4–6, a phone row one), re-measured on resize,
+  with a floor of `ARCHIVE_MIN` = 3 so a phone never collapses to a single lonely card.
+  The toggle only appears when something is actually hidden — with a handful of editions
+  the strip behaves exactly as before.
 - **Motion.** A typewriter reveal on the sign-off heading, sticker entrance
   (fade + scale, staggered on scroll), and section reveals. Platform-heading icons
   (`.pf-icon`) and the Past-editions sticker (`.stk-static`) are excluded from the

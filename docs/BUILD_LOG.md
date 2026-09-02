@@ -375,3 +375,21 @@ edition 1 now lists Nos. 3 and 2, edition 2 lists 3 and 1, edition 3 lists 2 and
 clicking through from `?lang=ru` keeps Russian; switching language in-page updates the
 hrefs; a plain link still opens English; and over `file://` each deck falls back to its
 baked archive with no errors.
+
+### Editions strip collapses to one row (2026-09-02)
+With a dozen editions the strip would grow into a wall of cards, so it now shows a single
+row plus a **View all N editions** toggle; expanding shows the full grid, and the toggle
+flips to *Show fewer editions*.
+
+How many cards that is gets **measured, not fixed**: the code lays them all out, reads the
+first card's `offsetTop`, and hides everything sitting on a lower row. A desktop row holds
+about 4–6 and a phone row exactly one, so a fixed count would behave differently on each.
+Re-measured (debounced) on resize. `ARCHIVE_MIN` = 3 is the floor — collapsing a phone to
+one lonely card reads as broken rather than tidy — so the three most recent editions
+always stay visible even if that spills onto extra rows. The toggle appears **only** when
+something is actually hidden, so with today's three editions nothing changes at all.
+
+One regression caught in review while building this: hiding/showing cards by clearing
+`style.display` wiped the inline `display:flex` that stacks each card's two lines, so
+restored cards rendered "No. 11" and its date on one row. Hiding now uses an `.ed-hidden`
+class, leaving the inline display alone. All three decks rebuilt and re-verified.
