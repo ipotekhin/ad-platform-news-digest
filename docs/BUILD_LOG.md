@@ -320,3 +320,22 @@ The run surfaced two config gaps, both now closed in the docs:
 Not changed: **Google Ads backlog pressure** (6 shipped, 27 deferred, 14 retired unseen at
 the 28-day expiry). The lever is its per-platform cap in Open config — left as-is pending
 a decision.
+
+### Trigger prompts made expiry-proof (2026-09-02, follow-up)
+The first fix for the drifted Routine 2 prompt replaced one stale prompt with another
+detailed one — it still enumerated the caps, the translations, `?team=`, the four
+language links and `editions.json`, every one of which would rot the next time the repo
+changed. Wrong shape, same failure mode.
+
+Both prompts are now **contentless pointers**. They carry only what cannot expire:
+which routine it is, which file to obey, that the file outranks the prompt if they ever
+disagree, and the `claude/`-branch + PR mechanic the platform forces. Routine 2 also
+carries "check the stop conditions first and do nothing if they say stop" — phrased
+without naming which gates, because silently building and posting an edition that should
+not exist is the one failure worth a line in the prompt itself.
+
+Everything else — destinations, thresholds, caps, languages, outputs, steps — lives in
+`routines/*.md`. The rule is now written into `CLAUDE.md`, both routine docs and
+`SETUP.md`: **never put a specific in a prompt**; wanting to is the signal it belongs in
+the routine's file. Paste the prompts once; after that, tuning the system means editing
+the repo, never the routine UI.

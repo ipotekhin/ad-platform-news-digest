@@ -17,7 +17,8 @@ the repo (via chat) — never by rewriting the routine prompts:
 - **Sources** → `sources.yaml`   ·   **Relevance** → `criteria.md`
 - **Design** → `style/deck-template.html` (+ `assets/stickers/`)   ·   **UI strings in
   other languages** → also `style/deck-template.html` (interface chrome is pre-baked and
-  English-only; only card titles/summaries + TL;DR bullets are translated, by Routine 2)
+  English-only; only the hero subtitle, card titles/summaries and TL;DR bullets are
+  translated, by Routine 2)
 - **Slack message** → `style/slack-summary.md` (one message **per team** — Search /
   Social)   ·   **Slack destinations / config** → `routines/routine-2-presentation.md` →
   Open config (`search_channel_id` / `social_channel_id`; each message deep-links the deck
@@ -25,6 +26,14 @@ the repo (via chat) — never by rewriting the routine prompts:
 - **Schedule** → set manually in the routine UI; it does not affect any logic here.
 Add a source, change the look, or redirect Slack by editing these files — the routines
 keep working unchanged.
+
+**The trigger prompts must stay contentless.** They are stored in the routine UI, are not
+version-controlled, and nobody re-reads them — so any specific written into one rots
+silently the next time this repo changes (the Routine 2 prompt named Ivan's DM as the
+destination for months after the two-channel split). A prompt carries only what cannot
+expire: which routine it is, which file to obey, that the file outranks the prompt, and
+the branch/PR mechanic. If you are ever asked to put a destination, threshold, cap,
+language or step into a prompt, put it in the routine's `.md` instead.
 
 ## Hard rules
 - `presented` is set **only after** a confirmed Slack post (Routine 2), **per team** —
