@@ -184,12 +184,18 @@ failed, even if every word in it is "correct".
   `editions.json`); for the **first** edition, `generated − 14 days`. **end** =
   `generated`. Format `"Mon D – Mon D, YYYY"` (e.g. `Jul 20 – Aug 3, 2026`). This keeps
   the label a clean ~2-week span independent of individual item dates.
-- **Past editions block:** read `data/editions.json` (the registry of prior editions)
-  and pass its entries as `archive` in the deck data — each as
+- **Editions strip:** read `data/editions.json` (the registry) and pass its entries as
+  `archive` in the deck data — each as
   `{ "no": <n>, "label": "<period_label>", "url": "deck-YYYY-MM-DD.html" }`. Use the
   **bare filename** for `url` (decks are siblings in `decks/`, so `deck-….html`
-  resolves correctly; do NOT prefix `decks/`). If the registry is empty, omit `archive`
-  and the section stays hidden.
+  resolves correctly; do NOT prefix `decks/`). If the registry is empty, omit `archive`.
+  - This array is a **fallback**. At view time the deck re-reads `data/editions.json`
+    itself (same origin) and lists every *other* edition, newest first — which is what
+    lets an already-published deck link **forward** to editions released after it. The
+    baked array only takes over when that read can't happen (opened from disk, offline).
+  - **You therefore never rewrite a published deck to add a newer edition to its strip.**
+    Appending to `editions.json` in step 7 is enough; every existing deck picks it up on
+    its next view.
 - Sanity check: open/parse the file; ensure valid JSON in the data block, that every item
   carries `i18n` for all three languages, that `subtitle_i18n` has all three, and that
   `tldr_i18n` matches `tldr` in length (and that `tldr` is 3–4 bullets).

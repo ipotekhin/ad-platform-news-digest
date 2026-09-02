@@ -46,6 +46,10 @@ language or step into a prompt, put it in the routine's `.md` instead.
   never the interface chrome, platform names, chips, dates or footer. Length limits are set
   in English, and translations must read naturally, never as a calque (see Routine 2 step
   3a). Language comes from `?lang=` only — no param means English, nothing is stored.
+- **Editions strip:** the deck reads `data/editions.json` at view time and lists every
+  *other* edition, newest first — so published decks link forward to later ones with
+  nothing rewritten. Never edit an old deck to add a newer edition; appending to the
+  registry is enough. The deck-data `archive` array is only the offline fallback.
 - Only advance a source's `last_collected` in `state.json` if you actually read it.
 - The deck (`style/deck-template.html`) loads Google Fonts (Playfair Display, Courier
   Prime) from the Google Fonts CDN, reads sticker PNGs from `assets/stickers/` (plus the

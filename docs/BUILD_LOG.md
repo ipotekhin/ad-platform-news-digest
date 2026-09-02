@@ -339,3 +339,39 @@ Everything else — destinations, thresholds, caps, languages, outputs, steps �
 `SETUP.md`: **never put a specific in a prompt**; wanting to is the signal it belongs in
 the routine's file. Paste the prompts once; after that, tuning the system means editing
 the repo, never the routine UI.
+
+## 14. Editions navigation + language carry-over (2026-09-02)
+
+**Forward navigation between editions.** The strip used to be built once, at build time,
+from the `archive` array — so it could only ever list editions *older* than the deck
+holding it. Land on edition 2 and edition 3 was unreachable; with ten editions, opening
+No. 3 stranded you with no route to 4–10.
+
+A deck can't know at build time about an edition that doesn't exist yet, so the strip now
+reads the **live registry** (`data/editions.json`, same origin on Pages) at **view time**
+and lists every *other* edition, newest first. Already-published decks pick up new
+editions on their own — nothing is rewritten, no git churn, and `editions.json` stays the
+single source of truth. The baked `archive` array remains as the fallback for when that
+read can't happen (opened from disk, offline) and still holds prior editions only, so
+nothing regressed for offline copies.
+
+Section heading is now **"Other editions"** rather than "Past editions", since it lists
+both directions. Same-origin fetch of our own JSON — not a third-party request, so the
+"fonts + local assets + GTM only" rule is intact.
+
+**Language carries across internal edition links.** Links in the strip are built with the
+reader's current `?lang=`, and are rebuilt when the language pill changes. This does *not*
+reintroduce the stored-preference behaviour that was deliberately removed: nothing is
+persisted, and the language travels because it is written into the link's own URL. A bare
+link — from Slack, a bookmark, anywhere outside the page — still opens in English. The URL
+remains the only source of language.
+
+`?team=` is deliberately **not** carried: a past edition may have no platforms for that
+team, which would land the reader on an empty filtered view. Language has no such failure
+mode.
+
+All three published decks were rebuilt on the updated template. Verified over HTTP:
+edition 1 now lists Nos. 3 and 2, edition 2 lists 3 and 1, edition 3 lists 2 and 1;
+clicking through from `?lang=ru` keeps Russian; switching language in-page updates the
+hrefs; a plain link still opens English; and over `file://` each deck falls back to its
+baked archive with no errors.

@@ -44,6 +44,15 @@ deck-data changes needed:
   the sticky header sets its own `backdrop-filter`, and a `backdrop-filter` nested inside
   another one samples an empty backdrop, so in place the panel rendered with **no blur at
   all**. It returns to its control on close, and scroll/resize close it.
+- **Editions strip.** "Other editions" lists every edition except the one being viewed,
+  **newest first**, so an older deck links forward as well as back. It reads
+  `data/editions.json` at view time (same origin — not a third-party request), which is
+  what lets an already-published, frozen deck show editions released after it without
+  anything being rewritten. The `archive` array in the deck data is the fallback for when
+  that read can't happen (opened from disk, offline) and holds prior editions only.
+  Links in this strip carry the reader's current `?lang=` so a language survives moving
+  between editions — the language is written into the link's own URL, not stored, so the
+  "a bare link always opens in English" rule is untouched.
 - **Motion.** A typewriter reveal on the sign-off heading, sticker entrance
   (fade + scale, staggered on scroll), and section reveals. Platform-heading icons
   (`.pf-icon`) and the Past-editions sticker (`.stk-static`) are excluded from the
