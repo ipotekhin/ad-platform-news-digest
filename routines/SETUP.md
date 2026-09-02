@@ -59,33 +59,33 @@ Wednesday `0 7 * * 3`** — its step-0 cadence gate then makes the digest land b
 ### Routine 1 — Collect  ·  schedule: **weekly**
 ```
 You are Routine 1 (Collect) for the ad-platform-news-digest repo.
-Read routines/routine-1-collect.md and follow it exactly. Branch from main to a
-claude/collect-run branch, commit the updated data/updates.json and
-data/state.json (and any sources.yaml validation edits), push, then open a pull
-request into main and merge it. Do not build any deck.
+Read routines/routine-1-collect.md and follow it exactly. That file is the source of
+truth for this run — its scope, rules, outputs and stop conditions are kept current, and
+if anything in this prompt ever disagrees with it, the file wins. Work on a
+claude/-prefixed branch off main and land the result through a pull request into main,
+as the file specifies. Stay inside this routine's job — do not do Routine 2's work.
 ```
 
 ### Routine 2 — Presentation  ·  schedule: **every Wednesday** `0 7 * * 3` (gate makes it bi-weekly)
 ```
 You are Routine 2 (Presentation) for the ad-platform-news-digest repo.
-Read routines/routine-2-presentation.md and follow it exactly. First apply the step-0
-cadence gate and the empty-edition guard — if either says stop, do nothing. Otherwise
-branch from main to a claude/present-run branch, expire stale backlog, select with the
-per-platform caps, build the deck (English plus the RU/ES/SR translations), merge it into
-main so GitHub Pages serves it, and check the deck URL resolves before announcing it.
-Then deliver one Slack message per team (Search / Social) to the channel IDs in that
-doc's Open config — never to a DM — each with its own ?team= deep link and all four
-language links. Only after a confirmed post, set presented:true on that team's delivered
-items, append the edition to data/editions.json, DM Ivan the backlog status note, commit,
-push, open a pull request into main and merge it.
+Read routines/routine-2-presentation.md and follow it exactly. That file is the source of
+truth for this run — its scope, rules, outputs, delivery targets and stop conditions are
+kept current, and if anything in this prompt ever disagrees with it, the file wins. Check
+its stop conditions first and do nothing at all if they say stop. Work on a
+claude/-prefixed branch off main and land the result through a pull request into main,
+as the file specifies. Stay inside this routine's job — do not do Routine 1's work.
 ```
 
-> The Slack destinations and message wording live in the repo (`routine-2` Open config +
-> `style/slack-summary.md`), so these prompts never need editing when a channel or the
-> wording changes — and the prompt must **not** name a destination itself, or it drifts
-> out of sync with the doc (as it did before the 2026-09-02 run). If you edit the prompt
-> block in `routines/routine-2-presentation.md`, re-paste it into the routine UI: the
-> stored copy is the one that actually runs.
+> **These prompts are deliberately contentless, and must stay that way.** The stored copy
+> in the routine UI is not version-controlled and nobody re-reads it, so any specific
+> written into it rots silently the next time the repo changes — the Routine 2 prompt
+> still named Ivan's DM as the destination months after the two-channel split. A prompt
+> holds only what cannot expire: which routine it is, which file to obey, that the file
+> outranks the prompt, and the branch/PR mechanic the platform forces. Everything
+> else — destinations, thresholds, caps, languages, outputs, steps — lives in
+> `routines/*.md`, where it is edited and reviewed. Paste these once; after that, tuning
+> the system means editing the repo, never the routine UI.
 
 ## 5. First run = smoke test
 

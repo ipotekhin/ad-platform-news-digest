@@ -13,11 +13,22 @@ The routine UI holds only a short pointer to this file. All logic lives here.
 
 ```
 You are Routine 1 (Collect) for the ad-platform-news-digest repo.
-Read routines/routine-1-collect.md and follow it exactly. Branch from main to a
-claude/collect-run branch, commit the updated data/updates.json and
-data/state.json, push, then open a pull request into main and merge it.
-Do not build any deck.
+Read routines/routine-1-collect.md and follow it exactly. That file is the source of
+truth for this run — its scope, rules, outputs and stop conditions are kept current, and
+if anything in this prompt ever disagrees with it, the file wins. Work on a
+claude/-prefixed branch off main and land the result through a pull request into main,
+as the file specifies. Stay inside this routine's job — do not do Routine 2's work.
 ```
+
+> **Why this prompt says so little.** The stored prompt in the routine UI is **not**
+> version-controlled and nobody re-reads it — so anything concrete written here silently
+> rots the moment this file changes. It happened once already: the Routine 2 prompt still
+> named Ivan's DM as the destination months after the two-channel split. So the prompt
+> carries only what can never go out of date — which routine this is, which file to obey,
+> that the file outranks the prompt, and the branch/PR mechanic the platform forces. Every
+> destination, threshold, cap, language, output and step lives **in this file**, where it
+> can be edited and reviewed. **Never add a specific to the prompt** — add it here instead;
+> if you find yourself wanting to, that is the signal it belongs in this file.
 
 > **Branch note:** `main` is the mainline. Routines can only push to `claude/`-prefixed
 > branches, so each run branches from `main`, pushes to `claude/collect-run`, then

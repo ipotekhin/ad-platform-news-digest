@@ -14,24 +14,27 @@ The routine UI holds only a short pointer to this file. All logic lives here.
 
 ```
 You are Routine 2 (Presentation) for the ad-platform-news-digest repo.
-Read routines/routine-2-presentation.md and follow it exactly. First apply the step-0
-cadence gate and the empty-edition guard — if either says stop, do nothing. Otherwise
-branch from main to a claude/present-run branch, expire stale backlog, select with the
-per-platform caps, build the deck (English plus the RU/ES/SR translations), merge it into
-main so GitHub Pages serves it, and check the deck URL resolves before announcing it.
-Then deliver one Slack message per team (Search / Social) to the channel IDs in that
-doc's Open config — never to a DM — each with its own ?team= deep link and all four
-language links. Only after a confirmed post, set presented:true on that team's delivered
-items, append the edition to data/editions.json, DM Ivan the backlog status note, commit,
-push, open a pull request into main and merge it.
+Read routines/routine-2-presentation.md and follow it exactly. That file is the source of
+truth for this run — its scope, rules, outputs, delivery targets and stop conditions are
+kept current, and if anything in this prompt ever disagrees with it, the file wins. Check
+its stop conditions first and do nothing at all if they say stop. Work on a
+claude/-prefixed branch off main and land the result through a pull request into main,
+as the file specifies. Stay inside this routine's job — do not do Routine 1's work.
 ```
 
-**Keep the stored prompt free of destinations.** It points at this doc; the channel IDs
-live in Open config below, so redirecting a team means editing Open config and nothing
-else. A prompt that names a destination goes stale silently — the 2026-09-02 run found
-the stored prompt still saying "currently Ivan's DM" while Open config named the two team
-channels. CLAUDE.md makes this doc the source of truth, so the run correctly used the
-channels, but re-paste the block above whenever this doc's prompt changes.
+> **Why this prompt says so little.** The stored prompt in the routine UI is **not**
+> version-controlled and nobody re-reads it — so anything concrete written here silently
+> rots the moment this file changes. It happened once already: the Routine 2 prompt still
+> named Ivan's DM as the destination months after the two-channel split. So the prompt
+> carries only what can never go out of date — which routine this is, which file to obey,
+> that the file outranks the prompt, and the branch/PR mechanic the platform forces. Every
+> destination, threshold, cap, language, output and step lives **in this file**, where it
+> can be edited and reviewed. **Never add a specific to the prompt** — add it here instead;
+> if you find yourself wanting to, that is the signal it belongs in this file.
+
+> **Branch note:** each run branches from `main`, pushes to `claude/present-run`, then
+> merges into `main` via pull request (the deck must be on `main` before step 6, since
+> that is what GitHub Pages serves).
 
 ---
 
