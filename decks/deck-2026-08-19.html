@@ -222,11 +222,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div id="d-body"></div>
 </main>
 
-<!-- ══ ARCHIVE (only shown if deck-data provides `archive`) ══ -->
+<!-- ══ EDITIONS STRIP (every other edition, newest first; hidden if there are none) ══ -->
 <section id="d-archive-section" style="max-width:1120px;margin:0 auto;padding:10px 32px 30px;display:none">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
     <img id="dec-archive" class="stk-static" src="../assets/stickers/folder-star-blue.png" alt="" style="width:40px">
-    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:26px;margin:0">Past editions</h2>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:26px;margin:0">Other editions</h2>
   </div>
   <div id="d-archive" style="display:flex;gap:12px;flex-wrap:wrap"></div>
 </section>
@@ -283,7 +283,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
        "subtitle":       "…",                   // hero subhead; falls back to "Updates published <period_label>"
        "read_minutes":   5,                     // falls back to an estimate from item count
        "author":         "Ivan Potekhin",       // footer credit; falls back to "Ivan Potekhin"
-       "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"deck-2026-07-05.html" }]  // past-editions strip; BARE filename (no decks/ prefix); omitted -> section hidden
+       "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"deck-2026-07-05.html" }]  // FALLBACK for the editions strip; BARE filename (no decks/ prefix). At view time the
+                                                //   strip prefers the live registry data/editions.json (same origin), which is what lets an
+                                                //   already-published deck link FORWARD to editions released after it. This array is only used
+                                                //   when that read fails (opened from disk, offline), so keep supplying it: prior editions only.
 
      TRANSLATIONS (optional; the header language pill offers EN / RU / ES / SR).
      English is the base language and is always what `subtitle`/`title`/`summary`/
@@ -862,9 +865,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // stickers and platform icons are identical in all four languages.
   var tldrList = document.getElementById("d-tldr");
   var body = document.getElementById("d-body");
+  var curLang = "en";   // read by renderArchive() to carry the language onto edition links
 
   function renderContent(lang){
   _rng = mulberry32(hashStr(SEED + "|body"));
+  curLang = lang;
   document.documentElement.lang = lang;
   tldrList.textContent = "";
   body.textContent = "";
@@ -934,6 +939,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var _sec=el("section",{marginBottom:"56px"},heading,grid);_sec.className="reveal";_sec.setAttribute("data-team",teamOf(pf.name));body.appendChild(_sec);
   });
 
+  renderArchive();   // its links carry ?lang=, so they follow the switch
   // Lets the chrome script re-apply the team filter and show the new nodes.
   document.dispatchEvent(new CustomEvent("deck:rendered", { detail:{ lang:lang } }));
   }
@@ -943,19 +949,61 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // Handed to the chrome script below (which owns the header dropdowns).
   window.__deck = { render: renderContent, langs: LANGS, lang: initialLang };
 
-  // Archive (optional)
-  if (data.archive && data.archive.length) {
-    document.getElementById("d-archive-section").style.display = "";
-    var archiveList = document.getElementById("d-archive");
-    data.archive.forEach(function(a){
+  // ── Editions strip ────────────────────────────────────────────────────────
+  // Lists every OTHER edition, newest first — so an older deck also links
+  // *forward* to the editions published after it, not just back.
+  //
+  // That can't come from the deck data: a deck is a frozen file, and the edition
+  // that supersedes it does not exist yet when it is built. So the strip reads
+  // the live registry (`data/editions.json`, same origin on Pages) at view time,
+  // which means every already-published deck picks up new editions on its own,
+  // with nothing rewritten. If that read can't happen (opened from disk, offline,
+  // registry missing) it falls back to the `archive` array baked in at build
+  // time — the old behaviour, older editions only.
+  var archiveEntries = null;
+  function normalizeEdition(e){
+    return { no:e.no, label:e.period_label || e.label || "", url:e.url || "#" };
+  }
+  function isCurrentEdition(e){
+    if (data.edition_no) return e.no === data.edition_no;
+    // No edition_no in the deck data — fall back to matching the file we're on.
+    var here = (location.pathname.split("/").pop() || "");
+    return here && e.url === here;
+  }
+  function renderArchive(){
+    var sec = document.getElementById("d-archive-section");
+    var host = document.getElementById("d-archive");
+    if (!sec || !host || !archiveEntries) return;
+    var list = archiveEntries.filter(function(e){ return !isCurrentEdition(e); })
+                             .sort(function(a,b){ return (b.no||0) - (a.no||0); });
+    if (!list.length) { sec.style.display = "none"; return; }
+    host.textContent = "";
+    list.forEach(function(a){
       var link = el("a", { fontFamily:"'Courier Prime',monospace", fontSize:"12.5px", color:"var(--aid-ink)", background:"#fff", border:"2px solid var(--aid-ink)", borderRadius:"12px", padding:"12px 18px", boxShadow:"3px 3px 0 var(--aid-ink)", display:"flex", flexDirection:"column", gap:"3px" },
         el("span", { fontWeight:"700" }, "No. " + a.no),
         el("span", { color:"var(--aid-mute)" }, a.label)
       );
-      link.href = a.url || "#";
-      archiveList.appendChild(link);
+      // Carry the reader's language onto the edition they're opening. This is NOT a
+      // stored preference: the link spells the language out in its own URL, so the
+      // destination still reads it from ?lang= like any other visit. A bare link —
+      // from Slack, a bookmark, anywhere outside this page — still opens in English.
+      link.href = a.url + (curLang !== "en" ? "?lang=" + curLang : "");
+      host.appendChild(link);
     });
+    sec.style.display = "";
   }
+  // Baked fallback first, so the strip is populated even with no network…
+  if (data.archive && data.archive.length) {
+    archiveEntries = data.archive.map(normalizeEdition);
+    renderArchive();
+  }
+  // …then upgrade to the live registry when it's reachable.
+  try {
+    fetch("../data/editions.json", { cache:"no-cache" })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if (j && j.length) { archiveEntries = j.map(normalizeEdition); renderArchive(); } })
+      .catch(function(){});
+  } catch(e){}
 
   // Footer
   document.getElementById("d-footer").textContent =

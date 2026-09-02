@@ -112,7 +112,8 @@ embedded in the message:
   🇪🇸 ES and 🇷🇸 SR (Latin). Routine 2 pre-translates the hero subtitle, card titles,
   card summaries and TL;DR bullets when it builds the edition — the interface itself stays
   English. `?lang=ru|es|sr` deep-links a language and composes with `?team=`; no param
-  means English. Each Slack message carries all four language links.
+  means English. Each Slack message carries all four language links, and moving between
+  editions inside the deck keeps the language you're reading in.
 - **GitHub Pages** — enable once in *Settings → Pages* (serve `main` / root); deck URL is
   `https://ipotekhin.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html`.
 - Delivery is **GitHub Pages only** — no Slack Canvas.
