@@ -53,7 +53,8 @@
     "category": "other",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "dc30bb3ecae5",
@@ -67,7 +68,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "b291e4f2ac00",
@@ -81,7 +83,8 @@
     "category": "api",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "3f5913160391",
@@ -95,7 +98,8 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "36fb61ebb882",
@@ -123,7 +127,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "54fc58f623dd",
@@ -137,7 +142,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "3fe0252d2fb6",
@@ -151,7 +157,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "afedba251c70",
@@ -165,7 +172,8 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "50e3350307a4",
@@ -179,7 +187,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "c60dd7b00f43",
@@ -193,7 +202,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "d534433c5104",
@@ -221,7 +231,8 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "6cb91e8d28b5",
@@ -235,7 +246,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "6fcfeac9e3c4",
@@ -249,7 +261,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "5706ba0bfd9b",
@@ -277,7 +290,8 @@
     "category": "other",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "ab269450f871",
@@ -837,7 +851,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "45d4345ff562",
@@ -865,7 +879,7 @@
     "category": "measurement",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "95a324e26af0",
@@ -879,7 +893,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "3ae7341faf42",
@@ -893,7 +907,7 @@
     "category": "deprecation",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "13920d2dd4f8",
@@ -907,7 +921,7 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "06499566599d",
@@ -921,7 +935,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "698b78633e18",
@@ -935,7 +949,7 @@
     "category": "deprecation",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "ea3879c3fcd8",
@@ -949,7 +963,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "85e97ca397b8",
@@ -963,7 +977,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "1ded6b4e7453",
@@ -977,7 +991,7 @@
     "category": "api",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "044c56d3ef4f",
@@ -1061,7 +1075,7 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "ca0e4471a9fe",
@@ -1075,7 +1089,7 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "2d00da0d9b1f",
@@ -1103,7 +1117,7 @@
     "category": "deprecation",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "e5bd5a5fea71",
@@ -1131,6 +1145,6 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   }
 ]
