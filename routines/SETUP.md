@@ -70,14 +70,22 @@ request into main and merge it. Do not build any deck.
 You are Routine 2 (Presentation) for the ad-platform-news-digest repo.
 Read routines/routine-2-presentation.md and follow it exactly. First apply the step-0
 cadence gate and the empty-edition guard — if either says stop, do nothing. Otherwise
-branch from main to a claude/present-run branch, build the deck, publish it to GitHub
-Pages, and deliver the Slack message to the target in the doc's Open config (currently
-Ivan's DM). Only after a successful delivery, set presented:true on the included items,
-commit, push, open a pull request into main and merge it.
+branch from main to a claude/present-run branch, expire stale backlog, select with the
+per-platform caps, build the deck (English plus the RU/ES/SR translations), merge it into
+main so GitHub Pages serves it, and check the deck URL resolves before announcing it.
+Then deliver one Slack message per team (Search / Social) to the channel IDs in that
+doc's Open config — never to a DM — each with its own ?team= deep link and all four
+language links. Only after a confirmed post, set presented:true on that team's delivered
+items, append the edition to data/editions.json, DM Ivan the backlog status note, commit,
+push, open a pull request into main and merge it.
 ```
 
-> The Slack destination and message wording live in the repo (`routine-2` Open config +
-> `style/slack-summary.md`), so these prompts never need editing when they change.
+> The Slack destinations and message wording live in the repo (`routine-2` Open config +
+> `style/slack-summary.md`), so these prompts never need editing when a channel or the
+> wording changes — and the prompt must **not** name a destination itself, or it drifts
+> out of sync with the doc (as it did before the 2026-09-02 run). If you edit the prompt
+> block in `routines/routine-2-presentation.md`, re-paste it into the routine UI: the
+> stored copy is the one that actually runs.
 
 ## 5. First run = smoke test
 

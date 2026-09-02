@@ -17,14 +17,21 @@ You are Routine 2 (Presentation) for the ad-platform-news-digest repo.
 Read routines/routine-2-presentation.md and follow it exactly. First apply the step-0
 cadence gate and the empty-edition guard — if either says stop, do nothing. Otherwise
 branch from main to a claude/present-run branch, expire stale backlog, select with the
-per-platform caps, build the deck, deliver the per-team Slack messages (Search / Social,
-each with its own `?team=` deep link) to the targets in the doc's Open config, then set
-presented:true on the delivered items, DM Ivan the backlog status note, commit, push,
-open a pull request into main and merge it.
+per-platform caps, build the deck (English plus the RU/ES/SR translations), merge it into
+main so GitHub Pages serves it, and check the deck URL resolves before announcing it.
+Then deliver one Slack message per team (Search / Social) to the channel IDs in that
+doc's Open config — never to a DM — each with its own ?team= deep link and all four
+language links. Only after a confirmed post, set presented:true on that team's delivered
+items, append the edition to data/editions.json, DM Ivan the backlog status note, commit,
+push, open a pull request into main and merge it.
 ```
 
-The Slack destination lives in the doc (Open config → currently Ivan's DM), so the
-prompt never needs editing when the destination changes.
+**Keep the stored prompt free of destinations.** It points at this doc; the channel IDs
+live in Open config below, so redirecting a team means editing Open config and nothing
+else. A prompt that names a destination goes stale silently — the 2026-09-02 run found
+the stored prompt still saying "currently Ivan's DM" while Open config named the two team
+channels. CLAUDE.md makes this doc the source of truth, so the run correctly used the
+channels, but re-paste the block above whenever this doc's prompt changes.
 
 ---
 
@@ -35,6 +42,11 @@ prompt never needs editing when the destination changes.
   attached. The message posts **from Ivan's own Slack identity** (the connector is
   authorized under his account), not a separate bot.
 - **Delivery is GitHub Pages only.** Do not create or format anything in Slack Canvas.
+- **Egress:** the run environment's network policy must allow
+  **`ipotekhin.github.io`**, or step 5 cannot verify the deck URL and the link goes out
+  unchecked (`connect_rejected` — this happened on 2026-09-02 and was fixed by adding the
+  domain). This is an environment setting, not a code bug — same class of issue as
+  Routine 1's source domains (README → Network requirement).
 
 ---
 
@@ -184,6 +196,11 @@ failed, even if every word in it is "correct".
   `https://ipotekhin.github.io/ad-platform-news-digest/decks/deck-YYYY-MM-DD.html`.
 - Requires Pages enabled once (Settings → Pages, serve `main` / root — see
   `routines/SETUP.md`). Give Pages a moment to build before posting the link.
+- **Verify the URL returns 2xx before step 6** — the Slack messages are the one thing a
+  reader can't undo, so never announce a link you haven't loaded. If the fetch is refused
+  by the environment's egress policy rather than by Pages (`connect_rejected` on
+  `ipotekhin.github.io`), that is a config gap, not a broken deck: still post, but say in
+  the step-8 note that the link went out unverified and why.
 - This is the **only** delivery format. Do not use Slack Canvas.
 
 ### 6. Post to Slack — one message per team (Search / Social)
