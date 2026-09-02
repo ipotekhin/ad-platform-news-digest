@@ -90,6 +90,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .opts button:hover{background:rgba(43,90,224,.14)}
   .opts button.active{background:var(--aid-blue);color:#fff}
   .flt-ind{display:none}
+  /* "View all editions" toggle under the editions strip. */
+  #d-archive-more{margin-top:14px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:9px 16px 8px;line-height:1;transition:background .18s}
+  #d-archive-more:hover{background:var(--aid-lime)}
+  /* Collapsed-away edition cards. A class, not an inline display, because the cards
+     carry an inline `display:flex` that stacks their two lines — clearing that to
+     un-hide them would drop them to `block` and put both lines on one row. */
+  .ed-hidden{display:none!important}
   /* Desktop: the news filter goes back to being a segmented slider — its panel
      stays in place (never portaled) because its toggle is hidden here. */
   @media (min-width:641px){
@@ -229,6 +236,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:26px;margin:0">Other editions</h2>
   </div>
   <div id="d-archive" style="display:flex;gap:12px;flex-wrap:wrap"></div>
+  <button id="d-archive-more" type="button" aria-expanded="false" style="display:none">View all editions</button>
 </section>
 
 <!-- ══ SIGN-OFF ══ -->
@@ -599,7 +607,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       host.appendChild(link);
     });
     sec.style.display = "";
+    collapseArchive();
   }
+  // Keep the strip to a single row until the reader asks for the rest — with a
+  // dozen editions it would otherwise become a wall of cards. Which cards fit is
+  // measured, not a fixed count, because the row holds ~4–6 on a desktop and only
+  // one on a phone; anything whose top edge sits below the first card's is a
+  // second row and gets hidden. Re-measured on resize.
+  // ARCHIVE_MIN is the floor: a phone fits one card per row, and collapsing to a
+  // single lonely card reads as broken rather than tidy, so the three most recent
+  // editions always stay visible even when that spills onto extra rows.
+  var ARCHIVE_MIN = 3;
+  var archiveExpanded = false;
+  function collapseArchive(){
+    var host = document.getElementById("d-archive");
+    var btn = document.getElementById("d-archive-more");
+    if (!host || !btn) return;
+    var cards = [].slice.call(host.children);
+    cards.forEach(function(c){ c.classList.remove("ed-hidden"); });   // measure them all laid out
+    var firstTop = cards.length ? cards[0].offsetTop : 0;
+    var overflow = cards.filter(function(c, i){ return i >= ARCHIVE_MIN && c.offsetTop > firstTop; });
+    if (!archiveExpanded) overflow.forEach(function(c){ c.classList.add("ed-hidden"); });
+    if (!overflow.length) { btn.style.display = "none"; return; }   // one row already
+    btn.style.display = "";
+    btn.textContent = archiveExpanded ? "Show fewer editions" : ("View all " + cards.length + " editions");
+    btn.setAttribute("aria-expanded", archiveExpanded ? "true" : "false");
+  }
+  (function(){
+    var btn = document.getElementById("d-archive-more");
+    if (btn) btn.addEventListener("click", function(){ archiveExpanded = !archiveExpanded; collapseArchive(); });
+    var t; window.addEventListener("resize", function(){ clearTimeout(t); t = setTimeout(collapseArchive, 120); });
+  })();
   // Baked fallback first, so the strip is populated even with no network…
   if (data.archive && data.archive.length) {
     archiveEntries = data.archive.map(normalizeEdition);
