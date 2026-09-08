@@ -39,14 +39,19 @@
 # a concurrency of 3 or lower and retry the stragglers; every 504 succeeded on retry.
 # The other domains tolerate 8 parallel fetches fine.
 #
-# PPC LAND TAG-PAGE LAG (observed 2026-09-01): `/tag/search/` and `/tag/social/` went
-# STALE while the site kept publishing daily — on 2026-09-01 the newest card on
-# /tag/search/ was Aug 19 and on /tag/social/ Aug 17, yet the homepage and `/tag/news/`
-# carried Aug 31 stories. Not a fetch problem (HTTP 200, cache-busting query and
+# PPC LAND TAG-PAGE LAG (observed 2026-09-01, STILL BROKEN 2026-09-08): `/tag/search/`
+# and `/tag/social/` went STALE while the site kept publishing daily — on 2026-09-01 the
+# newest card on /tag/search/ was Aug 19 and on /tag/social/ Aug 17, yet the homepage and
+# `/tag/news/` carried Aug 31 stories. A week later, on 2026-09-08, the two tag pages had
+# not moved AT ALL — still Aug 19 / Aug 17 as their newest cards — while /tag/news/ was
+# current to Sep 8. Treat these tag pages as frozen, not merely lagging. Not a fetch problem (HTTP 200, cache-busting query and
 # `Cache-Control: no-cache` changed nothing) and there are no per-platform tags
 # (/tag/google-ads/, /tag/meta/, … all 404). FALLBACK USED: page back through
-# `https://ppc.land/tag/news/page/N/` (~12 cards/page, ~12 pages ≈ 2 weeks; page 14 falls
-# off a cliff into 2016 archive posts) and apply the same scope filter — search-side
+# `https://ppc.land/tag/news/page/N/` (12 cards/page; on 2026-09-08 pages 1–20 ran
+# unbroken from Sep 8 back to Aug 20, i.e. ~18 pages ≈ 2 weeks — the "page 14 falls off a
+# cliff into 2016 archive posts" behaviour seen on 2026-09-01 did NOT recur, so page back
+# by date until the cards precede window_start rather than trusting a page number) and
+# apply the same scope filter — search-side
 # platforms for ppcland_search, social-side for ppcland_social. Items found that way are
 # still recorded under the `PPC Land — Search` / `PPC Land — Social` source titles.
 # Re-check the tag pages on the next run; if they are current again, drop the fallback.
