@@ -39,7 +39,7 @@
 # a concurrency of 3 or lower and retry the stragglers; every 504 succeeded on retry.
 # The other domains tolerate 8 parallel fetches fine.
 #
-# PPC LAND TAG-PAGE LAG (observed 2026-09-01, STILL BROKEN 2026-09-08): `/tag/search/`
+# PPC LAND TAG-PAGE LAG (observed 2026-09-01, STILL BROKEN 2026-09-08 and 2026-09-15): `/tag/search/`
 # and `/tag/social/` went STALE while the site kept publishing daily — on 2026-09-01 the
 # newest card on /tag/search/ was Aug 19 and on /tag/social/ Aug 17, yet the homepage and
 # `/tag/news/` carried Aug 31 stories. A week later, on 2026-09-08, the two tag pages had
@@ -54,6 +54,11 @@
 # apply the same scope filter — search-side
 # platforms for ppcland_search, social-side for ppcland_social. Items found that way are
 # still recorded under the `PPC Land — Search` / `PPC Land — Social` source titles.
+# On 2026-09-15 the freeze held for a THIRD week — /tag/search/ still newest Aug 19,
+# /tag/social/ still newest Aug 17, both byte-for-byte where they were on 2026-09-01 —
+# while /tag/news/ was current to Sep 15 and paged back unbroken: pages 1–21 covered
+# Sep 15 → Aug 30 (page 22 crossed window_start), ~12 cards/page, no archive cliff.
+# Treat the fallback as the standing method, not an exception.
 # Re-check the tag pages on the next run; if they are current again, drop the fallback.
 #
 # SEL OUTAGE (observed 2026-08-04): a retry is NOT always enough. The index pages and
