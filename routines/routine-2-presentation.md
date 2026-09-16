@@ -75,6 +75,13 @@ Apply `criteria.md` **strictly** now. Drop items that don't clearly match an "In
 rule or that hit an "Exclude" rule. For survivors, confirm/adjust `category` and
 `impact` per `criteria.md`.
 
+- **Re-check the product test here, and don't trust the `platform` field.** Routine 1 set
+  that field; if it mis-filed something, the label will look right while the item is not
+  ours. Read each item's own title and summary and ask which product actually changes —
+  an item tagged `google_ads` that is really about Display & Video 360, Campaign Manager
+  360, Search Ads 360 or Google Ad Manager is **out** (criteria.md → product test). Two
+  DV360 items reached readers this way, in editions 3 and 4, before that test existed.
+
 ### 2a. Empty-edition guard (IMPORTANT — stop if nothing qualifies)
 If **no items** survive selection + filtering (i.e. there are zero un-presented,
 relevant updates across **all** platforms), **STOP the whole run**: do **not** build a

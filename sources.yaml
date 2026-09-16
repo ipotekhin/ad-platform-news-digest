@@ -238,7 +238,12 @@ sources:
       until the dates fall before window_start. Apply the normal 2-week
       window by that index date. Scope = keep ONLY ads-manager items about platforms in
       our pipeline: **Google Ads**, **Microsoft/Bing** and **ChatGPT Ads** (set each item's
-      `platform` accordingly — google_ads, bing or chatgpt). This feed does carry ChatGPT
+      `platform` accordingly — google_ads, bing or chatgpt).
+      This feed carries a lot of **Display & Video 360 / Campaign Manager 360 /
+      Search Ads 360 / Google Ad Manager** news. Those are Google products but they are
+      NOT Google Ads — separate seats we don't run — so drop them and never file one as
+      `platform: google_ads`. Two slipped through that way (editions 3 and 4) before the
+      product test was written into criteria.md; apply it here. This feed does carry ChatGPT
       Ads news (verified 2026-08-17: 2 of the 12 cards on page 1), so don't drop it — it
       dedups against the dedicated ChatGPT sources via Layers 1–2.
       Filter HARD per criteria.md — drop SEO / zero-
@@ -260,5 +265,6 @@ sources:
       per page, so page back through `/tag/social/page/N/` until dates precede
       window_start). Apply the normal 2-week window by the index date. Scope = keep ONLY ads-manager items about
       platforms in our pipeline: **Meta**, **TikTok**, **LinkedIn** (set each item's
-      `platform` to meta / tiktok / linkedin). Filter HARD per criteria.md — drop organic-
+      `platform` to meta / tiktok / linkedin) — the *ads manager* of each, not the
+      platform's publisher, creator or consumer products (criteria.md → product test). Filter HARD per criteria.md — drop organic-
       social / creator / consumer-app stories. Aggregator → prefer official in dedup.
