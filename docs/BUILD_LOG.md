@@ -393,3 +393,48 @@ One regression caught in review while building this: hiding/showing cards by cle
 `style.display` wiped the inline `display:flex` that stacks each card's two lines, so
 restored cards rendered "No. 11" and its date on one row. Hiding now uses an `.ed-hidden`
 class, leaving the inline display alone. All three decks rebuilt and re-verified.
+
+## 15. DV360 leak + Social-silence audit (2026-09-16)
+
+**DV360 items were reaching readers.** Edition 4 carried "Display & Video 360 archives
+legacy mCPV and Video reach 1.0 line items" under **Google Ads**. Checking the archive,
+it was not a one-off: edition 3 shipped "Display & Video 360 API drops content-label and
+sensitive-category exclusions" the same way. Both were filed `platform: google_ads`.
+
+Root cause: `criteria.md` defined scope as "the official ad platforms we actually run"
+but never said *which products those are*. DV360 is a Google ad product, carried on the
+search-side feed, ads-manager-shaped — so every heuristic said yes. It is a different
+seat in Google Marketing Platform and invisible in our Google Ads account.
+
+Fixes:
+- **criteria.md — new "product test".** Our platforms are an exact list of six, not a
+  company: Google Ads · Microsoft (Bing) · ChatGPT Ads · Meta · TikTok · LinkedIn. A table
+  names the Google products that are *not* ours — DV360, CM360, SA360, Ad Manager /
+  AdSense / AdMob — with what each actually is. Crucially it also says to **judge by where
+  the change lands, not which product is named**: the same edition's "Data Manager lands
+  in GA4 and DV360, *and a Data Strength Uplift metric arrives in Google Ads*" is
+  legitimately in, on the strength of its Google Ads and GA4 half. The Google Ads
+  GRAB/IGNORE row lists the excluded products too.
+- **routine-2 step 2** now re-checks the product test and explicitly does **not** trust the
+  `platform` field, since Routine 1 sets it and a mis-file looks correct downstream.
+- **sources.yaml** — `ppcland_search`, the feed that carried both, is told to drop those
+  products and never file one as `google_ads`.
+
+**Social silence (editions 3–4) — verified genuine, not a filter bug.** Checked
+independently rather than trusting the run log:
+- All 5 social sources *were* read (`state.json`: every source `last_collected` 2026-09-15).
+- `ppc.land/tag/social/` is still frozen at Aug 17 — confirmed by direct fetch, matching
+  the three-week freeze already recorded in `sources.yaml`.
+- Swept `ppc.land/tag/news/` (the live fallback) for the whole window: **78 articles, 3
+  social-looking**, all correctly droppable — a Doceree/LinkedIn vendor integration
+  (third-party rule), an SEO piece about *meta descriptions*, and Ray-Ban Meta glasses
+  (consumer hardware, no ad surface).
+- SEL Meta/TikTok: one in-window social article, "TikTok rejects Meta ads pushing rivals
+  to join child safety settlement" (Sep 11) — a corporate/legal story, correctly excluded.
+- Social Media Today LinkedIn: current items are tips, playbooks and Q2 revenue — all
+  excluded categories.
+
+So nothing was wrongly filtered. **Standing risk worth watching:** with PPC Land's social
+tag frozen, social coverage rests on sources that publish mostly non-ads content, so a
+real Meta/TikTok ads change could go unseen. Re-check the tag pages each run; if they stay
+frozen, consider adding a dedicated social ads source.

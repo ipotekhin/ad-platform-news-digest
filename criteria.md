@@ -28,6 +28,33 @@ analytics/ecosystem that feeds it), **not** about a third-party vendor's own pro
 "Vendor X can now buy ads on / measure data from Platform Y" is **not** an update to
 Platform Y — see the third-party exclusion below.
 
+**Product test — "our platforms" is an exact list, not a company.** We run **six** ad
+accounts and only these: **Google Ads · Microsoft (Bing) Advertising · ChatGPT Ads ·
+Meta Ads · TikTok Ads · LinkedIn Ads.** A vendor being the right *company* does not make
+the news ours — it has to be one of *those* products.
+
+This trips up most often on **Google's other ad products, which are NOT Google Ads** and
+are bought through separate seats we do not have:
+
+| Not ours (drop) | What it actually is |
+|---|---|
+| **Display & Video 360 (DV360)** | the DSP seat in Google Marketing Platform |
+| **Campaign Manager 360 (CM360)** | ad server / trafficking |
+| **Search Ads 360 (SA360)** | enterprise search-management layer |
+| **Google Ad Manager (GAM) / AdSense / AdMob** | publisher-side monetisation |
+
+A line-item change, API deprecation or migration deadline inside one of those is
+invisible in our Google Ads account, so it is **out — no matter how urgent its headline
+sounds.** The same applies elsewhere: Meta's publisher tools, Microsoft's Monetize/PubCenter,
+LinkedIn's sales or hiring products.
+
+**But judge by where the change lands, not by which product is named.** An item that
+mentions DV360 *and* delivers something in our stack stays in — e.g. "Data Manager lands
+in GA4 and DV360, **and a Data Strength Uplift metric arrives in Google Ads**" is in,
+because of the Google Ads metric and GA4, not the DV360 half. Ask: *after this ships,
+does anything look or behave differently in one of our six accounts (or the analytics
+feeding them)?* If the only answer involves a product from the table above → drop it.
+
 ## Include if it is one of
 
 - **New ad feature / capability** in the ads manager — incl. betas & limited releases.
@@ -82,7 +109,7 @@ The official newsrooms (esp. Meta) publish a lot of non-ads news. Use this to fo
 
 | Platform | GRAB (ads-manager relevant) | IGNORE |
 |---|---|---|
-| **Google Ads** | Performance Max, Demand Gen, Search/Shopping/PMax features, bidding & budget controls, audience signals, asset/format changes, Google Ads API, new reports/columns, conversion & consent tracking, policy/eligibility. | Consumer Search/Gemini features with no ad surface, Workspace, hardware, corporate PR. |
+| **Google Ads** | Performance Max, Demand Gen, Search/Shopping/PMax features, bidding & budget controls, audience signals, asset/format changes, Google Ads API, new reports/columns, conversion & consent tracking, policy/eligibility. | **Display & Video 360, Campaign Manager 360, Search Ads 360, Google Ad Manager / AdSense / AdMob — different products, separate seats, not our account (see the product test above).** Consumer Search/Gemini features with no ad surface, Workspace, hardware, corporate PR. |
 | **Meta** | Advantage+ (shopping/app/leads), Ads Manager features, new placements/formats (Reels, Stories), audience & Advantage+ audience, attribution/CAPI/Events Manager, catalog/commerce ads, ad policy. | Consumer app features (Threads/IG/WhatsApp product news), VR/AI research, policy for users (not advertisers), corporate/earnings PR. |
 | **TikTok** | TikTok Ads Manager features, Spark Ads / new ad formats, Smart+ / automated campaigns, targeting & optimization, Events API / attribution, commerce/Shop ads, ad policy. | Creator/consumer features, entertainment/culture posts, corporate PR. |
 | **LinkedIn** | Campaign Manager features, new ad formats (Thought Leader, Conversation, Document ads), audience/targeting, bidding, LinkedIn Insight Tag / conversion tracking, reporting, Marketing API. | Consumer feed features, hiring/talent products, corporate PR, general LinkedIn tips. |
