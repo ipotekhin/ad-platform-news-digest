@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" href="../assets/stickers/blob-face-pink.png">
+<link rel="apple-touch-icon" href="../assets/stickers/blob-face-pink.png">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-M2BTR42L');</script>
+<!-- End Google Tag Manager -->
+<title>Ad Platform News Digest</title>
+<!--
+  ZINE DECK TEMPLATE — used by Routine 2 (Presentation).
+
+  HOW ROUTINE 2 USES THIS FILE:
+    1. Copy this file to decks/deck-YYYY-MM-DD.html
+    2. Replace the single line  <script id="deck-data" ...> ... </script>
+       with a filled-in DECK_DATA object (schema documented in that block below).
+    3. Nothing else needs editing. All rendering is data-driven.
+
+  Not zero-request: this skin pulls Playfair Display + Courier Prime from Google
+  Fonts CDN and reads sticker PNGs from ../assets/stickers/ (repo-relative, works
+  identically from style/ and from decks/ since both sit one level below repo
+  root). It also loads Google Tag Manager (container GTM-M2BTR42L) for analytics,
+  and pushes a `link_click` event to the dataLayer on every <a> click (for GTM
+  triggers). Those are the only third-party requests — do not add other analytics
+  or third-party JS/CSS. Fine to serve from GitHub Pages and to print to PDF.
+
+  No dark-mode variant — this skin is a light/cream editorial look by design
+  (see the Claude Design "Zine" direction it implements); it does not adapt to
+  prefers-color-scheme like the previous template did.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --aid-blue:     rgb(0, 9, 220);
+    --aid-blue-50:  rgb(245, 245, 254);
+    --aid-ink:      rgb(11, 11, 11);
+    --aid-slate:    rgb(51, 52, 74);
+    --aid-mute:     rgb(128, 128, 142);
+    --aid-pink:     rgb(240, 52, 142);
+    --aid-lime:     rgb(174, 243, 62);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{margin:0;background:#f4f1ea;color:var(--aid-ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:var(--aid-blue);text-decoration:none}
+  a:hover{opacity:.78}
+  ::selection{background:var(--aid-lime)}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-8px) rotate(var(--r,0deg))}}
+  .card-hov{transition:transform .18s ease, box-shadow .18s ease}
+  .card-hov:hover{transform:translate(-2px,-2px)}
+  .lnk-underline{background-image:linear-gradient(var(--aid-blue),var(--aid-blue));background-size:0% 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .25s ease}
+  .lnk-underline:hover{background-size:100% 2px;opacity:1}
+  .empty{color:var(--aid-mute);font-style:italic}
+  @media print{
+    header[style*="sticky"]{position:static}
+    img[style*="floaty"]{animation:none}
+  }
+
+  /* ── Header controls: news filter + language (shared dropdown chrome) ──
+     Both controls are pills of the same family. The language pill is always a
+     dropdown; the news filter is the original segmented slider on desktop
+     (≥641px) and collapses to the same dropdown pill on phones, so the header
+     keeps a fixed, compact footprint however many filters we add later. */
+  .hdr-ctl{display:flex;align-items:center;gap:10px;flex:none}
+  .dd{position:relative;flex:none}
+  /* Height is set explicitly (not left to font metrics) so the pill matches the
+     desktop filter slider exactly whether or not the webfont has loaded. The 1px
+     of top-only padding optically centres the label: uppercase has no descenders,
+     so a strictly box-centred line reads as sitting high. */
+  .dd-toggle{display:inline-flex;align-items:center;gap:7px;height:36px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:1px 13px 0;line-height:1;white-space:nowrap;transition:background .18s}
+  .dd-toggle:hover{background:var(--aid-lime)}
+  .dd-car{font-size:9px;line-height:1;transition:transform .22s}
+  .dd.open .dd-car{transform:rotate(180deg)}
+  /* Frosted-glass popup. It is position:fixed and gets moved to <body> when it
+     opens — see openPanel() below. The header sets its own backdrop-filter, which
+     makes it a backdrop root, and a backdrop-filter nested inside one samples an
+     empty backdrop: the popup would render with no blur at all. Living on <body>
+     while open puts it back over the real page content. */
+  .opts{position:fixed;z-index:80;display:none;flex-direction:column;gap:2px;padding:6px;border:2px solid var(--aid-ink);border-radius:16px;background:rgba(255,255,255,.55);backdrop-filter:blur(16px) saturate(1.35);-webkit-backdrop-filter:blur(16px) saturate(1.35);box-shadow:4px 5px 0 rgba(26,26,26,.16)}
+  .opts.open{display:flex}
+  .opts button{display:flex;align-items:center;gap:8px;border:0;background:transparent;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:8px 12px;border-radius:999px;white-space:nowrap;text-align:left;transition:background .15s,color .15s}
+  .opts button:hover{background:rgba(43,90,224,.14)}
+  .opts button.active{background:var(--aid-blue);color:#fff}
+  .flt-ind{display:none}
+  /* "View all editions" toggle under the editions strip. */
+  #d-archive-more{margin-top:14px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:9px 16px 8px;line-height:1;transition:background .18s}
+  #d-archive-more:hover{background:var(--aid-lime)}
+  /* Collapsed-away edition cards. A class, not an inline display, because the cards
+     carry an inline `display:flex` that stacks their two lines — clearing that to
+     un-hide them would drop them to `block` and put both lines on one row. */
+  .ed-hidden{display:none!important}
+  /* Desktop: the news filter goes back to being a segmented slider — its panel
+     stays in place (never portaled) because its toggle is hidden here. */
+  @media (min-width:641px){
+    #news-filter{display:inline-flex;height:36px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;padding:3px}
+    #news-filter>.dd-toggle{display:none}
+    #news-filter .opts{position:relative;z-index:auto;display:inline-flex;flex-direction:row;gap:0;padding:0;border:0;border-radius:0;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
+    #news-filter .opts button{position:relative;z-index:1;height:100%;padding:6px 14px;transition:color .2s}
+    #news-filter .opts button:hover{background:transparent}
+    #news-filter .opts button.active{background:transparent;color:#fff}
+    #news-filter .flt-ind{display:block;position:absolute;left:0;top:0;bottom:0;z-index:0;border-radius:999px;background:var(--aid-blue);transition:transform .3s cubic-bezier(.5,1.5,.4,1),width .3s cubic-bezier(.5,1.5,.4,1)}
+  }
+  /* ── Typewriter caret ── */
+  .tw-caret::after{content:"";display:inline-block;width:.055em;height:.92em;background:currentColor;margin-left:.05em;vertical-align:-.06em;animation:tw-blink .8s steps(1) infinite}
+  @keyframes tw-blink{50%{opacity:0}}
+  /* ── Sticker entrance (uses `scale` so it won't fight the floaty transform) ── */
+  img.stk-in{opacity:0;scale:.5;transition:opacity .5s ease,scale .6s cubic-bezier(.34,1.56,.64,1)}
+  img.stk-in.shown{opacity:1;scale:1}
+  /* ── Section reveal (smooth top-to-bottom) ── */
+  .reveal{opacity:0;translate:0 18px;transition:opacity .6s ease,translate .6s cubic-bezier(.22,1,.36,1)}
+  .reveal.shown{opacity:1;translate:0 0}
+  @media (prefers-reduced-motion: reduce){
+    img.stk-in,img.stk-in.shown{opacity:1;scale:1;transition:none}
+    .reveal,.reveal.shown{opacity:1;translate:0 0;transition:none}
+    .tw-caret::after{display:none}
+  }
+  /* ── Mobile polish (phones only; desktop ≥641px is untouched) ── */
+  @media (max-width:640px){
+    /* The large floating stickers are positioned for the wide layout and cover
+       text on narrow screens — hide them here. Inline heading/card stickers stay. */
+    #dec-hero-1,#dec-hero-2,#dec-tldr,#dec-signoff-1,#dec-signoff-2{display:none}
+    /* Center the footer credits instead of stretching them edge-to-edge. */
+    footer>div{flex-direction:column;text-align:center}
+    /* Tighter side gutters + block padding so cards/headings don't hug the edge. */
+    body section,body main,body header>div,footer>div{padding-left:20px!important;padding-right:20px!important}
+    #d-tldr-wrap{padding:26px 22px!important}
+    .signoff-card{padding:40px 26px!important}
+    /* Sign-off heading: smaller on phones and let both sentences flow together
+       (drop the forced break) so it fills ~2 lines instead of 4. */
+    .signoff-card h2{font-size:clamp(20px,5.2vw,25px)!important;line-height:1.2!important}
+    .signoff-card h2 br{display:none}
+    /* Header: keep the brand on the LEFT and the filter on the RIGHT in one row
+       (like desktop). Compact the filter and let the brand wrap to 2–3 lines so
+       both fit on narrow phones without running off the edge. */
+    header>div>div:first-child{min-width:0}
+    header>div>div:first-child span:last-child{font-size:11px;letter-spacing:.09em;line-height:1.25}
+    /* Both header controls are dropdown pills here — see the .dd rules above.
+       Shorter pill (30px), same explicit height + 1px top bias as desktop. */
+    .hdr-ctl{gap:7px}
+    .dd-toggle{height:30px;padding:1px 10px 0;gap:5px;letter-spacing:.02em}
+    /* TL;DR: one column on phones — two columns squeeze each bullet into a narrow
+       ribbon of text that is hard to read. */
+    #d-tldr{grid-template-columns:1fr!important;gap:14px!important}
+  }
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2BTR42L"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div style="min-height:100vh">
+
+<!-- ══ TOP BAR ══ -->
+<header style="position:sticky;top:0;z-index:40;background:rgba(244,241,234,.85);backdrop-filter:blur(10px);border-bottom:2px solid var(--aid-ink)">
+  <div style="max-width:1120px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+    <div style="display:flex;align-items:center;gap:11px">
+      <img class="stk-static" src="../assets/aidigital-icon-blue.svg" alt="AI Digital" style="height:22px;width:auto;flex:none;display:block">
+      <span style="font-family:'Courier Prime',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:700">Ad Platform Digest</span>
+    </div>
+    <div class="hdr-ctl">
+      <div id="news-filter" class="dd" role="group" aria-label="Filter news">
+        <button class="dd-toggle" type="button" aria-haspopup="true" aria-expanded="false"><span class="dd-cur">All news</span><span class="dd-car">▾</span></button>
+        <div class="opts" role="tablist">
+          <button class="flt active" data-team="all" role="tab">All news</button>
+          <button class="flt" data-team="search" role="tab">Search</button>
+          <button class="flt" data-team="social" role="tab">Social</button>
+        </div>
+      </div>
+      <div id="lang-dd" class="dd">
+        <button class="dd-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Language"><span class="dd-cur">🇺🇸 EN</span><span class="dd-car">▾</span></button>
+        <div class="opts">
+          <button class="lng active" data-lang="en">🇺🇸 EN</button>
+          <button class="lng" data-lang="ru">🇷🇺 RU</button>
+          <button class="lng" data-lang="es">🇪🇸 ES</button>
+          <button class="lng" data-lang="sr">🇷🇸 SR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ HERO ══ -->
+<section style="max-width:1120px;margin:0 auto;padding:66px 32px 26px;position:relative">
+  <div id="d-badge" style="display:inline-flex;align-items:center;gap:9px;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--aid-ink);background:var(--aid-lime);border:2px solid var(--aid-ink);border-radius:999px;padding:6px 16px;box-shadow:3px 3px 0 var(--aid-ink)"></div>
+  <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(52px,8vw,104px);line-height:.95;letter-spacing:-.015em;margin:26px 0 14px;max-width:920px;text-wrap:balance" id="hero-title">The <span style="font-style:italic;color:var(--aid-blue)">Bi-Weekly</span> Brief</h1>
+  <p id="d-subtitle" style="font-size:19px;line-height:1.5;color:var(--aid-slate);margin:0;max-width:560px;text-wrap:pretty"></p>
+  <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:30px">
+    <div style="background:#fff;border:2px solid var(--aid-ink);border-radius:14px;padding:16px 22px;box-shadow:5px 5px 0 var(--aid-blue);min-width:118px">
+      <div id="stat-updates" style="font-family:'Playfair Display',serif;font-weight:800;font-size:44px;line-height:1;color:var(--aid-ink)"></div>
+      <div style="font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aid-mute);margin-top:6px">updates</div>
+    </div>
+    <div style="background:#fff;border:2px solid var(--aid-ink);border-radius:14px;padding:16px 22px;box-shadow:5px 5px 0 var(--aid-pink);min-width:118px">
+      <div id="stat-platforms" style="font-family:'Playfair Display',serif;font-weight:800;font-size:44px;line-height:1;color:var(--aid-ink)"></div>
+      <div style="font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aid-mute);margin-top:6px">platforms</div>
+    </div>
+    <div style="background:#fff;border:2px solid var(--aid-ink);border-radius:14px;padding:16px 22px;box-shadow:5px 5px 0 var(--aid-lime);min-width:118px">
+      <div id="stat-readmin" style="font-family:'Playfair Display',serif;font-weight:800;font-size:44px;line-height:1;color:var(--aid-ink)"></div>
+      <div style="font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aid-mute);margin-top:6px">min read</div>
+    </div>
+  </div>
+  <img id="dec-hero-1" class="stk-in" src="../assets/stickers/bandage-formula-pink.png" alt="" style="position:absolute;right:6px;top:84px;width:220px;--r:-8deg;animation:floaty 6.5s ease-in-out infinite;filter:drop-shadow(0 14px 20px rgba(0,0,0,.18))">
+  <img id="dec-hero-2" class="stk-in" src="../assets/stickers/thumbs-up-blue-pink.png" alt="" style="position:absolute;right:250px;top:246px;width:64px;--r:8deg;animation:floaty 5.5s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.16))">
+</section>
+
+<!-- ══ TL;DR ══ -->
+<section id="tldr" class="reveal" style="max-width:1120px;margin:0 auto;padding:30px 32px 10px">
+  <div id="d-tldr-wrap" style="background:#fff;border:2px solid var(--aid-ink);border-radius:20px;padding:34px 38px;box-shadow:10px 12px 0 var(--aid-blue);position:relative;overflow:hidden">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px">
+      <span style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--aid-blue);background:var(--aid-lime);border:1.5px solid var(--aid-ink);border-radius:999px;padding:4px 12px">TL;DR</span>
+      <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:var(--aid-slate)">what matters this edition</span>
+    </div>
+    <ul id="d-tldr" style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:18px 44px"></ul>
+    <img id="dec-tldr" class="stk-in" src="../assets/stickers/shooting-star-pink.png" alt="" style="position:absolute;width:82px;--r:-6deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 14px rgba(0,0,0,.16));left:974px;top:-4px">
+  </div>
+</section>
+
+<!-- ══ UPDATES ══ -->
+<main id="updates" style="max-width:1120px;margin:0 auto;padding:48px 32px 20px">
+  <div id="d-body"></div>
+</main>
+
+<!-- ══ EDITIONS STRIP (every other edition, newest first; hidden if there are none) ══ -->
+<section id="d-archive-section" style="max-width:1120px;margin:0 auto;padding:10px 32px 30px;display:none">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+    <img id="dec-archive" class="stk-static" src="../assets/stickers/folder-star-blue.png" alt="" style="width:40px">
+    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:26px;margin:0">Other editions</h2>
+  </div>
+  <div id="d-archive" style="display:flex;gap:12px;flex-wrap:wrap"></div>
+  <button id="d-archive-more" type="button" aria-expanded="false" style="display:none">View all editions</button>
+</section>
+
+<!-- ══ SIGN-OFF ══ -->
+<section class="reveal" style="max-width:1120px;margin:0 auto;padding:20px 32px 70px">
+  <div class="signoff-card" style="background:var(--aid-blue);border:2px solid var(--aid-ink);border-radius:22px;padding:56px 46px;box-shadow:12px 14px 0 var(--aid-ink);position:relative;overflow:hidden;text-align:center">
+    <div style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--aid-lime);margin-bottom:16px">That's a wrap</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(32px,4.4vw,44px);line-height:1.05;color:#fff;margin:0 auto 14px;max-width:720px" id="wrap-title">Spot something worth testing? <br>Share it in the channel!</h2>
+    <p style="color:rgba(255,255,255,.82);font-size:16px;line-height:1.55;margin:0 auto;max-width:520px">Hope this was useful.<br>See you in two weeks✨</p>
+    <img id="dec-signoff-1" class="stk-in" src="../assets/stickers/thumbs-up-green-blue.png" alt="" style="position:absolute;left:44px;bottom:15px;width:104px;--r:-9deg;animation:floaty 6s ease-in-out infinite;filter:drop-shadow(0 10px 16px rgba(0,0,0,.28))">
+    <img id="dec-signoff-2" class="stk-in" src="../assets/stickers/rainbow.png" alt="" style="position:absolute;right:38px;top:34px;width:120px;--r:7deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.2))">
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer style="border-top:2px solid var(--aid-ink);background:#f4f1ea">
+  <div style="max-width:1120px;margin:0 auto;padding:28px 32px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;font-family:'Courier Prime',monospace;font-size:12px;color:var(--aid-mute)">
+    <span id="d-footer"></span>
+    <span>AI Digital · Ad Platform News Digest</span>
+  </div>
+</footer>
+
+</div>
+
+<!-- ─────────────────────────────────────────────────────────────────────────
+     DECK_DATA — Routine 2 replaces the contents of this script block.
+     Required (unchanged from the previous template):
+     {
+       "period_label": "Jul 7 – Jul 21, 2026",   // window covered
+       "generated": "2026-07-21",                  // ISO date deck was built
+       "tldr": ["one-line highlight", "..."],      // 3–5 bullets, most important first
+       "platforms": [                              // ordered; empty ones omitted
+         {
+           "name": "Google Ads",
+           "items": [
+             {
+               "title": "…",
+               "url": "https://…",
+               "source": "Google Ads & Commerce Blog",
+               "published": "2026-07-14",
+               "category": "feature",              // feature|beta|policy|deprecation|measurement|api|other
+               "impact": "high",                   // high|medium|low
+               "summary": "2–3 sentences."
+             }
+           ]
+         }
+       ]
+     }
+     Items within a platform should be ordered high -> medium -> low impact.
+
+     Optional (new in this skin — omit any/all, the deck degrades gracefully):
+       "edition_no":     14,                    // shown as "No. 14 · <period_label>"; omitted -> just period_label
+       "subtitle":       "…",                   // hero subhead; falls back to "Updates published <period_label>"
+       "read_minutes":   5,                     // falls back to an estimate from item count
+       "author":         "Ivan Potekhin",       // footer credit; falls back to "Ivan Potekhin"
+       "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"deck-2026-07-05.html" }]  // FALLBACK for the editions strip; BARE filename (no decks/ prefix). At view time the
+                                                //   strip prefers the live registry data/editions.json (same origin), which is what lets an
+                                                //   already-published deck link FORWARD to editions released after it. This array is only used
+                                                //   when that read fails (opened from disk, offline), so keep supplying it: prior editions only.
+
+     TRANSLATIONS (optional; the header language pill offers EN / RU / ES / SR).
+     English is the base language and is always what `subtitle`/`title`/`summary`/
+     `tldr` hold. Routine 2 pre-translates at build time — there is no runtime
+     API — and supplies EXACTLY FOUR things per language: the hero subtitle, card
+     titles, card summaries and TL;DR bullets. Everything else on the page is
+     fixed English chrome. Serbian is written in LATIN script (`sr`). A missing
+     language, item or field silently falls back to English, so pre-i18n decks
+     still render.
+       "subtitle_i18n": { "ru":"…", "es":"…", "sr":"…" }
+       "tldr_i18n":     { "ru":[ … ], "es":[ … ], "sr":[ … ] }  // same count & order as "tldr"
+       …and on each item:
+       "i18n": { "ru":{"title":"…","summary":"…"}, "es":{…}, "sr":{…} }
+     Deep link with ?lang=ru|es|sr. The URL is the ONLY source of language (same
+     as ?team=): no param — or ?lang=en — always opens in English, and nothing is
+     stored, so a shared link renders the same for everyone who opens it.
+  ────────────────────────────────────────────────────────────────────────── -->
+  <script id="deck-data" type="application/json">
+{
+  "period_label": "Sep 3 – Sep 16, 2026",
+  "generated": "2026-09-16",
+  "edition_no": 4,
+  "author": "Ivan Potekhin",
+  "subtitle": "Google Ads API access moves to Cloud projects, exact match starts serving in AI Mode, and Microsoft finally documents a Conversions API.",
+  "tldr": [
+    "Exact and phrase match keywords now serve text ads inside AI Mode in a limited Google test.",
+    "Google Ads API access now attaches to a Cloud project, and developer tokens are sunset.",
+    "Legacy mCPV and Video reach 1.0 line items stop serving in DV360 on Oct. 26.",
+    "Microsoft Advertising opens a server-side Conversions API, gated behind per-account pilot approval."
+  ],
+  "archive": [
+    {
+      "no": 1,
+      "label": "Jul 22 – Aug 5, 2026",
+      "url": "deck-2026-08-05.html"
+    },
+    {
+      "no": 2,
+      "label": "Aug 6 – Aug 19, 2026",
+      "url": "deck-2026-08-19.html"
+    },
+    {
+      "no": 3,
+      "label": "Aug 20 – Sep 2, 2026",
+      "url": "deck-2026-09-02.html"
+    }
+  ],
+  "subtitle_i18n": {
+    "ru": "Доступ к Google Ads API переезжает в проекты Google Cloud, точное соответствие начинает показываться в AI Mode, а у Microsoft наконец появился Conversions API.",
+    "es": "El acceso a la Google Ads API pasa a los proyectos de Cloud, la concordancia exacta empieza a servir en AI Mode y Microsoft por fin documenta una Conversions API.",
+    "sr": "Pristup Google Ads API-ju prelazi na Cloud projekte, tačno podudaranje počinje da se prikazuje u AI Mode-u, a Microsoft je konačno dokumentovao Conversions API."
+  },
+  "tldr_i18n": {
+    "ru": [
+      "Точное и фразовое соответствие теперь показывают текстовые объявления в AI Mode — пока в ограниченном тесте Google.",
+      "Доступ к Google Ads API теперь привязан к проекту в Google Cloud, а developer-токены отменяют.",
+      "26 октября старые строки mCPV и Video reach 1.0 в DV360 перестанут показываться.",
+      "У Microsoft Advertising появился серверный Conversions API, но доступ выдают вручную по каждому аккаунту."
+    ],
+    "es": [
+      "La concordancia exacta y de frase ya muestra anuncios de texto en AI Mode, en una prueba limitada de Google.",
+      "El acceso a la Google Ads API ahora se asocia a un proyecto de Cloud y se retiran los developer tokens.",
+      "El 26 de octubre dejan de servir en DV360 las líneas antiguas de mCPV y Video reach 1.0.",
+      "Microsoft Advertising estrena una Conversions API de servidor, con acceso aprobado cuenta por cuenta."
+    ],
+    "sr": [
+      "Tačno i frazno podudaranje sada prikazuju tekstualne oglase u AI Mode-u, u ograničenom Google testu.",
+      "Pristup Google Ads API-ju sada je vezan za Cloud projekat, a developer tokeni se ukidaju.",
+      "Stare stavke mCPV i Video reach 1.0 u DV360 prestaju da se prikazuju 26. oktobra.",
+      "Microsoft Advertising dobija serverski Conversions API, uz odobrenje pristupa za svaki nalog posebno."
+    ]
+  },
+  "platforms": [
+    {
+      "name": "Google Ads",
+      "items": [
+        {
+          "title": "Exact and phrase match keywords become eligible for AI Mode text ads in a limited test",
+          "url": "https://ppc.land/exact-and-phrase-match-keywords-gain-ai-mode-ads-in-google-test/",
+          "source": "PPC Land — Search",
+          "published": "2026-09-06",
+          "category": "beta",
+          "impact": "high",
+          "summary": "Google Ads Liaison Ginny Marvin confirmed on Sep 4 a “small experiment” letting standard Search campaigns with exact and phrase match keywords serve text ads inside AI Mode — previously reachable only via AI Max, Performance Max or broad match with Smart Bidding. Eligibility is capped to queries Google reads as carrying explicit, direct user intent. It weakens exact and phrase match as the lever advertisers used to keep budget off AI surfaces they did not opt into.",
+          "i18n": {
+            "ru": {
+              "title": "Ключевые слова в точном и фразовом соответствии допустили к текстовым объявлениям в AI Mode — пока в ограниченном тесте",
+              "summary": "Представитель Google Ads Джинни Марвин 4 сентября подтвердила «небольшой эксперимент»: обычные поисковые кампании с точным и фразовым соответствием теперь могут показывать текстовые объявления внутри AI Mode. Раньше туда можно было попасть только через AI Max, Performance Max или широкое соответствие со Smart Bidding, а сейчас показы ограничены запросами, в которых Google видит явное и прямое намерение пользователя. Это ослабляет точное и фразовое соответствие как рычаг, которым рекламодатели удерживали бюджет вне тех AI-поверхностей, которые они сами не включали."
+            },
+            "es": {
+              "title": "Las palabras clave de concordancia exacta y de frase entran en los anuncios de texto de AI Mode, en una prueba limitada",
+              "summary": "El 4 de septiembre Ginny Marvin, enlace de Google Ads, confirmó un «pequeño experimento» que permite a las campañas de Search estándar con concordancia exacta y de frase mostrar anuncios de texto dentro de AI Mode, algo que antes solo se alcanzaba con AI Max, Performance Max o concordancia amplia con Smart Bidding. La elegibilidad se limita a las consultas en las que Google ve una intención explícita y directa. Debilita la concordancia exacta y de frase como la palanca con la que los anunciantes mantenían su presupuesto fuera de las superficies de IA que no habían activado."
+            },
+            "sr": {
+              "title": "Ključne reči u tačnom i fraznom podudaranju ulaze u tekstualne oglase u AI Mode-u, za sada u ograničenom testu",
+              "summary": "Ginny Marvin, Google Ads Liaison, potvrdila je 4. septembra „mali eksperiment“ u kojem standardne Search kampanje sa tačnim i fraznim podudaranjem mogu da prikazuju tekstualne oglase unutar AI Mode-a — do sada se tamo stizalo samo preko AI Max-a, Performance Max-a ili širokog podudaranja sa Smart Bidding-om. Prikazivanje je ograničeno na upite u kojima Google prepoznaje jasnu i direktnu nameru korisnika. Time slabi tačno i frazno podudaranje kao polugu kojom su oglašivači držali budžet van AI površina koje sami nisu uključili."
+            }
+          }
+        },
+        {
+          "title": "Google Ads API access moves to the Cloud Console and developer tokens are sunset",
+          "url": "https://ppc.land/google-drops-developer-tokens-from-ads-api-access-decisions/",
+          "source": "PPC Land — Search",
+          "published": "2026-09-12",
+          "category": "api",
+          "impact": "high",
+          "summary": "From September 10 Google Ads API access levels attach to Google Cloud projects rather than to a 22-character developer token, and signup no longer requires a Google Ads manager account. Existing code keeps working — the token is still accepted but ignored — while the API Center in manager accounts is being retired in stages and every Basic Access application still pending on September 10 was closed and must be resubmitted.",
+          "i18n": {
+            "ru": {
+              "title": "Доступ к Google Ads API переезжает в Cloud Console, developer-токены отменяют",
+              "summary": "С 10 сентября уровень доступа к Google Ads API привязан к проекту в Google Cloud, а не к 22-символьному developer-токену, и для регистрации больше не нужен управляющий аккаунт Google Ads. Уже написанный код продолжает работать — токен по-прежнему принимается, но игнорируется, — а раздел API Center в управляющих аккаунтах закрывают поэтапно. Все заявки на Basic Access, ещё не рассмотренные на 10 сентября, были закрыты, и подавать их нужно заново."
+            },
+            "es": {
+              "title": "El acceso a la Google Ads API pasa a la Cloud Console y se retiran los developer tokens",
+              "summary": "Desde el 10 de septiembre el nivel de acceso a la Google Ads API se asocia a un proyecto de Google Cloud y no al developer token de 22 caracteres, y para darse de alta ya no hace falta una cuenta de administrador de Google Ads. El código existente sigue funcionando: el token se sigue aceptando, pero se ignora, mientras el API Center de las cuentas de administrador se retira por fases. Todas las solicitudes de Basic Access que seguían pendientes el 10 de septiembre se cerraron y hay que volver a presentarlas."
+            },
+            "sr": {
+              "title": "Pristup Google Ads API-ju prelazi u Cloud Console, a developer tokeni se ukidaju",
+              "summary": "Od 10. septembra nivo pristupa Google Ads API-ju vezuje se za projekat u Google Cloud-u, a ne za developer token od 22 znaka, i za prijavu više nije potreban menadžerski Google Ads nalog. Postojeći kod i dalje radi — token se i dalje prihvata, ali se ignoriše — dok se API Center u menadžerskim nalozima postepeno gasi. Svi zahtevi za Basic Access koji su 10. septembra još čekali odgovor zatvoreni su i moraju se podneti ponovo."
+            }
+          }
+        },
+        {
+          "title": "Google Ads Developer Policies ban programmatic proxies and require a dedicated Cloud project per integration",
+          "url": "https://ppc.land/google-bans-programmatic-proxies-from-ads-api-access/",
+          "source": "PPC Land — Search",
+          "published": "2026-09-05",
+          "category": "api",
+          "impact": "high",
+          "summary": "Google published updated Google Ads Developer Policies on Aug 31, renaming the former Google Ads API Policy and formally prohibiting programmatic proxies — shared wrapper services and MCP servers that sit between advertisers and the API. Every integration must now connect through its own dedicated Google Cloud project or risk losing access, which hits shared reporting dashboards, bid-management tools and AI assistants that read or manage accounts on a client's behalf.",
+          "i18n": {
+            "ru": {
+              "title": "Новые Google Ads Developer Policies запрещают программные прокси и требуют отдельный Cloud-проект на каждую интеграцию",
+              "summary": "31 августа Google опубликовал обновлённые Google Ads Developer Policies — бывшую Google Ads API Policy — и прямо запретил программные прокси: общие сервисы-обёртки и MCP-серверы, которые встают между рекламодателем и API. Каждая интеграция теперь должна подключаться через собственный проект Google Cloud, иначе есть риск потерять доступ. Под удар попадают общие дашборды отчётности, инструменты управления ставками и AI-ассистенты, которые читают или ведут аккаунты от имени клиента."
+            },
+            "es": {
+              "title": "Las nuevas Google Ads Developer Policies prohíben los proxies programáticos y exigen un proyecto de Cloud propio por integración",
+              "summary": "El 31 de agosto Google publicó las Google Ads Developer Policies actualizadas —antes Google Ads API Policy— y prohibió formalmente los proxies programáticos: servicios envoltorio compartidos y servidores MCP que se sitúan entre el anunciante y la API. Cada integración debe conectarse ahora a través de su propio proyecto de Google Cloud o arriesgarse a perder el acceso, lo que afecta a los paneles de informes compartidos, las herramientas de gestión de pujas y los asistentes de IA que leen o gestionan cuentas en nombre de un cliente."
+            },
+            "sr": {
+              "title": "Nove Google Ads Developer Policies zabranjuju programske proksije i traže zaseban Cloud projekat po integraciji",
+              "summary": "Google je 31. avgusta objavio ažurirane Google Ads Developer Policies — nekadašnju Google Ads API Policy — i izričito zabranio programske proksije: deljene wrapper servise i MCP servere koji stoje između oglašivača i API-ja. Svaka integracija sada mora da se povezuje preko sopstvenog Google Cloud projekta ili rizikuje gubitak pristupa, što pogađa deljene izveštajne dashboarde, alate za upravljanje ponudama i AI asistente koji čitaju ili vode naloge u ime klijenta."
+            }
+          }
+        },
+        {
+          "title": "Display & Video 360 archives legacy mCPV and Video reach 1.0 line items on Oct. 26 — migration is manual",
+          "url": "https://ppc.land/dv360-halts-legacy-video-line-items-on-october-26/",
+          "source": "PPC Land — Search",
+          "published": "2026-09-05",
+          "category": "deprecation",
+          "impact": "high",
+          "summary": "A DV360 Help Center roadmap updated Aug 21 lists fourteen Q3 2026 changes, and one carries a hard cutoff: on Oct. 26 every remaining legacy maximum cost-per-view and Video reach 1.0 line item — active or paused — is archived automatically and stops serving. Migration to Video reach 2.0 is manual, so campaigns that miss it stop delivering. The same roadmap moves billed display impressions to begin-to-render counting in February 2027; the other thirteen items need no advertiser action.",
+          "i18n": {
+            "ru": {
+              "title": "26 октября Display & Video 360 архивирует старые строки mCPV и Video reach 1.0 — переносить придётся вручную",
+              "summary": "В обновлённой 21 августа дорожной карте Справки DV360 перечислены четырнадцать изменений на третий квартал 2026 года, и у одного из них жёсткий дедлайн: 26 октября все оставшиеся строки заказа со старым maximum cost-per-view и Video reach 1.0 — и активные, и приостановленные — архивируются автоматически и перестают показываться. Переход на Video reach 2.0 делается вручную, поэтому кампании, которые его пропустят, просто остановятся. Та же дорожная карта в феврале 2027 года переводит оплачиваемые показы в дисплее на счёт по началу рендеринга; остальные тринадцать пунктов действий от рекламодателя не требуют."
+            },
+            "es": {
+              "title": "Display & Video 360 archiva el 26 de octubre las líneas antiguas de mCPV y Video reach 1.0, y la migración es manual",
+              "summary": "La hoja de ruta del centro de ayuda de DV360, actualizada el 21 de agosto, recoge catorce cambios para el tercer trimestre de 2026, y uno tiene fecha límite estricta: el 26 de octubre todas las líneas de pedido que sigan usando el antiguo coste máximo por visualización y Video reach 1.0 —activas o pausadas— se archivan automáticamente y dejan de servir. El paso a Video reach 2.0 es manual, así que las campañas que no lo hagan a tiempo dejan de entregar. La misma hoja de ruta cambia en febrero de 2027 el recuento de impresiones de display facturables al inicio de renderizado; los otros trece puntos no requieren ninguna acción del anunciante."
+            },
+            "sr": {
+              "title": "Display & Video 360 26. oktobra arhivira stare stavke mCPV i Video reach 1.0, a migracija je ručna",
+              "summary": "Mapa puta u DV360 centru za pomoć, ažurirana 21. avgusta, navodi četrnaest promena za treći kvartal 2026, a jedna ima tvrd rok: 26. oktobra sve preostale stavke porudžbine sa starim maximum cost-per-view i Video reach 1.0 — i aktivne i pauzirane — automatski se arhiviraju i prestaju da se prikazuju. Prelazak na Video reach 2.0 radi se ručno, pa kampanje koje ga propuste jednostavno stanu. Ista mapa puta u februaru 2027. prebacuje naplative display prikaze na brojanje od početka renderovanja; preostalih trinaest stavki ne traži nikakvu akciju oglašivača."
+            }
+          }
+        },
+        {
+          "title": "Data Manager lands in GA4 and DV360, and a Data Strength Uplift metric arrives in Google Ads",
+          "url": "https://blog.google/products/ads-commerce/data-strength-updates/",
+          "source": "Google Ads & Commerce Blog",
+          "published": "2026-09-10",
+          "category": "measurement",
+          "impact": "high",
+          "summary": "Google is integrating Data Manager directly into Google Analytics and Display & Video 360, launching enhanced conversions in both, and making the Data Manager API universal on the IAB Tech Lab ECAPI standard. A new Data Strength Uplift metric in Google Ads estimates how many conversions an advertiser's first-party data setup recovers, and Meridian GeoX — the open-source geo-experiment tool — is now generally available alongside agentic model-building features and brand-signal inputs.",
+          "i18n": {
+            "ru": {
+              "title": "Data Manager появляется в GA4 и DV360, а в Google Ads — метрика Data Strength Uplift",
+              "summary": "Google встраивает Data Manager прямо в Google Analytics и Display & Video 360, запускает в обоих расширенные конверсии и переводит Data Manager API на общий стандарт IAB Tech Lab ECAPI. Новая метрика Data Strength Uplift в Google Ads оценивает, сколько конверсий возвращает настроенный у рекламодателя сбор собственных данных. Meridian GeoX — открытый инструмент гео-экспериментов — вышел в общий доступ вместе с агентными функциями сборки моделей и брендовыми сигналами на входе."
+            },
+            "es": {
+              "title": "Data Manager llega a GA4 y DV360, y Google Ads estrena la métrica Data Strength Uplift",
+              "summary": "Google integra Data Manager directamente en Google Analytics y Display & Video 360, lanza las conversiones mejoradas en ambos y pasa la Data Manager API al estándar común ECAPI del IAB Tech Lab. La nueva métrica Data Strength Uplift de Google Ads estima cuántas conversiones recupera la configuración de datos propios del anunciante. Meridian GeoX, la herramienta de código abierto para geoexperimentos, ya está disponible de forma general, junto con funciones agénticas para construir modelos y señales de marca como entrada."
+            },
+            "sr": {
+              "title": "Data Manager stiže u GA4 i DV360, a u Google Ads metrika Data Strength Uplift",
+              "summary": "Google ugrađuje Data Manager direktno u Google Analytics i Display & Video 360, u oba pokreće poboljšane konverzije i prevodi Data Manager API na zajednički IAB Tech Lab ECAPI standard. Nova metrika Data Strength Uplift u Google Ads-u procenjuje koliko konverzija vraća oglašivačeva postavka sopstvenih podataka. Meridian GeoX, open-source alat za geo-eksperimente, sada je opšte dostupan, zajedno sa agentnim funkcijama za pravljenje modela i signalima brenda na ulazu."
+            }
+          }
+        },
+        {
+          "title": "Local Customer Optimization comes to Performance Max store goals, and store sales connect through Data Manager",
+          "url": "https://searchengineland.com/google-ads-adds-new-tools-to-drive-and-measure-in-store-sales-487439",
+          "source": "Search Engine Land — Google",
+          "published": "2026-09-08",
+          "category": "feature",
+          "impact": "high",
+          "summary": "Google added a campaign-level Local Customer Optimization toggle to Performance Max for store goals, which pushes budget toward in-market consumers nearby across Maps, Waze and local Search. A companion Store Sales in Data Manager feature, rolling out in the coming weeks, lets advertisers connect a CRM or Google Sheet directly instead of using the more technical offline-upload methods.",
+          "i18n": {
+            "ru": {
+              "title": "В Performance Max с целями по магазинам появилась Local Customer Optimization, а офлайн-продажи подключаются через Data Manager",
+              "summary": "Google добавил в Performance Max для целей по офлайн-магазинам переключатель Local Customer Optimization на уровне кампании: он смещает бюджет в сторону заинтересованных пользователей поблизости — в Maps, Waze и локальной выдаче Search. Вместе с ним в ближайшие недели выкатывают Store Sales в Data Manager: данные о продажах можно подключить напрямую из CRM или Google Sheets, не прибегая к более техничной загрузке офлайн-конверсий."
+            },
+            "es": {
+              "title": "Local Customer Optimization llega a Performance Max con objetivos de tienda, y las ventas en tienda se conectan por Data Manager",
+              "summary": "Google añadió a Performance Max con objetivos de tienda un control Local Customer Optimization a nivel de campaña, que empuja el presupuesto hacia consumidores cercanos con intención de compra en Maps, Waze y la búsqueda local. La acompaña Store Sales en Data Manager, que se lanza en las próximas semanas y permite conectar directamente un CRM o una hoja de Google en lugar de usar los métodos de carga de conversiones offline, más técnicos."
+            },
+            "sr": {
+              "title": "Local Customer Optimization stiže u Performance Max sa ciljevima za prodavnice, a prodaja u radnjama se povezuje preko Data Manager-a",
+              "summary": "Google je u Performance Max sa ciljevima za prodavnice dodao Local Customer Optimization na nivou kampanje, koji gura budžet ka zainteresovanim korisnicima u blizini — na Maps-u, Waze-u i u lokalnoj Search pretrazi. Uz to u narednim nedeljama stiže i Store Sales u Data Manager-u, koji omogućava da se CRM ili Google tabela povežu direktno, umesto tehnički zahtevnijeg otpremanja offline konverzija."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Microsoft Advertising",
+      "items": [
+        {
+          "title": "Microsoft Advertising documents a server-side Conversions API, gated behind per-account pilot approval",
+          "url": "https://ppc.land/microsoft-gates-its-new-conversions-api-behind-per-account-pilot-approval/",
+          "source": "PPC Land — Search",
+          "published": "2026-09-11",
+          "category": "measurement",
+          "impact": "high",
+          "summary": "Microsoft published full documentation for a Conversions API that posts website, CRM, offline and app events server-to-server to capi.uet.microsoft.com, using the same event model as the UET tag and authorised by a Bearer token tied to a specific UET tag. Microsoft recommends running CAPI alongside UET rather than replacing it, but the product is a pilot the company provisions per account — advertisers cannot enable it themselves.",
+          "i18n": {
+            "ru": {
+              "title": "Microsoft Advertising описал серверный Conversions API, но доступ выдаёт вручную по каждому аккаунту",
+              "summary": "Microsoft выложил полную документацию по Conversions API, который отправляет события с сайта, из CRM, офлайна и приложений на capi.uet.microsoft.com напрямую с сервера, используя ту же модель событий, что и тег UET, с авторизацией по Bearer-токену, привязанному к конкретному тегу UET. Microsoft советует использовать CAPI вместе с UET, а не вместо него. Но продукт остаётся пилотом, доступ к которому компания выдаёт отдельно по каждому аккаунту — самостоятельно включить его рекламодатель не может."
+            },
+            "es": {
+              "title": "Microsoft Advertising documenta una Conversions API de servidor, pero el acceso se aprueba cuenta por cuenta",
+              "summary": "Microsoft publicó la documentación completa de una Conversions API que envía eventos de web, CRM, offline y apps de servidor a servidor a capi.uet.microsoft.com, con el mismo modelo de eventos que la etiqueta UET y autorización mediante un Bearer token ligado a una etiqueta UET concreta. Microsoft recomienda usar CAPI junto a UET, no en su lugar. Aun así, el producto es un piloto que la compañía habilita cuenta por cuenta: el anunciante no puede activarlo por sí mismo."
+            },
+            "sr": {
+              "title": "Microsoft Advertising je dokumentovao serverski Conversions API, ali pristup odobrava nalog po nalog",
+              "summary": "Microsoft je objavio kompletnu dokumentaciju za Conversions API koji sa servera na server šalje događaje sa sajta, iz CRM-a, offline izvora i aplikacija na capi.uet.microsoft.com, koristeći isti model događaja kao UET tag i autorizaciju Bearer tokenom vezanim za konkretan UET tag. Microsoft preporučuje da se CAPI koristi uz UET, a ne umesto njega. Ipak, proizvod je pilot koji kompanija odobrava za svaki nalog posebno — oglašivač ne može sam da ga uključi."
+            }
+          }
+        },
+        {
+          "title": "Microsoft Advertising publishes rules for AI-generated and synthetic ad creative",
+          "url": "https://searchengineland.com/microsoft-advertising-sets-rules-for-ai-generated-ads-488429",
+          "source": "Search Engine Land — Microsoft Advertising",
+          "published": "2026-09-14",
+          "category": "policy",
+          "impact": "medium",
+          "summary": "Microsoft issued dedicated guidance for AI-generated, AI-manipulated and synthetic ad content: advertisers must meet local disclosure, consent and likeness laws, preserve watermarks, metadata and provenance signals, and place any required disclosure close to the content — ideally embedded in the image or video asset. Ads can still be rejected or removed for prohibited deepfakes, impersonation, unauthorised use of a likeness or voice, missing disclosures, or stripped provenance data.",
+          "i18n": {
+            "ru": {
+              "title": "Microsoft Advertising опубликовал правила для объявлений с AI-генерацией и синтетическим контентом",
+              "summary": "Microsoft выпустил отдельное руководство по рекламным материалам, созданным или изменённым с помощью ИИ, и по синтетическому контенту: рекламодатель обязан соблюдать местные законы о раскрытии, согласии и использовании внешности, сохранять водяные знаки, метаданные и сигналы происхождения контента, а обязательное предупреждение размещать рядом с самим контентом — лучше всего прямо внутри изображения или видео. Объявление по-прежнему могут отклонить или снять за запрещённые дипфейки, выдачу себя за другого, использование чужой внешности или голоса без разрешения, отсутствие раскрытия или удалённые данные о происхождении."
+            },
+            "es": {
+              "title": "Microsoft Advertising publica las reglas para creatividades generadas con IA y contenido sintético",
+              "summary": "Microsoft publicó una guía específica para creatividades generadas o manipuladas con IA y para contenido sintético: el anunciante debe cumplir las leyes locales de divulgación, consentimiento y uso de imagen, conservar las marcas de agua, los metadatos y las señales de procedencia, y colocar cualquier aviso obligatorio junto al contenido, idealmente incrustado en la propia imagen o el vídeo. Los anuncios se pueden seguir rechazando o retirando por deepfakes prohibidos, suplantación, uso no autorizado de una imagen o una voz, falta de aviso o datos de procedencia eliminados."
+            },
+            "sr": {
+              "title": "Microsoft Advertising objavio pravila za oglase napravljene pomoću AI i sintetički sadržaj",
+              "summary": "Microsoft je objavio posebno uputstvo za oglasni materijal napravljen ili izmenjen pomoću AI i za sintetički sadržaj: oglašivač mora da poštuje lokalne zakone o obelodanjivanju, saglasnosti i korišćenju lika, da sačuva vodene žigove, metapodatke i signale o poreklu sadržaja, a obavezno upozorenje da postavi uz sam sadržaj — najbolje ugrađeno u sliku ili video. Oglasi i dalje mogu biti odbijeni ili uklonjeni zbog zabranjenih deepfake-ova, lažnog predstavljanja, neovlašćenog korišćenja tuđeg lika ili glasa, izostanka obelodanjivanja ili obrisanih podataka o poreklu."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ChatGPT Ads",
+      "items": [
+        {
+          "title": "ChatGPT Ads drops the 25,000-user floor for exclusion audiences and adds an Ads Manager plugin",
+          "url": "https://ppc.land/openai-drops-25-000-user-floor-for-chatgpt-ad-exclusion-audiences/",
+          "source": "PPC Land — Search",
+          "published": "2026-09-03",
+          "category": "feature",
+          "impact": "high",
+          "summary": "A product update sent to ChatGPT Ads beta advertisers in the week of Aug 31 removes the 25,000-member minimum for custom audiences used as exclusions, raises the list ceiling above 5M members and accepts the Google Advertising ID as a match identifier. The same update adds a plugin that builds and edits campaigns from inside ChatGPT or Codex, new conversion-matching identifier fields, carousel card impressions in reporting (not billed), and pacing for total-budget campaigns; self-service buying is now open across Europe, India, the Middle East and North Africa. An impression-billed campaign type optimising to view-through conversions is flagged as next.",
+          "i18n": {
+            "ru": {
+              "title": "ChatGPT Ads убрал порог в 25 000 пользователей для аудиторий-исключений и добавил плагин для Ads Manager",
+              "summary": "Обновление, разосланное бета-рекламодателям ChatGPT Ads на неделе с 31 августа, снимает минимум в 25 000 человек для пользовательских аудиторий, которые используются как исключения, поднимает потолок списка выше 5 млн и принимает Google Advertising ID как идентификатор для сопоставления. В том же обновлении — плагин, который собирает и правит кампании прямо из ChatGPT или Codex, новые поля идентификаторов для сопоставления конверсий, показы карточек карусели в отчётах (без списания) и распределение расхода для кампаний с общим бюджетом; самостоятельная закупка открылась в Европе, Индии, на Ближнем Востоке и в Северной Африке. Следующим заявлен тип кампаний с оплатой за показы и оптимизацией по post-view конверсиям."
+            },
+            "es": {
+              "title": "ChatGPT Ads elimina el mínimo de 25.000 usuarios para las audiencias de exclusión y añade un plugin para el Ads Manager",
+              "summary": "Una actualización enviada a los anunciantes de la beta de ChatGPT Ads en la semana del 31 de agosto elimina el mínimo de 25.000 miembros para las audiencias personalizadas usadas como exclusiones, sube el tope de la lista por encima de los 5 millones y acepta el Google Advertising ID como identificador de coincidencia. La misma actualización añade un plugin que crea y edita campañas desde dentro de ChatGPT o Codex, nuevos campos de identificador para el emparejamiento de conversiones, impresiones de las tarjetas del carrusel en los informes (no facturadas) y reparto del ritmo de gasto en campañas con presupuesto total; la compra self-service ya está abierta en Europa, India, Oriente Medio y el norte de África. El siguiente paso anunciado es un tipo de campaña facturada por impresiones que optimiza a conversiones post-view."
+            },
+            "sr": {
+              "title": "ChatGPT Ads ukida prag od 25.000 korisnika za publike za isključivanje i dodaje plugin za Ads Manager",
+              "summary": "Nadogradnja poslata beta oglašivačima na ChatGPT Ads u nedelji od 31. avgusta ukida minimum od 25.000 članova za prilagođene publike koje se koriste kao isključenja, podiže gornju granicu liste preko 5 miliona i prihvata Google Advertising ID kao identifikator za uparivanje. Ista nadogradnja donosi i plugin koji pravi i menja kampanje direktno iz ChatGPT-a ili Codex-a, nova polja identifikatora za uparivanje konverzija, prikaze kartica u karuselu u izveštajima (bez naplate) i raspoređivanje potrošnje za kampanje sa ukupnim budžetom; self-service kupovina sada je otvorena u Evropi, Indiji, na Bliskom istoku i u severnoj Africi. Kao sledeći najavljen je tip kampanje koja se naplaćuje po prikazima i optimizuje na post-view konverzije."
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+<script>
+(function(){
+  var data;
+  try { data = JSON.parse(document.getElementById('deck-data').textContent); }
+  catch(e){ data = {period_label:'(invalid deck data)', tldr:[], platforms:[]}; }
+
+  var CAT = { feature:"Feature", beta:"Beta", policy:"Policy", deprecation:"Deprecation", measurement:"Measurement", api:"API", other:"Update" };
+  var IMP = {
+    high:   { label:"High",   bg:"var(--aid-pink)", fg:"#fff",            shadow:"var(--aid-blue)" },
+    medium: { label:"Medium", bg:"var(--aid-blue)", fg:"#fff",            shadow:"var(--aid-pink)" },
+    low:    { label:"Low",    bg:"#ffffff",         fg:"var(--aid-slate)", shadow:"var(--aid-lime)" }
+  };
+  // ── Stickers: randomized per edition, deterministic (same deck → same layout) ──
+  // Positions & sizes of every sticker slot are fixed; only WHICH png lands in each
+  // slot is shuffled, seeded off the edition date, so nothing shifts. Pools below
+  // control which stickers may appear where (some families clash or are reserved).
+  //   - arrows-grid / flag: not used anywhere (removed).
+  //   - folder-star: only in the "THAT'S A WRAP" block (dark-blue bg).
+  //   - paperclip: only in the HERO (section:nth-child(2)) and the WRAP block; never in cards.
+  var STK = "../assets/stickers/";
+  // General pool — no arrows-grid / flag / folder-star / paperclip.
+  var POOL_GENERAL = ["bandage-formula-pink.png","blob-face-blue.png","blob-face-green.png","blob-face-pink.png","brain-star-blue.png","brain-star-green.png","brain-star-pink.png","document-sparkle-blue.png","document-sparkle-green.png","document-sparkle-pink.png","globe-blue-pink.png","globe-green-blue.png","globe-pink-blue.png","hand-raised-blue-green.png","hand-raised-pink-blue.png","hand-raised-pink-green.png","rainbow.png","shooting-star-blue.png","shooting-star-green.png","shooting-star-pink.png","sleepy-dome-blue.png","sleepy-dome-green.png","sleepy-dome-pink.png","thumbs-up-blue-pink.png","thumbs-up-green-blue.png","thumbs-up-green-pink.png","todo-notepad-blue.png","todo-notepad-green.png","todo-notepad-pink.png"];
+  var PAPERCLIP = ["paperclip-blue-pink.png","paperclip-green-blue.png","paperclip-green-pink.png"];
+  var POOL_HERO  = POOL_GENERAL.concat(PAPERCLIP);   // hero may use paperclip
+  var POOL_CARDS = POOL_GENERAL;                      // cards: no paperclip
+  // Only these read well on the dark-blue "THAT'S A WRAP" background.
+  var POOL_WRAP = ["bandage-formula-pink.png","blob-face-green.png","blob-face-pink.png","brain-star-green.png","brain-star-pink.png","document-sparkle-green.png","document-sparkle-pink.png","folder-star-green.png","folder-star-pink.png","globe-green-blue.png","globe-pink-blue.png","hand-raised-blue-green.png","hand-raised-pink-green.png","paperclip-green-pink.png","rainbow.png","shooting-star-green.png","shooting-star-pink.png","sleepy-dome-green.png","sleepy-dome-pink.png","thumbs-up-green-blue.png","thumbs-up-green-pink.png"];
+  // Platform-heading icons stay meaningful (a shape per platform), but the colour varies.
+  var FAM = {
+    globe:  ["globe-blue-pink.png","globe-green-blue.png","globe-pink-blue.png"],
+    notepad:["todo-notepad-blue.png","todo-notepad-green.png","todo-notepad-pink.png"],
+    doc:    ["document-sparkle-blue.png","document-sparkle-green.png","document-sparkle-pink.png"]
+  };
+  var PF_FAM = [{k:"linkedin",f:"notepad"},{k:"tiktok",f:"doc"},{k:"meta",f:"globe"},{k:"facebook",f:"globe"},{k:"microsoft",f:"globe"},{k:"bing",f:"globe"},{k:"google",f:"globe"},{k:"chatgpt",f:"doc"},{k:"openai",f:"doc"}];
+  function hashStr(s){var h=2166136261>>>0;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h>>>0;}
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  var SEED = String((typeof data!=="undefined" && (data.generated||data.period_label)) || "seed");
+  var _rng = mulberry32(hashStr(SEED));
+  function pickFrom(pool){ return STK + pool[Math.floor(_rng()*pool.length)]; }
+  // Social = Meta / TikTok / LinkedIn; everything else (Google Ads, Microsoft/Bing,
+  // ChatGPT Ads, …) belongs to the Search team.
+  function teamOf(name){var n=(name||"").toLowerCase();return (n.indexOf("meta")>=0||n.indexOf("tiktok")>=0||n.indexOf("linkedin")>=0||n.indexOf("facebook")>=0)?"social":"search";}
+  function iconFor(name){
+    var n=(name||"").toLowerCase(), fam="globe";
+    for(var i=0;i<PF_FAM.length;i++){ if(n.indexOf(PF_FAM[i].k)>=0){ fam=PF_FAM[i].f; break; } }
+    return pickFrom(FAM[fam]);
+  }
+  // Assign the fixed decorative slots from their allowed pools (image swaps; position/size untouched).
+  var SLOT_POOL = { "dec-tldr":POOL_GENERAL, "dec-archive":POOL_GENERAL };
+  // Base "type" of a sticker = filename minus trailing colour tokens
+  // (blob-face-green -> blob-face, paperclip-green-pink -> paperclip, globe-blue-pink -> globe).
+  function stkType(file){ return file.replace(/\.png$/,"").replace(/(-(?:green|pink|blue))+$/,""); }
+  function pickFile(pool){ return pool[Math.floor(_rng()*pool.length)]; }
+  // Pick a file whose type differs from avoidType (fall back to any after a few tries).
+  function pickFileDistinct(pool, avoidType){
+    for(var k=0;k<16;k++){ var f=pickFile(pool); if(stkType(f)!==avoidType){ return f; } }
+    return pickFile(pool);
+  }
+  // Paired decorative slots (two stickers shown together) must be DIFFERENT types — never
+  // e.g. two smileys or two to-do lists, even in different colours. Still random per edition.
+  function assignPair(id1, id2, pool){
+    var f1=pickFile(pool), n1=document.getElementById(id1); if(n1){ n1.src=STK+f1; }
+    var f2=pickFileDistinct(pool, stkType(f1)), n2=document.getElementById(id2); if(n2){ n2.src=STK+f2; }
+  }
+  assignPair("dec-hero-1","dec-hero-2",POOL_HERO);         // hero (section:nth-child(2))
+  assignPair("dec-signoff-1","dec-signoff-2",POOL_WRAP);   // sign-off (section:nth-child(6))
+  // Single decorative slots — any sticker from their pool.
+  Object.keys(SLOT_POOL).forEach(function(id){
+    var n=document.getElementById(id); if(n){ n.src = pickFrom(SLOT_POOL[id]); }
+  });
+
+  function el(tag, style){
+    var node = document.createElement(tag);
+    if (style) for (var k in style) node.style[k] = style[k];
+    for (var i = 2; i < arguments.length; i++) {
+      var child = arguments[i];
+      if (child == null || child === false) continue;
+      node.appendChild(typeof child === "string" ? document.createTextNode(child) : child);
+    }
+    return node;
+  }
+  function img(src, style){
+    var i = document.createElement("img");
+    i.src = src; i.alt = "";
+    if (style) for (var k in style) i.style[k] = style[k];
+    return i;
+  }
+
+  // ── Language (i18n) ──────────────────────────────────────────────────────
+  // Only FOUR things are translated: the hero subtitle, card titles, card
+  // summaries and TL;DR bullets. Everything else — brand, filters, hero
+  // headline, dates, counters, platform names, category/impact chips, card
+  // meta, archive, sign-off, footer — is pre-baked English chrome and is
+  // never regenerated.
+  //   item.i18n         = { ru:{title,summary}, es:{…}, sr:{…} }
+  //   data.tldr_i18n     = { ru:[…], es:[…], sr:[…] }
+  //   data.subtitle_i18n = { ru:"…", es:"…", sr:"…" }
+  // All optional: a missing language (or field) falls back to the English
+  // base, so decks built before i18n keep rendering unchanged.
+  var LANGS = ["en","ru","es","sr"];
+  function txt(it, field, lang){
+    if(lang !== "en" && it.i18n && it.i18n[lang] && it.i18n[lang][field]) return it.i18n[lang][field];
+    return it[field] || "";
+  }
+  function tldrFor(lang){
+    if(lang !== "en" && data.tldr_i18n && data.tldr_i18n[lang] && data.tldr_i18n[lang].length) return data.tldr_i18n[lang];
+    return data.tldr || [];
+  }
+  function subtitleFor(lang){
+    if(lang !== "en" && data.subtitle_i18n && data.subtitle_i18n[lang]) return data.subtitle_i18n[lang];
+    return data.subtitle || (data.period_label ? ("Updates published " + data.period_label) : "");
+  }
+  // Language comes from ?lang= ONLY — exactly like ?team=. No stored preference:
+  // a plain link (no param) always opens in English, so the URL alone decides
+  // what a reader sees and a shared link never renders differently for them.
+  function resolveLang(){
+    try { var q = new URLSearchParams(window.location.search).get("lang");
+          if(q && LANGS.indexOf(q.toLowerCase()) >= 0) return q.toLowerCase(); } catch(e){}
+    return "en";
+  }
+
+  var platforms = (data.platforms || []).filter(function(p){ return p.items && p.items.length; });
+  var total = platforms.reduce(function(a, p){ return a + p.items.length; }, 0);
+
+  // Hero
+  var badge = data.edition_no
+    ? "● No. " + data.edition_no + " · " + (data.period_label || "")
+    : "● " + (data.period_label || "");
+  document.getElementById("d-badge").textContent = badge;
+
+  document.getElementById("stat-updates").textContent = total;
+  document.getElementById("stat-platforms").textContent = platforms.length;
+  document.getElementById("stat-readmin").textContent =
+    data.read_minutes || Math.max(2, Math.round(total * 0.5));
+
+  // ── Content render (language-aware) ──────────────────────────────────────
+  // Everything a reader can re-translate is built here, so switching language
+  // just re-runs this function; the chrome above is written once. The sticker
+  // RNG is re-seeded from a fixed sub-seed at the top of every run, so card
+  // stickers and platform icons are identical in all four languages.
+  var tldrList = document.getElementById("d-tldr");
+  var body = document.getElementById("d-body");
+  var curLang = "en";   // read by renderArchive() to carry the language onto edition links
+
+  function renderContent(lang){
+  _rng = mulberry32(hashStr(SEED + "|body"));
+  curLang = lang;
+  document.documentElement.lang = lang;
+  tldrList.textContent = "";
+  body.textContent = "";
+
+  // Hero subtitle (the one line of hero copy that IS translated)
+  document.getElementById("d-subtitle").textContent = subtitleFor(lang);
+
+  // TL;DR
+  var bullets = tldrFor(lang);
+  if (bullets.length) {
+    document.getElementById("d-tldr-wrap").style.display = "";
+    bullets.forEach(function(text, i){
+      tldrList.appendChild(
+        el("li", { display:"flex", gap:"14px", alignItems:"flex-start", color:"var(--aid-ink)", fontSize:"16px", lineHeight:"1.5" },
+          el("span", { flex:"none", fontFamily:"'Playfair Display',serif", fontWeight:"800", fontSize:"22px", color:"var(--aid-blue)", lineHeight:"1.25" }, String(i + 1).padStart(2, "0")),
+          el("span", null, text)
+        )
+      );
+    });
+  } else {
+    document.getElementById("d-tldr-wrap").style.display = "none";
+  }
+
+  // Updates, grouped by platform
+  if (!platforms.length) {
+    body.appendChild(el("p", { color:"var(--aid-mute)", fontStyle:"italic" }, "No qualifying updates in this period."));
+  }
+  platforms.forEach(function(pf){
+    var heading = el("div", { display:"flex", alignItems:"center", flexWrap:"wrap", gap:"14px", marginBottom:"24px" },
+      (function(){var _pi=img(iconFor(pf.name),{width:"46px",flex:"none",filter:"drop-shadow(0 6px 10px rgba(0,0,0,.14))"});_pi.className="pf-icon";return _pi;})(),
+      el("h2", { fontFamily:"'Playfair Display',Georgia,serif", fontWeight:"800", fontSize:"38px", lineHeight:"1", margin:"0", color:"var(--aid-ink)" }, pf.name),
+      el("span", { fontFamily:"'Courier Prime',monospace", fontSize:"13px", color:"var(--aid-ink)", background:"#fff", border:"2px solid var(--aid-ink)", borderRadius:"999px", padding:"3px 12px", fontWeight:"700", whiteSpace:"nowrap", flex:"none" }, pf.items.length + (pf.items.length === 1 ? " update" : " updates")),
+      el("span", { flex:"1", height:"2px", background:"var(--aid-ink)", opacity:".14" })
+    );
+
+    var grid = el("div", { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(340px,100%),1fr))", gap:"22px" });
+
+    pf.items.forEach(function(it, i){
+      var imp = IMP[(it.impact || "low").toLowerCase()] || IMP.low;
+      // Sticker on every 3rd card (fixed rhythm, not impact-driven). Which PNG lands
+      // there is still seeded-random per edition via pickFrom.
+      var wantSticker = (i % 3 === 1);
+      var stickerSrc = wantSticker ? pickFrom(POOL_CARDS) : null;
+      var bg = (i % 2 === 1) ? "var(--aid-blue-50)" : "#ffffff";
+
+      var link = el("a", { color:"inherit" }, txt(it, "title", lang));
+      link.href = it.url || "#";
+      link.target = "_blank";
+      link.rel = "noopener";
+
+      var card = el("article", { background:bg, border:"2px solid var(--aid-ink)", borderRadius:"18px", padding:"26px 26px 22px", boxShadow:"7px 8px 0 " + imp.shadow, position:"relative" },
+        stickerSrc ? img(stickerSrc, { position:"absolute", right:"18px", top:"-26px", width:"66px", "--r":"7deg", animation:"floaty 5s ease-in-out infinite", filter:"drop-shadow(0 6px 9px rgba(0,0,0,.18))" }) : null,
+        el("div", { display:"flex", gap:"8px", marginBottom:"14px", flexWrap:"wrap" },
+          el("span", { fontFamily:"'Courier Prime',monospace", fontSize:"10.5px", letterSpacing:".06em", textTransform:"uppercase", color:"var(--aid-ink)", background:"#fff", border:"1.5px solid var(--aid-ink)", borderRadius:"7px", padding:"3px 10px" }, CAT[it.category] || CAT.other),
+          el("span", { fontFamily:"'Courier Prime',monospace", fontSize:"10.5px", letterSpacing:".06em", textTransform:"uppercase", color:imp.fg, background:imp.bg, border:"1.5px solid var(--aid-ink)", borderRadius:"7px", padding:"3px 10px" }, imp.label)
+        ),
+        el("h3", { fontFamily:"'Playfair Display',Georgia,serif", fontWeight:"700", fontSize:"23px", lineHeight:"1.14", margin:"0 0 12px", color:"var(--aid-ink)" }, link),
+        el("p", { margin:"0", fontSize:"14.5px", lineHeight:"1.56", color:"var(--aid-slate)" }, txt(it, "summary", lang)),
+        el("div", { fontFamily:"'Courier Prime',monospace", fontSize:"11px", color:"var(--aid-mute)", marginTop:"16px", display:"flex", gap:"8px", alignItems:"center" },
+          el("span", { color:"var(--aid-blue)" }, "↳"), el("span", null, it.published || ""), el("span", null, "·"), el("span", null, it.source || "")
+        )
+      );
+      card.className = "card-hov";
+      grid.appendChild(card);
+    });
+
+    var _sec=el("section",{marginBottom:"56px"},heading,grid);_sec.className="reveal";_sec.setAttribute("data-team",teamOf(pf.name));body.appendChild(_sec);
+  });
+
+  renderArchive();   // its links carry ?lang=, so they follow the switch
+  // Lets the chrome script re-apply the team filter and show the new nodes.
+  document.dispatchEvent(new CustomEvent("deck:rendered", { detail:{ lang:lang } }));
+  }
+
+  var initialLang = resolveLang();
+  renderContent(initialLang);
+  // Handed to the chrome script below (which owns the header dropdowns).
+  window.__deck = { render: renderContent, langs: LANGS, lang: initialLang };
+
+  // ── Editions strip ────────────────────────────────────────────────────────
+  // Lists every OTHER edition, newest first — so an older deck also links
+  // *forward* to the editions published after it, not just back.
+  //
+  // That can't come from the deck data: a deck is a frozen file, and the edition
+  // that supersedes it does not exist yet when it is built. So the strip reads
+  // the live registry (`data/editions.json`, same origin on Pages) at view time,
+  // which means every already-published deck picks up new editions on its own,
+  // with nothing rewritten. If that read can't happen (opened from disk, offline,
+  // registry missing) it falls back to the `archive` array baked in at build
+  // time — the old behaviour, older editions only.
+  var archiveEntries = null;
+  function normalizeEdition(e){
+    return { no:e.no, label:e.period_label || e.label || "", url:e.url || "#" };
+  }
+  function isCurrentEdition(e){
+    if (data.edition_no) return e.no === data.edition_no;
+    // No edition_no in the deck data — fall back to matching the file we're on.
+    var here = (location.pathname.split("/").pop() || "");
+    return here && e.url === here;
+  }
+  function renderArchive(){
+    var sec = document.getElementById("d-archive-section");
+    var host = document.getElementById("d-archive");
+    if (!sec || !host || !archiveEntries) return;
+    var list = archiveEntries.filter(function(e){ return !isCurrentEdition(e); })
+                             .sort(function(a,b){ return (b.no||0) - (a.no||0); });
+    if (!list.length) { sec.style.display = "none"; return; }
+    host.textContent = "";
+    list.forEach(function(a){
+      var link = el("a", { fontFamily:"'Courier Prime',monospace", fontSize:"12.5px", color:"var(--aid-ink)", background:"#fff", border:"2px solid var(--aid-ink)", borderRadius:"12px", padding:"12px 18px", boxShadow:"3px 3px 0 var(--aid-ink)", display:"flex", flexDirection:"column", gap:"3px" },
+        el("span", { fontWeight:"700" }, "No. " + a.no),
+        el("span", { color:"var(--aid-mute)" }, a.label)
+      );
+      // Carry the reader's language onto the edition they're opening. This is NOT a
+      // stored preference: the link spells the language out in its own URL, so the
+      // destination still reads it from ?lang= like any other visit. A bare link —
+      // from Slack, a bookmark, anywhere outside this page — still opens in English.
+      link.href = a.url + (curLang !== "en" ? "?lang=" + curLang : "");
+      host.appendChild(link);
+    });
+    sec.style.display = "";
+    collapseArchive();
+  }
+  // Keep the strip to a single row until the reader asks for the rest — with a
+  // dozen editions it would otherwise become a wall of cards. Which cards fit is
+  // measured, not a fixed count, because the row holds ~4–6 on a desktop and only
+  // one on a phone; anything whose top edge sits below the first card's is a
+  // second row and gets hidden. Re-measured on resize.
+  // ARCHIVE_MIN is the floor: a phone fits one card per row, and collapsing to a
+  // single lonely card reads as broken rather than tidy, so the three most recent
+  // editions always stay visible even when that spills onto extra rows.
+  var ARCHIVE_MIN = 3;
+  var archiveExpanded = false;
+  function collapseArchive(){
+    var host = document.getElementById("d-archive");
+    var btn = document.getElementById("d-archive-more");
+    if (!host || !btn) return;
+    var cards = [].slice.call(host.children);
+    cards.forEach(function(c){ c.classList.remove("ed-hidden"); });   // measure them all laid out
+    var firstTop = cards.length ? cards[0].offsetTop : 0;
+    var overflow = cards.filter(function(c, i){ return i >= ARCHIVE_MIN && c.offsetTop > firstTop; });
+    if (!archiveExpanded) overflow.forEach(function(c){ c.classList.add("ed-hidden"); });
+    if (!overflow.length) { btn.style.display = "none"; return; }   // one row already
+    btn.style.display = "";
+    btn.textContent = archiveExpanded ? "Show fewer editions" : ("View all " + cards.length + " editions");
+    btn.setAttribute("aria-expanded", archiveExpanded ? "true" : "false");
+  }
+  (function(){
+    var btn = document.getElementById("d-archive-more");
+    if (btn) btn.addEventListener("click", function(){ archiveExpanded = !archiveExpanded; collapseArchive(); });
+    var t; window.addEventListener("resize", function(){ clearTimeout(t); t = setTimeout(collapseArchive, 120); });
+  })();
+  // Baked fallback first, so the strip is populated even with no network…
+  if (data.archive && data.archive.length) {
+    archiveEntries = data.archive.map(normalizeEdition);
+    renderArchive();
+  }
+  // …then upgrade to the live registry when it's reachable.
+  try {
+    fetch("../data/editions.json", { cache:"no-cache" })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if (j && j.length) { archiveEntries = j.map(normalizeEdition); renderArchive(); } })
+      .catch(function(){});
+  } catch(e){}
+
+  // Footer
+  document.getElementById("d-footer").textContent =
+    total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "") + " · Made for Performance Team with 💜 by " + (data.author || "Ivan Potekhin");
+  document.title = "Ad Platform News Digest — " + (data.period_label || "");
+})();
+</script>
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ── Header dropdowns ──
+  // One open at a time; click outside or Esc closes. On desktop the news filter
+  // renders as a segmented slider and its toggle is hidden, so this only drives
+  // the language pill there; on phones it drives both.
+  var openDD=null;
+  function panelFor(dd){ if(!dd.__panel) dd.__panel=dd.querySelector(".opts"); return dd.__panel; }
+  function closeDD(){
+    if(!openDD) return;
+    var dd=openDD, panel=panelFor(dd);
+    panel.classList.remove("open");
+    panel.style.cssText="";                       // drop the fixed-position placement
+    if(panel.parentNode!==dd) dd.appendChild(panel);   // return it to its control
+    dd.classList.remove("open");
+    var t=dd.querySelector(".dd-toggle"); if(t) t.setAttribute("aria-expanded","false");
+    openDD=null;
+  }
+  function openPanel(dd){
+    var panel=panelFor(dd), tog=dd.querySelector(".dd-toggle");
+    // Move the panel onto <body> before showing it. The sticky header has its own
+    // backdrop-filter, and a backdrop-filter nested inside another one sees an empty
+    // backdrop — the popup would show zero blur. On <body> it frosts the real page.
+    if(panel.parentNode!==document.body) document.body.appendChild(panel);
+    var r=tog.getBoundingClientRect();
+    panel.style.position="fixed";
+    panel.style.top=(r.bottom+9)+"px";
+    panel.style.right=(window.innerWidth-r.right)+"px";
+    panel.style.minWidth=r.width+"px";
+    panel.classList.add("open");
+    dd.classList.add("open");
+    tog.setAttribute("aria-expanded","true");
+    openDD=dd;
+  }
+  document.addEventListener("click", function(e){
+    if(!e.target.closest) return;
+    var tog=e.target.closest(".dd-toggle");
+    if(tog){
+      var dd=tog.closest(".dd"), wasOpen=(openDD===dd);
+      closeDD();
+      if(!wasOpen) openPanel(dd);
+      return;
+    }
+    // An open panel lives on <body>, so "inside" means inside .opts, not inside .dd.
+    if(!e.target.closest(".opts")) closeDD();
+  });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeDD(); });
+  // The placement is a one-shot measurement, so anything that moves the toggle
+  // closes the panel rather than leaving it stranded.
+  window.addEventListener("scroll", closeDD, true);
+
+  // ?team= / ?lang= stay in the address bar so a reader can copy the link they see.
+  function setParam(key, val, dflt){
+    if(!(window.history && history.replaceState)) return;
+    try{
+      var u=new URL(window.location.href);
+      if(val===dflt){ u.searchParams.delete(key); } else { u.searchParams.set(key, val); }
+      history.replaceState(null,"",u.toString());
+    }catch(e){}
+  }
+
+  // News filter
+  var filter=document.getElementById("news-filter");
+  var curTeam="all";
+  if(filter){
+    var opts=filter.querySelector(".opts");
+    var btns=[].slice.call(filter.querySelectorAll(".flt"));
+    var fcur=filter.querySelector(".dd-cur");
+    var ind=document.createElement("div"); ind.className="flt-ind"; opts.insertBefore(ind, opts.firstChild);
+    function moveInd(btn){ ind.style.width=btn.offsetWidth+"px"; ind.style.transform="translateX("+btn.offsetLeft+"px)"; }
+    function apply(team){
+      var secs=[].slice.call(document.querySelectorAll('#d-body > section'));
+      secs.forEach(function(s){ s.style.display=(team==="all"||s.getAttribute("data-team")===team)?"":"none"; });
+      var vis=secs.filter(function(s){return s.style.display!=="none";});
+      var items=0; vis.forEach(function(s){ items+=s.querySelectorAll('article').length; });
+      var su=document.getElementById('stat-updates'); if(su) su.textContent=items;
+      var sp=document.getElementById('stat-platforms'); if(sp) sp.textContent=vis.length;
+    }
+    function btnFor(team){ for(var i=0;i<btns.length;i++){ if(btns[i].getAttribute("data-team")===team) return btns[i]; } return null; }
+    function select(team, updateURL){
+      var b=btnFor(team); if(!b) return;
+      curTeam=team;
+      btns.forEach(function(x){x.classList.remove("active");}); b.classList.add("active");
+      moveInd(b); if(fcur) fcur.textContent=b.textContent; apply(team);
+      if(updateURL) setParam("team", team, "all");
+    }
+    btns.forEach(function(b){ b.addEventListener("click", function(){ select(b.getAttribute("data-team"), true); closeDD(); }); });
+    // Deep link: ?team=search|social (|all) opens the deck with that filter pre-applied.
+    // Routine 2 uses this to send each team a link straight to its own view; readers
+    // can switch to All news in the header. Unknown/absent value falls back to "all".
+    var want="all";
+    try{ var q=new URLSearchParams(window.location.search).get("team"); if(q){ q=q.toLowerCase(); if(q==="search"||q==="social"||q==="all"){ want=q; } } }catch(e){}
+    requestAnimationFrame(function(){ select(want, false); });
+    // A language switch rebuilds #d-body, so re-apply the current filter to it.
+    document.addEventListener("deck:rendered", function(){ apply(curTeam); });
+    window.addEventListener("resize", function(){ closeDD(); var a=filter.querySelector(".flt.active"); if(a) moveInd(a); });
+  }
+
+  // Language switcher — swaps card titles/summaries + TL;DR bullets (see the
+  // render script above); every other string on the page stays English.
+  var langDD=document.getElementById("lang-dd");
+  if(langDD && window.__deck){
+    var lbtns=[].slice.call(langDD.querySelectorAll(".lng"));
+    var lcur=langDD.querySelector(".dd-cur");
+    function selectLang(lang, rerender){
+      var b=null;
+      lbtns.forEach(function(x){ var on=x.getAttribute("data-lang")===lang; x.classList.toggle("active",on); if(on) b=x; });
+      if(!b) return;
+      if(lcur) lcur.textContent=b.textContent;
+      if(rerender){
+        window.__deck.render(lang);
+        setParam("lang", lang, "en");   // URL only — the choice is not stored
+      }
+    }
+    lbtns.forEach(function(b){ b.addEventListener("click", function(){ selectLang(b.getAttribute("data-lang"), true); closeDD(); }); });
+    selectLang(window.__deck.lang, false);   // first render already used this language
+  }
+
+  // Sticker entrance (exclude platform icons and always-static stickers like Past editions)
+  var stickers=[].slice.call(document.querySelectorAll("img")).filter(function(i){ return !i.classList.contains("pf-icon") && !i.classList.contains("stk-static"); });
+  if(reduce || !("IntersectionObserver" in window)){ stickers.forEach(function(i){ i.classList.add("stk-in","shown"); }); }
+  else {
+    stickers.forEach(function(i){ i.classList.add("stk-in"); });
+    // Wide, randomized delay so stickers in view pop in one-by-one (chaotic), not all at once.
+    var so=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ var t=e.target; setTimeout(function(){t.classList.add("shown");}, 120 + Math.random()*1000); so.unobserve(t);} }); },{threshold:.15});
+    stickers.forEach(function(i){ so.observe(i); });
+  }
+
+  // Section reveal
+  var reveals=[].slice.call(document.querySelectorAll(".reveal"));
+  if(reduce || !("IntersectionObserver" in window)){ reveals.forEach(function(r){ r.classList.add("shown"); }); }
+  else { var ro=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("shown"); ro.unobserve(e.target);} }); },{threshold:.08}); reveals.forEach(function(r){ ro.observe(r); }); }
+
+  // On a language switch the whole body is replaced. Show the new nodes at once
+  // instead of replaying the scroll entrance — the reader is mid-page and would
+  // otherwise watch the deck blank out and fade back in.
+  document.addEventListener("deck:rendered", function(){
+    [].forEach.call(document.querySelectorAll("#d-body img"), function(i){ if(!i.classList.contains("pf-icon")) i.classList.add("stk-in","shown"); });
+    [].forEach.call(document.querySelectorAll("#d-body .reveal"), function(r){ r.classList.add("shown"); });
+  });
+
+  // Typewriter (preserves inline-styled segments like the italic "Bi-Weekly")
+  function typewrite(node){
+    if(!node) return;
+    var segs=[]; [].forEach.call(node.childNodes, function(n){
+      if(n.nodeType===3) segs.push({t:n.nodeValue,s:null,tag:null});
+      else if(n.nodeType===1){
+        if(n.tagName==="BR") segs.push({br:true});
+        else segs.push({t:n.textContent,s:n.getAttribute("style"),tag:n.tagName});
+      }
+    });
+    // Reserve the fully-laid-out height BEFORE clearing so the block doesn't grow
+    // line-by-line while typing (the phrase wraps to 2 lines).
+    node.style.minHeight = node.offsetHeight + "px";
+    node.textContent=""; node.classList.add("tw-caret");
+    var si=0,ci=0,cur=null;
+    (function step(){
+      if(si>=segs.length){ node.classList.remove("tw-caret"); return; }
+      var seg=segs[si];
+      if(seg.br){ node.appendChild(document.createElement("br")); si++; ci=0; cur=null; return step(); }
+      if(ci===0){ if(seg.s!==null){ cur=document.createElement(seg.tag||"span"); if(seg.s) cur.setAttribute("style",seg.s); node.appendChild(cur);} else cur=null; }
+      var ch=seg.t.charAt(ci); if(cur) cur.textContent+=ch; else node.appendChild(document.createTextNode(ch));
+      ci++; if(ci>=seg.t.length){ si++; ci=0; }
+      setTimeout(step, 34);
+    })();
+  }
+  if(!reduce){
+    // Typewriter runs only on the bottom sign-off heading (the hero shows immediately).
+    var wrap=document.getElementById("wrap-title");
+    if(wrap && "IntersectionObserver" in window){ var did=false; var wo=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && !did){ did=true; typewrite(wrap); wo.unobserve(e.target);} }); },{threshold:.4}); wo.observe(wrap); }
+  }
+})();
+</script>
+
+<!-- Link-click tracking -> dataLayer (for GTM triggers) -->
+<script>
+(function(){
+  window.dataLayer = window.dataLayer || [];
+  document.addEventListener("click", function(e){
+    var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+    if(!a) return;
+    var host=""; try{ host=new URL(a.href).hostname; }catch(_){}
+    var sec = a.closest("#d-body > section[data-team]");
+    var h2 = sec ? sec.querySelector("h2") : null;
+    var loc = a.closest("article") ? "card" : (a.closest("#d-archive") ? "archive" : "other");
+    var af = document.querySelector("#news-filter .flt.active");
+    window.dataLayer.push({
+      event: "link_click",
+      link_url: a.href,
+      link_text: (a.textContent||"").trim().slice(0,140),
+      link_domain: host,
+      link_team: sec ? sec.getAttribute("data-team") : "",
+      link_platform: h2 ? h2.textContent.trim() : "",
+      link_location: loc,
+      active_filter: af ? af.getAttribute("data-team") : ""
+    });
+  }, true);
+})();
+</script>
+</body>
+</html>

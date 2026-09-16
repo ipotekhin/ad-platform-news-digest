@@ -361,7 +361,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "0601013f1f36",
@@ -403,7 +404,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "ab3f11892ddb",
@@ -417,7 +419,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "8987dc05e331",
@@ -431,7 +434,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "cafcbb1142c7",
@@ -459,7 +463,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "bf423b9ce765",
@@ -473,7 +478,8 @@
     "category": "api",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "864045cbe623",
@@ -487,7 +493,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "1e90028c9e67",
@@ -501,7 +508,8 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "56a915240e35",
@@ -515,7 +523,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "294303ab6276",
@@ -543,7 +552,8 @@
     "category": "other",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "1a594f389da3",
@@ -599,7 +609,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "c6502e89a336",
@@ -669,7 +680,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "e02233ae41c2",
@@ -683,7 +695,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "0a7f937c051c",
@@ -697,7 +710,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "97970da5d1d5",
@@ -711,7 +725,8 @@
     "category": "deprecation",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "ace383723326",
@@ -725,7 +740,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "dd6e021ca3a2",
@@ -739,7 +755,8 @@
     "category": "api",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "de287f8d9d8a",
@@ -753,7 +770,8 @@
     "category": "other",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "48a5ae081c68",
