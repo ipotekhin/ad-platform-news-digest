@@ -438,3 +438,20 @@ So nothing was wrongly filtered. **Standing risk worth watching:** with PPC Land
 tag frozen, social coverage rests on sources that publish mostly non-ads content, so a
 real Meta/TikTok ads change could go unseen. Re-check the tag pages each run; if they stay
 frozen, consider adding a dedicated social ads source.
+
+### DV360 cards retracted from editions 3 and 4 (2026-09-16)
+Removed the two out-of-scope cards that shipped before the product test existed:
+- ed. 3 — "Display & Video 360 API drops content-label and sensitive-category exclusions"
+  (14 → 13 items).
+- ed. 4 — "Display & Video 360 archives legacy mCPV and Video reach 1.0 line items"
+  (9 → 8 items), **plus** its TL;DR bullet, which was entirely about DV360, in English and
+  all three translations (4 → 3 bullets, still within the 3–4 rule).
+
+**Kept:** ed. 4's "Data Manager lands in GA4 and DV360, and a Data Strength Uplift metric
+arrives in Google Ads" — in scope on the strength of its Google Ads metric and GA4 half,
+which is exactly the distinction the new product test draws.
+
+Counters, platform counts and the footer are computed at render time, so they followed on
+their own (verified in EN and RU). The `updates.json` records were deliberately **left as
+`presented: true`**: they are the historical record, and Layer-1 dedup keys off the IDs
+being present, so deleting them would let a future run re-collect the same stories.
