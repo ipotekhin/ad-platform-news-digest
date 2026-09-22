@@ -26,6 +26,11 @@
 #   validation  readable = plain in-session fetch returns real, dated article text.
 #                 Every source below was confirmed readable on 2026-07-21. Sources
 #                 that could not be read were dropped and are intentionally not listed.
+#               blocked  = the source WAS readable and has since stopped being fetchable
+#                 from the run environment (e.g. an anti-bot challenge). Kept in the list,
+#                 not dropped: the block may lift. A `blocked` source is still attempted
+#                 every run; if it reads, flip it back to `readable`. Its `last_collected`
+#                 in state.json must NOT be advanced while it cannot be read.
 #   note        Free-text guidance for the routine.
 #
 # FETCH METHOD (important): fetch pages with an in-session client (curl / requests /
@@ -38,6 +43,21 @@
 # requests in a parallel burst (8 at once → 17/20 failed). Fetch SEL article pages at
 # a concurrency of 3 or lower and retry the stragglers; every 504 succeeded on retry.
 # The other domains tolerate 8 parallel fetches fine.
+#
+# SEL CLOUDFLARE CHALLENGE (NEW 2026-09-22 — all 5 SEL sources unreadable): every
+# searchengineland.com URL now returns HTTP 403 with `cf-mitigated: challenge` and a
+# "Just a moment..." interstitial — Cloudflare's interactive bot challenge, NOT the
+# 2026-08-04 origin outage (that was 504) and NOT concurrency. It is domain-wide: the
+# library index pages, article pages, /feed and /sitemap_index.xml all 403, under a
+# Chrome UA, curl's default UA, no UA and a Googlebot UA alike. A real browser cannot
+# clear it here either: headless Chromium (/opt/pw-browsers/) loads the interstitial,
+# but the challenge's own script host `challenges.cloudflare.com` is DENIED by the run
+# environment's egress policy (connect_rejected), so the challenge can never be solved.
+# => SEL is unreadable from this environment until either the site drops the challenge
+# for this IP range or `challenges.cloudflare.com` is added to the egress allowlist.
+# This costs the pipeline its 5 highest-volume sources (Google, Meta, TikTok, Microsoft,
+# ChatGPT), and Meta + TikTok have no other source at all. HUMAN ACTION NEEDED — see the
+# note on each SEL source below. Re-check every run; if the 403 clears, resume normally.
 #
 # PPC LAND TAG-PAGE LAG (observed 2026-09-01, STILL BROKEN 2026-09-08 and 2026-09-15): `/tag/search/`
 # and `/tag/social/` went STALE while the site kept publishing daily — on 2026-09-01 the
@@ -59,6 +79,11 @@
 # while /tag/news/ was current to Sep 15 and paged back unbroken: pages 1–21 covered
 # Sep 15 → Aug 30 (page 22 crossed window_start), ~12 cards/page, no archive cliff.
 # Treat the fallback as the standing method, not an exception.
+# On 2026-09-22 the freeze held for a FOURTH week — /tag/search/ newest still Aug 19,
+# /tag/social/ newest still Aug 17 — while /tag/news/ was current to Sep 22 and paged
+# back unbroken: pages 1–15 covered Sep 22 → Sep 06 (page 16 was entirely before
+# window_start), 12 cards/page, no archive cliff. The tag pages look abandoned rather
+# than lagging; the /tag/news/ fallback is the method for these two sources.
 # Re-check the tag pages on the next run; if they are current again, drop the fallback.
 #
 # SEL OUTAGE (observed 2026-08-04): a retry is NOT always enough. The index pages and
@@ -79,8 +104,17 @@ sources:
     url: https://blog.google/products/ads-commerce/
     type: official
     validation: readable
-    note: Primary Google Ads source. Server-rendered; article links + JSON-LD dates
+    note: >-
+      Primary Google Ads source. Server-rendered; article links + JSON-LD dates
       read fine via curl (verified article dated 2026-07-13).
+      USE THE RSS FEED, not the index (found 2026-09-22): the HTML index exposed only 3
+      article links that run, while `https://blog.google/products/ads-commerce/rss/`
+      returned the full dated list (pubDate + title + link per item) and is far easier to
+      window. The feed also carries ads-relevant posts published under OTHER blog.google
+      paths — e.g. the Sep 16 agentic-commerce post lives at
+      /products-and-platforms/products/shopping/… and never appears under
+      /products/ads-commerce/. Record those under this source's title anyway.
+      Note the feed mixes in consumer Search/Shopping posts; filter per criteria.md.
 
   - key: google_ads_announcements
     platform: google_ads
@@ -98,7 +132,7 @@ sources:
     title: Search Engine Land — Google
     url: https://searchengineland.com/library/platforms/google
     type: aggregator
-    validation: readable
+    validation: blocked  # 2026-09-22: Cloudflare challenge, see header
     note: >-
       ~50 article links with JSON-LD dates (verified article dated 2026-07-17).
       Overlaps official Google sources; prefer official as canonical on dedup. NB the
@@ -110,6 +144,8 @@ sources:
       `Mon D, YYYY at H:MM am/pm ET` (re-verified 2026-08-04); there is no `datetime=`
       attribute and no JSON-LD on the index, so parse that byline.
       Highest-volume source in the pipeline (~18 in-window ads items on 2026-08-03).
+      BLOCKED 2026-09-22 by the Cloudflare challenge (see header). Google still has two
+      official sources plus PPC Land, so the Google side degrades rather than goes dark.
 
   # ── Meta ────────────────────────────────────────────────────────────────────
   - key: meta_newsroom_tech
@@ -126,8 +162,13 @@ sources:
     title: Search Engine Land — Meta
     url: https://searchengineland.com/library/platforms/meta
     type: aggregator
-    validation: readable
-    note: ~55 article links with dates (verified). Primary practical Meta-ads source.
+    validation: blocked  # 2026-09-22: Cloudflare challenge, see header
+    note: >-
+      ~55 article links with dates (verified). Primary practical Meta-ads source.
+      BLOCKED 2026-09-22 by the Cloudflare challenge (see header). CRITICAL: with this
+      source blocked, Meta ads news has NO working source — meta_newsroom_tech is almost
+      entirely non-ads and ppcland_social carries Meta only occasionally. Meta coverage
+      is effectively dark until this reads again or a replacement source is added.
 
   # ── TikTok ──────────────────────────────────────────────────────────────────
   - key: searchengineland_tiktok
@@ -135,8 +176,12 @@ sources:
     title: Search Engine Land — TikTok
     url: https://searchengineland.com/library/platforms/tiktok
     type: aggregator
-    validation: readable
-    note: ~57 article links with dates (verified). Primary practical TikTok-ads source.
+    validation: blocked  # 2026-09-22: Cloudflare challenge, see header
+    note: >-
+      ~57 article links with dates (verified). Primary practical TikTok-ads source.
+      BLOCKED 2026-09-22 by the Cloudflare challenge (see header). CRITICAL: this is the
+      ONLY TikTok source in the pipeline, so TikTok coverage is fully dark while it is
+      blocked (ppcland_social may carry the odd TikTok ads item). Needs a replacement.
 
   # ── LinkedIn ────────────────────────────────────────────────────────────────
   - key: socialmediatoday_linkedin
@@ -176,9 +221,12 @@ sources:
     title: Search Engine Land — Microsoft Advertising
     url: https://searchengineland.com/library/platforms/microsoft/microsoft-advertising
     type: aggregator
-    validation: readable
-    note: ~62 article links with dates (verified). Often higher signal for Microsoft
-      Ads than the broad Bing blog.
+    validation: blocked  # 2026-09-22: Cloudflare challenge, see header
+    note: >-
+      ~62 article links with dates (verified). Often higher signal for Microsoft Ads than
+      the broad Bing blog. BLOCKED 2026-09-22 by the Cloudflare challenge (see header).
+      bing_blogs publishes rarely and skews organic, so Microsoft Ads now leans on
+      ppcland_search alone.
 
   # ── ChatGPT Ads (OpenAI) ────────────────────────────────────────────────────
   # Search-team platform. Item `platform` = `chatgpt`; deck display name "ChatGPT Ads".
@@ -205,7 +253,7 @@ sources:
     url: https://searchengineland.com/library/platforms/openai/chatgpt
     type: aggregator
     cadence: feed
-    validation: readable
+    validation: blocked  # 2026-09-22: Cloudflare challenge, see header
     note: >-
       Verified 2026-08-17 via curl (HTTP 200): ~43 article links, same SEL index structure
       as the other library pages (`<h2 class="headline"><a href=…>` + byline date
@@ -216,6 +264,8 @@ sources:
       ads-manager changes per criteria.md. As with other SEL pages, the top links can be a
       site-wide recent/popular block, so pick platform-specific items. Same SEL fetch
       caveats apply (concurrency ≤3; possible origin 504s — see header).
+      BLOCKED 2026-09-22 by the Cloudflare challenge (see header); seroundtable_chatgpt_ads
+      still reads and remains the highest-signal ChatGPT Ads source.
 
   # NOTE: SEL /library/ppc was evaluated as a third ChatGPT Ads source (readable, HTTP 200)
   # but NOT tracked — it is a broad PPC feed whose ChatGPT items also appear on the two
