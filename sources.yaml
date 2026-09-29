@@ -55,6 +55,9 @@
 # environment's egress policy (connect_rejected), so the challenge can never be solved.
 # => SEL is unreadable from this environment until either the site drops the challenge
 # for this IP range or `challenges.cloudflare.com` is added to the egress allowlist.
+# STILL BLOCKED 2026-09-29 (second consecutive run): every SEL URL returns 403 with
+# `cf-mitigated: challenge`, and `challenges.cloudflare.com` still fails CONNECT (403)
+# under the egress policy, so the challenge remains unsolvable from here.
 # This costs the pipeline its 5 highest-volume sources (Google, Meta, TikTok, Microsoft,
 # ChatGPT), and Meta + TikTok have no other source at all. HUMAN ACTION NEEDED — see the
 # note on each SEL source below. Re-check every run; if the 403 clears, resume normally.
@@ -84,6 +87,9 @@
 # back unbroken: pages 1–15 covered Sep 22 → Sep 06 (page 16 was entirely before
 # window_start), 12 cards/page, no archive cliff. The tag pages look abandoned rather
 # than lagging; the /tag/news/ fallback is the method for these two sources.
+# On 2026-09-29 the freeze held for a FIFTH week — /tag/search/ newest still Aug 19,
+# /tag/social/ newest still Aug 17 — while /tag/news/ was current to Sep 29 and paged
+# back unbroken: pages 1-18 covered Sep 29 -> Sep 12, 12 cards/page, no archive cliff.
 # Re-check the tag pages on the next run; if they are current again, drop the fallback.
 #
 # SEL OUTAGE (observed 2026-08-04): a retry is NOT always enough. The index pages and
