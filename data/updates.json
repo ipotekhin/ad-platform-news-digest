@@ -1467,7 +1467,7 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "1e1b0450a54c",
@@ -1495,7 +1495,7 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "ce233b6ccfa8",
@@ -1509,7 +1509,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "dd00b8482f90",
@@ -1523,7 +1523,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "c4ab1b7603f6",
@@ -1537,7 +1537,7 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "752cfe8b1d23",
@@ -1551,7 +1551,7 @@
     "category": "deprecation",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "ef1fbe6723bd",
@@ -1579,7 +1579,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "007ebac07c4c",
@@ -1593,7 +1593,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "f83fc48a3bb3",
@@ -1621,7 +1621,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "cc6c92fc2dce",
@@ -1635,7 +1635,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "ac6649d48037",
@@ -1649,7 +1649,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "b150180591e3",
@@ -1663,7 +1663,7 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "d6ba84695528",
@@ -1677,6 +1677,6 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": true
   }
 ]
