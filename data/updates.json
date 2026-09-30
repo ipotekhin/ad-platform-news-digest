@@ -841,7 +841,8 @@
     "category": "api",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "dd17dbf270b7",
@@ -855,7 +856,8 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "891b283b880f",
@@ -883,7 +885,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "534502d36b07",
@@ -1023,7 +1026,8 @@
     "category": "api",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "50513a6adcc3",
@@ -1037,7 +1041,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "05b6796063d9",
@@ -1051,7 +1056,8 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "e0a0e6ef6bc1",
@@ -1065,7 +1071,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "4876c9c67b0a",
@@ -1079,7 +1086,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "c0e17731f333",
@@ -1121,7 +1129,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "86d433af5174",
@@ -1149,7 +1158,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "72864b9cd025",
