@@ -62,6 +62,11 @@
 # /sitemap_index.xml all return 403 with `cf-mitigated: challenge` under a Chrome UA, and
 # `challenges.cloudflare.com` still fails CONNECT (403). Three weeks of SEL loss now; the
 # egress allowlist change is the only fix in reach.
+# STILL BLOCKED 2026-10-13 (fourth consecutive run): /library/platforms/google,
+# /library/platforms/meta, /feed and /sitemap_index.xml all return 403 with
+# `cf-mitigated: challenge` under a Chrome UA, and `challenges.cloudflare.com` still fails
+# to connect at all (curl exit, code 000) under the egress policy. Four weeks of SEL loss;
+# nothing about the block has changed since 2026-09-22.
 # This costs the pipeline its 5 highest-volume sources (Google, Meta, TikTok, Microsoft,
 # ChatGPT), and Meta + TikTok have no other source at all. HUMAN ACTION NEEDED — see the
 # note on each SEL source below. Re-check every run; if the 403 clears, resume normally.
@@ -99,6 +104,11 @@
 # back unbroken: pages 1-23 covered Oct 6 -> Sep 20 (page 24 was entirely before
 # window_start), 12 cards/page, no archive cliff. Six weeks frozen: treat the tag pages as
 # dead and the /tag/news/ fallback as the only standing method for these two sources.
+# On 2026-10-13 the freeze held for a SEVENTH week - /tag/search/ newest still Aug 19,
+# /tag/social/ newest still Aug 17 - while /tag/news/ was current to Oct 13 and paged back
+# unbroken: pages 1-27 covered Oct 13 -> Sep 26 (page 26 reached window_start Sep 27),
+# ~11 cards/page, no archive cliff. Note the per-page card count reads 11, not 12, once the
+# /signin/ card is discarded. Still the only working method for these two sources.
 # Re-check the tag pages on the next run; if they are current again, drop the fallback.
 #
 # SEL OUTAGE (observed 2026-08-04): a retry is NOT always enough. The index pages and
