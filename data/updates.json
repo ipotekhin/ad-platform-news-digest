@@ -1229,7 +1229,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "4d4bb05ec047",
@@ -1257,7 +1258,8 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "5833cf93d44f",
@@ -1271,7 +1273,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "84691aa128e5",
@@ -1285,7 +1288,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "bcb629461937",
@@ -1299,7 +1303,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "ed4efc59bc48",
@@ -1313,7 +1318,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "1a04562e9ae9",
@@ -1369,7 +1375,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "51fc26b8d175",
@@ -1383,7 +1390,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "27293a02f541",
@@ -1397,7 +1405,8 @@
     "category": "other",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "4cb63b2b3727",
@@ -1411,7 +1420,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "a703f1da2598",
@@ -1425,7 +1435,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "1615c111fbff",
