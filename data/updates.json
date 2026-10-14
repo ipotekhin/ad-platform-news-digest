@@ -1702,7 +1702,7 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "14cccd4a20cd",
@@ -1716,7 +1716,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "9011c17b98c3",
@@ -1730,7 +1730,7 @@
     "category": "feature",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "5602179eec6b",
@@ -1744,7 +1744,7 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "865014765776",
@@ -1772,7 +1772,7 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "33237dbdb1fd",
@@ -1786,7 +1786,7 @@
     "category": "other",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "c1f46bfdd01f",
@@ -1814,7 +1814,7 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "3330ace6cf57",
@@ -1828,7 +1828,7 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "8838e4035ae2",
@@ -1856,7 +1856,7 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "6f3fd906d53f",
@@ -1870,7 +1870,7 @@
     "category": "policy",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "0caec212447e",
@@ -1912,7 +1912,7 @@
     "category": "measurement",
     "impact": "high",
     "collected": true,
-    "presented": false
+    "presented": true
   },
   {
     "id": "626fa9ccd3a5",
@@ -1954,6 +1954,6 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": true
   }
 ]
