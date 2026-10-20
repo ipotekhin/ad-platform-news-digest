@@ -67,6 +67,10 @@
 # `cf-mitigated: challenge` under a Chrome UA, and `challenges.cloudflare.com` still fails
 # to connect at all (curl exit, code 000) under the egress policy. Four weeks of SEL loss;
 # nothing about the block has changed since 2026-09-22.
+# STILL BLOCKED 2026-10-20 (fifth consecutive run): /library/platforms/google,
+# /library/platforms/meta and /feed all return 403 with `cf-mitigated: challenge` under a
+# Chrome UA, and `challenges.cloudflare.com` still fails CONNECT (403) under the egress
+# policy. Five weeks of SEL loss; nothing about the block has changed since 2026-09-22.
 # This costs the pipeline its 5 highest-volume sources (Google, Meta, TikTok, Microsoft,
 # ChatGPT), and Meta + TikTok have no other source at all. HUMAN ACTION NEEDED — see the
 # note on each SEL source below. Re-check every run; if the 403 clears, resume normally.
@@ -109,7 +113,30 @@
 # unbroken: pages 1-27 covered Oct 13 -> Sep 26 (page 26 reached window_start Sep 27),
 # ~11 cards/page, no archive cliff. Note the per-page card count reads 11, not 12, once the
 # /signin/ card is discarded. Still the only working method for these two sources.
-# Re-check the tag pages on the next run; if they are current again, drop the fallback.
+# 2026-10-20 - THE /tag/news/ FALLBACK IS GONE AND THE SITE HAS BEEN RESTRUCTURED.
+# `/tag/news/` and `/tag/news/page/N/` now return HTTP 404 (checked pages 1-20, all 404,
+# identical 8,345-byte error body). The tag set was rebuilt around five section tags, all
+# current to 2026-10-20: `pulse` (news - this is what /tag/news/ used to carry), `decoded`
+# (glossary/dictionary entries, high volume, never news), `gridlock` (word games),
+# `intermission` (entertainment), `landline` (telecom/privacy roundups). Meanwhile
+# /tag/search/ and /tag/social/ held frozen for an EIGHTH week - newest cards still Aug 19
+# and Aug 17.
+# NEW STANDING METHOD for ppcland_search / ppcland_social: page back through the HOMEPAGE,
+# `https://ppc.land/` then `https://ppc.land/page/N/`. Each page holds ~12 cards (page 1
+# holds ~63) and runs unbroken newest-first; on 2026-10-20 pages 1-55 covered Oct 20 ->
+# Oct 03, i.e. ~3.5 pages per day, so expect ~55 pages for a 16-day window. Parse each
+# `<article class="card card-post ...">...</article>` block: the link and title are in
+# `<a class="card-post-image-link" aria-label="TITLE" href="/slug/">`, the date in
+# `<time class="card-post-date" datetime="YYYY-MM-DD">` and the section in
+# `<a class="card-post-primary-tag" href="/tag/<section>/">`. KEEP only `pulse` (and skim
+# `landline`); `decoded` is ~40% of all cards and is pure glossary - discard it unread.
+# Then apply the usual scope filter: search-side platforms for ppcland_search, social-side
+# for ppcland_social. Items found this way are still recorded under the `PPC Land - Search`
+# / `PPC Land - Social` source titles. `https://ppc.land/rss/` also works but carries only
+# the last ~2 days, and `sitemap-posts.xml` dates are lastmod (glossary pages are bulk-
+# touched), so neither replaces homepage pagination.
+# Re-check /tag/search/ and /tag/social/ next run; if they are current again, drop the
+# fallback.
 #
 # SEL OUTAGE (observed 2026-08-04): a retry is NOT always enough. The index pages and
 # ~14 article pages read fine, then a fixed subset of article URLs returned Cloudflare
