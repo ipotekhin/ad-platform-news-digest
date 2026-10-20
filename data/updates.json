@@ -2174,7 +2174,7 @@
     "url": "https://ppc.land/meta-will-turn-on-product-browsing-in-existing-ads-on-october-28",
     "published": "2026-10-15",
     "first_seen": "2026-10-20T07:14:11Z",
-    "summary": "Meta has notified advertisers that from October 28, 2026 it will add product browsing to ads already running on Facebook and Instagram unless they opt out first: a tap may open an in-app page with product info and personalised suggestions instead of going straight to the advertiser's site. It is on by default, right at the start of the holiday period, and the only ways off are the opt-out button in Meta's notice or a per-ad toggle. Meta's supporting claim is 3% more conversions on average, from an August 6–21 test across roughly 117,700 advertisers.",
+    "summary": "Meta has notified advertisers that from October 28, 2026 it will add product browsing to ads already running on Facebook and Instagram unless they opt out first: a tap may open an in-app page with product info and personalised suggestions instead of going straight to the advertiser's site. It is on by default, right at the start of the holiday period; the ways off are the opt-out button in Meta's notice or the \"Add product browsing\" toggle in each ad's Advantage+ Creative and Destination settings. Meta's supporting claim is 3% more conversions on average, from an August 6–21 test across roughly 117,700 advertisers.",
     "category": "feature",
     "impact": "high",
     "collected": true,
