@@ -17,7 +17,7 @@ Two scheduled **routines** + this repo as state:
 
 | Routine | Cadence | What it does |
 |---|---|---|
-| **[Routine 1 — Collect](routines/routine-1-collect.md)** | weekly | Visits each source, finds new items, dedupes them, appends to `data/updates.json`. |
+| **[Routine 1 — Collect](routines/routine-1-collect.md)** | weekly | Visits each source, finds new items, dedupes them, appends to `data/updates.json`; DMs Ivan (in Russian) when a source breaks or recovers. |
 | **[Routine 2 — Presentation](routines/routine-2-presentation.md)** | every 2 weeks | Filters the un-presented items, builds the deck, posts a summary + link to Slack, then marks them `presented`. |
 
 Each routine's trigger prompt is just a short pointer to its instruction doc in
@@ -28,7 +28,7 @@ Each routine's trigger prompt is just a short pointer to its instruction doc in
 ## Repository layout
 
 ```
-sources.yaml          # validated entry points (blog index pages) per platform
+sources.yaml          # entry points per platform + each one's current status
 criteria.md           # relevance rules + impact scoring (human-edited)
 style/
   deck-template.html  # data-driven HTML deck ("Zine" skin)
@@ -43,6 +43,9 @@ decks/                # generated presentations (deck-YYYY-MM-DD.html)
 routines/
   routine-1-collect.md
   routine-2-presentation.md
+docs/
+  SOURCES_LOG.md      # history of source changes (added / broke / recovered)
+  BUILD_LOG.md        # how the system was built, decision by decision
 README.md / CLAUDE.md # repo context
 ```
 
@@ -80,7 +83,8 @@ the semantic dedup itself.
   `sha1(source + published + title)[:12]`.
 - **Layer 2 — semantic (LLM):** ask the model whether a candidate is the same story as
   anything already stored in the current window. Prefer the **official** source over an
-  **aggregator** (Search Engine Land) as the canonical record.
+  **aggregator** (Search Engine Roundtable, PPC Land, Social Media Today, …) as the
+  canonical record.
 
 ## Collection window
 - Routine 1 collects over a **fixed last-2-weeks window** (`today − 14 days`, ~2 days
@@ -137,22 +141,23 @@ A routine runs as a full cloud Claude Code session. **Outbound HTTPS to every so
 domain in `sources.yaml` must be allowed by the run environment's egress policy**, or
 the fetch fails with a `403 CONNECT` policy denial (not a code bug).
 
-**Fetch with an in-session client (`curl` / `requests` / browser), not the managed
-`WebFetch` tool.** Validated 2026-07-21: once egress is open, curl gets HTTP 200 from
-every source domain, but `WebFetch`'s fetcher is still blocked by the sites' anti-bot
-(403). `sources.yaml` lists **13 sources**, all confirmed readable via curl; sources that
-could not be read were dropped and are not tracked. (The two PPC Land tag pages —
-multi-platform aggregators — were added and validated 2026-08-03; SocialBee was removed
-2026-08-04, so every source is now a dated feed under the 2-week window; two ChatGPT Ads
-sources were added and validated 2026-08-17.)
+**Fetch with an in-session client (`curl` / `requests`), not the managed `WebFetch`
+tool.** Once egress is open, curl gets HTTP 200 from the source domains, but
+`WebFetch`'s fetcher is still blocked by the sites' anti-bot (403).
+
+`sources.yaml` lists **24 sources** across the six platforms (re-validated 2026-10-21:
+19 `readable`, 5 Search Engine Land pages `blocked` by a Cloudflare challenge and kept
+in case the site recovers). Each source carries its current status; Routine 1 updates it,
+records every change in [`docs/SOURCES_LOG.md`](docs/SOURCES_LOG.md) and DMs Ivan when a
+source breaks or recovers. The hosts to allow are listed in
+[`routines/SETUP.md`](routines/SETUP.md) → step 1.
 
 ## Status / next actions
 - [x] 1. Architecture / workflow decided
 - [x] 2. Repo created + sources gathered
-- [x] 3. **Validate sources** — done 2026-07-21 (in-session curl); 2 PPC Land tags added
-      2026-08-03 (SocialBee removed 2026-08-04); 2 ChatGPT Ads sources added 2026-08-17.
-      **13 sources** confirmed `readable`; unreadable ones dropped. Recorded in
-      `sources.yaml`.
+- [x] 3. **Validate sources** — first done 2026-07-21 (in-session curl); source list
+      rebuilt and re-validated 2026-10-21 (**24 sources**, 19 readable). Current status in
+      `sources.yaml`, history in `docs/SOURCES_LOG.md`.
 - [x] 4. Repo scaffolded
 - [x] 5. Routine instruction docs written
 - [x] 6. **Test + schedule** — both routines tested and on schedule; first digest shipped

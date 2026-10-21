@@ -32,9 +32,10 @@ as the file specifies. Stay inside this routine's job — do not do Routine 1's 
 > can be edited and reviewed. **Never add a specific to the prompt** — add it here instead;
 > if you find yourself wanting to, that is the signal it belongs in this file.
 
-> **Branch note:** each run branches from `main`, pushes to `claude/present-run`, then
-> merges into `main` via pull request (the deck must be on `main` before step 6, since
-> that is what GitHub Pages serves).
+> **Branch note:** each run branches from `main`, pushes to its `claude/*` branch (the
+> session's assigned name, or `claude/present-run`), merges into `main` via pull request
+> (the deck must be on `main` before step 6, since that is what GitHub Pages serves),
+> then **deletes that branch** (step 7).
 
 ---
 
@@ -268,8 +269,13 @@ itself is a single file with all platforms; the two links only differ by a `?tea
   (`no` = previous max + 1).
 - Commit `data/updates.json` (presented + expired flags) + `data/editions.json` +
   `decks/deck-YYYY-MM-DD.html` with a message like `present: deck YYYY-MM-DD, M items -> Slack`.
-- Push to `claude/present-run`, then open a pull request into `main` and merge it
+- Push to your `claude/*` branch, then open a pull request into `main` and merge it
   (Pages serves `main`, so the deck link resolves after merge).
+- **After each merge, delete the branch** on the remote: `git push origin --delete
+  <branch>` (if it is already gone — GitHub's auto-delete — there is nothing to do).
+  When the run merges twice (deck first, then the presented flags), delete it after the
+  last merge. Never delete `main` or a `backup*` branch; keep a branch whose PR did not
+  merge.
 
 ### 8. Backlog status note to Ivan (internal — always to Ivan's DM)
 After the digest is delivered, send a **separate short** `slack_send_message` to
@@ -320,4 +326,4 @@ is enough. Keep it compact; this note is for Ivan only, not the teams.
 - **Idempotent:** re-running before a successful post just rebuilds; re-running after
   finds nothing new to present.
 - Never invent updates — the deck contains only what's in `updates.json`.
-- Keep the channel message short; depth lives in the deck / canvas.
+- Keep the channel message short; depth lives in the deck.

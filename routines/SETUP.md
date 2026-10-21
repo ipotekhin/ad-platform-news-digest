@@ -6,23 +6,32 @@ One-time steps to go from "repo scaffolded" to "routines running on schedule."
 
 ## 1. Allow the source domains in the run environment (required)
 
-A routine fetches live pages. The environment it runs in **must** permit outbound
-HTTPS to the 8 domains behind the 13 validated sources, or fetches fail with
-`403 CONNECT` (policy denial):
+A routine fetches live pages. The environment it runs in (**Ad-platform-news-digest**)
+**must** permit outbound HTTPS to every host behind the sources in `sources.yaml`, or
+fetches fail with `CONNECT tunnel failed, response 403` (policy denial):
 
 ```
 blog.google
 support.google.com
 searchengineland.com
+www.seroundtable.com
+about.ads.microsoft.com
+blogs.bing.com
+www.adexchanger.com
 about.fb.com
 www.socialmediatoday.com
-blogs.bing.com
+ads.tiktok.com
+www.linkedin.com
 ppc.land
-www.seroundtable.com
+ppcnewsfeed.com
+www.searchenginejournal.com
+ipotekhin.github.io        # Routine 2 verifies the published deck URL
 ```
 
-Configure this on the environment used by the routines. If you use "trusted"/open
-network access for that environment, that covers it too.
+Configure this on the environment used by the routines (environment menu → Edit →
+Network access → Allowed domains). If you use "trusted"/open network access for that
+environment, that covers it too. When a source is added later, add its host here and in
+the environment; if it is missing, Routine 1 marks the source `blocked` and DMs Ivan.
 
 ## 2. Enable GitHub Pages (chosen delivery)
 
@@ -37,11 +46,11 @@ GitHub Pages is the **only** delivery format — no Slack Canvas.
 
 ## 3. Confirm the Slack connector + channel
 
-- Make sure the **Slack connector is enabled in the routine's environment** (not just a
-  desktop session). Messages post from Ivan's own Slack identity.
-- Decide the target channel for the digest and drop its name into Routine 2's trigger
-  prompt below (replace `#<CHANNEL>`). For **test runs**, no channel is needed — Routine
-  2 posts a draft or a DM to Ivan for review first (see step 5).
+- Make sure the **Slack connector is attached to both routines** (not just a desktop
+  session) — Routine 2 posts the digest, Routine 1 DMs Ivan when a source breaks or
+  recovers. Messages post from Ivan's own Slack identity.
+- Destinations live in each routine doc's **Open config**, never in a trigger prompt:
+  the team channels in `routine-2-presentation.md`, Ivan's DM in both.
 
 ---
 
@@ -107,10 +116,17 @@ as the file specifies. Stay inside this routine's job — do not do Routine 1's 
 ## 6. Branch / merge workflow (main is the mainline)
 
 `main` is the canonical branch and what GitHub Pages serves. Each routine run:
-1. branches from `main` to a short-lived `claude/collect-run` or `claude/present-run`
-   branch (routines can only push to `claude/`-prefixed branches),
+1. branches from `main` to a short-lived `claude/*` branch (routines can only push to
+   `claude/`-prefixed branches; the platform usually assigns the name),
 2. commits + pushes its changes there,
-3. opens a pull request into `main` and merges it.
+3. opens a pull request into `main` and merges it,
+4. **deletes the branch** once it is merged — merged branches are never kept. The same
+   goes for branches from chat sessions. `backup*` branches are Ivan's manual snapshots
+   and are never deleted.
+
+Recommended belt-and-braces: turn on **Settings → General → Pull Requests →
+"Automatically delete head branches"**, so GitHub removes a branch the moment its PR
+merges, even if a run forgets.
 
 This keeps `data/` and `decks/` current on `main` so the published deck and state stay
 in sync. (Set the repo's **default branch to `main`** and point **Settings → Pages** at

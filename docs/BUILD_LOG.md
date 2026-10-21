@@ -7,17 +7,23 @@
 ## 1. What this is
 Two scheduled Claude **routines** + this GitHub repo as **persistent memory**, producing
 a bi-weekly ad-platform news digest as a self-contained HTML "Zine" deck on GitHub Pages,
-announced via a Slack DM. Everything is **data-driven and repo-controlled**: all tuning
+announced in the two team Slack channels (Search / Social). Everything is **data-driven
+and repo-controlled**: all tuning
 happens by editing repo files, never by rewriting the routine trigger prompts.
 
 - **Routine 1 — Collect** (weekly): fetch sources → filter → dedup → append to
   `data/updates.json`. Never builds a deck.
 - **Routine 2 — Presentation** (every 2 weeks): select un-presented items → build deck →
-  publish to Pages → Slack DM → mark `presented:true` + append `data/editions.json`.
+  publish to Pages → one Slack message per team → mark `presented:true` + append
+  `data/editions.json`.
 
 Each run branches from `main` to a `claude/*` branch, commits, opens a PR, and merges.
 
 ## 2. Sources (`sources.yaml`, 13 — all `readable`, all `feed`)
+> **Superseded 2026-10-21 — see §16.** The list below is the original 13-source setup;
+> the current list and each source's status live in `sources.yaml`, the host allowlist
+> in `routines/SETUP.md`, and the source history in `docs/SOURCES_LOG.md`.
+
 Domains that MUST be in the run environment's egress allowlist (exact hosts):
 `blog.google`, `support.google.com`, `searchengineland.com`, `about.fb.com`,
 `www.socialmediatoday.com`, `blogs.bing.com`, `ppc.land`, `www.seroundtable.com`.
@@ -455,3 +461,50 @@ Counters, platform counts and the footer are computed at render time, so they fo
 their own (verified in EN and RU). The `updates.json` records were deliberately **left as
 `presented: true`**: they are the historical record, and Layer-1 dedup keys off the IDs
 being present, so deleting them would let a future run re-collect the same stories.
+
+## 16. Source list rebuilt + source-health alerts (2026-10-21)
+
+**Why.** Search Engine Land had been behind a Cloudflare challenge since 2026-09-22, which
+took out 5 sources — and Meta and TikTok had nothing else. PPC Land rebuilt its tags on
+2026-10-20, so the old `/tag/search/` + `/tag/social/` pages (frozen since August) and
+the `/tag/news/` fallback were both gone. And `sources.yaml` had turned into a weekly
+diary: ~110 of its ~150 header lines were dated "STILL BLOCKED / still frozen" notes that
+every run had to read and reconcile with the instructions next to them.
+
+**New source list (24).** Built from Ivan's table and re-validated over curl the same
+day: 19 `readable`, the 5 SEL pages kept as `blocked`. New: SER Google Ads and SER
+Microsoft Advertising, the official Microsoft Advertising, TikTok for Business and
+LinkedIn Ads blogs, AdExchanger's ChatGPT Ads tag, Social Media Today's Facebook /
+Instagram / TikTok topics, PPC Land `/tag/pulse/` (one source, scope `all`, replacing
+the two dead tag pages), PPC News Feed and Search Engine Journal's PPC / social news
+filters. Four hosts (`about.ads.microsoft.com`, `www.adexchanger.com`,
+`ppcnewsfeed.com`, `www.searchenginejournal.com`) had to be added to the environment's
+egress allowlist first. Details per source in `docs/SOURCES_LOG.md`.
+
+**`sources.yaml` = current state only.** Header cut to fields, statuses, fetch rules
+and per-domain parse notes; each source's `note` says how to read it *today*. Mixed
+sources now carry a `scope` field (`search` / `social` / `all`) instead of naming their
+platforms in prose. The `cadence` field is gone (every source was a feed). History moved
+to the new `docs/SOURCES_LOG.md`, which Routine 1 appends to only when something changes.
+
+**Statuses and the "no workarounds" rule.** `readable` / `pending` / `blocked` /
+`broken`, plus `blocked_since`. A blocked or broken source gets exactly one request per
+run; if it still fails, the run moves on — no alternative URLs, feeds, sitemaps or
+browsers (that is where the SEL runs spent their time). Routine 1 never changes a
+source's URL on its own; a moved page is `broken`, and Ivan picks the replacement.
+
+**Alerts.** Routine 1 now DMs Ivan (in Russian, `U065VBRHYV7`) only when a source's
+status changes into or out of `blocked` / `broken`, or when the run fails to land on
+`main`. One message per run, one line per change, plus what to do (e.g. "add host X to
+Allowed domains"). Nothing is sent while things stay the same. The Routine 1 trigger
+already had the Slack connector attached, so no routine-UI change was needed.
+
+## 17. Branch hygiene (2026-10-21)
+Every routine run and chat session pushes its own platform-named `claude/*` branch, and
+nothing ever deleted them: by 2026-10-21 the remote held 19 merged `claude/*` branches
+next to `main` and the four `backup*` snapshots. All 19 were verified fully merged
+(with full history — a shallow clone makes the July branches look unmerged) and deleted.
+The rule is now in `CLAUDE.md`, both routine docs and `routines/SETUP.md`: **delete your
+branch once its PR is merged**; never delete `main` or a `backup*` branch, or a branch
+whose work is not in `main`. GitHub's "Automatically delete head branches" setting is
+recommended as a backstop.
