@@ -14,7 +14,10 @@ operational reference for a routine session.
 The routines are meant to run **hands-off from the repo**: the trigger prompts are tiny
 pointers, and every decision lives in these repo files. All tuning happens by editing
 the repo (via chat) — never by rewriting the routine prompts:
-- **Sources** → `sources.yaml`   ·   **Relevance** → `criteria.md`
+- **Sources** → `sources.yaml` (current state only; history in `docs/SOURCES_LOG.md`)
+  ·   **Relevance** → `criteria.md`
+- **Source alerts** → `routines/routine-1-collect.md` → Open config (`alert_channel_id`,
+  Ivan's DM; Russian; sent only when a source breaks or recovers)
 - **Design** → `style/deck-template.html` (+ `assets/stickers/`)   ·   **UI strings in
   other languages** → also `style/deck-template.html` (interface chrome is pre-baked and
   English-only; only the hero subtitle, card titles/summaries and TL;DR bullets are
@@ -51,8 +54,13 @@ language or step into a prompt, put it in the routine's `.md` instead.
   nothing rewritten. Never edit an old deck to add a newer edition; appending to the
   registry is enough. The deck-data `archive` array is only the offline fallback.
 - Only advance a source's `last_collected` in `state.json` if you actually read it.
+- **Source status:** `sources.yaml` holds only the current state (`validation` +
+  `blocked_since`). A `blocked` / `broken` source gets one request per run and is
+  skipped if it still fails — no workarounds. Status changes go to
+  `docs/SOURCES_LOG.md` and trigger one DM to Ivan; "still broken" is never written
+  anywhere.
 - The deck (`style/deck-template.html`) loads Google Fonts (Playfair Display, Courier
-  Prime) from the Google Fonts CDN, reads sticker PNGs from `assets/stickers/` (plus the
+  Prime, Inter) from the Google Fonts CDN, reads sticker PNGs from `assets/stickers/` (plus the
   brand logo `assets/aidigital-icon-blue.svg` in the header and `blob-face-pink.png` as the
   favicon), and loads
   **Google Tag Manager** (container `GTM-M2BTR42L`) for analytics — pushing a `link_click`

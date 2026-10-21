@@ -1,172 +1,91 @@
-# sources.yaml — validated entry points for Routine 1 (Collect)
+# sources.yaml — entry points for Routine 1 (Collect)
 #
-# Each source is a stable blog INDEX / announcements page. Routine 1 starts here
-# and follows the fresh links; it never relies on hard-coded article URLs.
+# This file holds the CURRENT state only: which pages to read, how to read them today,
+# and whether each one works right now. History — when a source broke, how it was
+# diagnosed, what changed and when — lives in docs/SOURCES_LOG.md. Never append dated
+# "still broken" notes here: a source's state is its `validation` (+ `blocked_since`),
+# and how long it has been down is visible from that and from data/state.json.
 #
 # Fields:
-#   key         Stable identifier. MUST match the key used in data/state.json.
-#   platform    google_ads | meta | tiktok | linkedin | bing | chatgpt | mixed
-#                 mixed = a multi-platform aggregator (e.g. ppc.land tag pages). The
-#                         SOURCE has no single platform; the collector reads EACH article
-#                         and sets that item's real platform (one of the five above),
-#                         keeping only platforms in our pipeline. The `scope` note says
-#                         which side to keep (search-side or social-side).
-#   title       Human-readable source name (goes into updates.json -> "source").
-#   url         Entry point (index / announcements page).
-#   type        official | aggregator
-#                 official   = the platform's own blog. Preferred canonical record.
-#                 aggregator = 3rd-party (Search Engine Land / PPC Land). Often
-#                              repeats official stories -> resolved by dedup Layer 2.
-#   cadence     feed (default; the only cadence in use)
-#                 feed    = dated article stream -> apply the normal 2-week window by
-#                           each article's published date. EVERY source is a feed, so
-#                           the 2-week window applies to everything (nothing is exempt).
-#                 (A `roundup` cadence — monthly digests exempt from the window — used to
-#                  exist for SocialBee; that source was removed, so no source is exempt.)
-#   validation  readable = plain in-session fetch returns real, dated article text.
-#                 Every source below was confirmed readable on 2026-07-21. Sources
-#                 that could not be read were dropped and are intentionally not listed.
-#               blocked  = the source WAS readable and has since stopped being fetchable
-#                 from the run environment (e.g. an anti-bot challenge). Kept in the list,
-#                 not dropped: the block may lift. A `blocked` source is still attempted
-#                 every run; if it reads, flip it back to `readable`. Its `last_collected`
-#                 in state.json must NOT be advanced while it cannot be read.
-#   note        Free-text guidance for the routine.
+#   key            Stable identifier. MUST match the key used in data/state.json.
+#   platform       google_ads | bing | chatgpt | meta | tiktok | linkedin | mixed
+#                    mixed = a multi-platform source. The collector reads EACH article,
+#                    sets that item's real platform (one of the six above) and keeps only
+#                    platforms inside the source's `scope`.
+#   scope          mixed sources only — which platforms to keep:
+#                    search = google_ads, bing, chatgpt · social = meta, tiktok, linkedin
+#                    all    = all six
+#   title          Human-readable source name (goes into updates.json -> "source").
+#   url            Entry point to fetch (index page or feed).
+#   type           official   = the platform's own blog; preferred canonical record.
+#                  aggregator = third-party news site; often repeats official stories,
+#                               resolved by dedup Layer 2 (prefer official).
+#   validation     Current status — see STATUS below. Routine 1 keeps it current.
+#   blocked_since  Date the source stopped reading. Present only while blocked / broken.
+#   note           How to read this source today (structure, dates, pagination, filter).
 #
-# FETCH METHOD (important): fetch pages with an in-session client (curl / requests /
-# browser), NOT the managed WebFetch tool. With egress open, curl gets HTTP 200 from
-# every domain, but WebFetch's fetcher is blocked by the sites' anti-bot (403). Read
-# dates/titles from each article's JSON-LD ("datePublished") and og: meta tags.
-# Re-validate on drift.
+# Every source is a dated feed: the fixed 2-week window applies to all of them.
 #
-# CONCURRENCY (verified 2026-08-03): searchengineland.com returns HTTP 504 for most
-# requests in a parallel burst (8 at once → 17/20 failed). Fetch SEL article pages at
-# a concurrency of 3 or lower and retry the stragglers; every 504 succeeded on retry.
-# The other domains tolerate 8 parallel fetches fine.
+# STATUS (`validation`)
+#   readable  Reads normally.
+#   pending   Newly added, not yet confirmed by a run. Fetch it like a readable source;
+#             the run then sets readable / blocked / broken.
+#   blocked   The entry page cannot be fetched: anti-bot challenge, HTTP 4xx/5xx or a
+#             timeout after retries, or the run environment refusing the host
+#             (curl: "CONNECT tunnel failed, response 403" = egress allowlist).
+#   broken    The page fetches (2xx) but no dated article list can be parsed from it —
+#             the layout changed or the page moved.
+#   For blocked / broken sources make ONE request to `url` per run. If it fails the same
+#   way, skip the source at once and move on — no workarounds (no other URLs, feeds,
+#   sitemaps, user agents or headless browsers) and nothing written anywhere. If it
+#   reads, the source has recovered: read it normally.
 #
-# SEL CLOUDFLARE CHALLENGE (NEW 2026-09-22 — all 5 SEL sources unreadable): every
-# searchengineland.com URL now returns HTTP 403 with `cf-mitigated: challenge` and a
-# "Just a moment..." interstitial — Cloudflare's interactive bot challenge, NOT the
-# 2026-08-04 origin outage (that was 504) and NOT concurrency. It is domain-wide: the
-# library index pages, article pages, /feed and /sitemap_index.xml all 403, under a
-# Chrome UA, curl's default UA, no UA and a Googlebot UA alike. A real browser cannot
-# clear it here either: headless Chromium (/opt/pw-browsers/) loads the interstitial,
-# but the challenge's own script host `challenges.cloudflare.com` is DENIED by the run
-# environment's egress policy (connect_rejected), so the challenge can never be solved.
-# => SEL is unreadable from this environment until either the site drops the challenge
-# for this IP range or `challenges.cloudflare.com` is added to the egress allowlist.
-# STILL BLOCKED 2026-09-29 (second consecutive run): every SEL URL returns 403 with
-# `cf-mitigated: challenge`, and `challenges.cloudflare.com` still fails CONNECT (403)
-# under the egress policy, so the challenge remains unsolvable from here.
-# STILL BLOCKED 2026-10-06 (third consecutive run): /library/platforms/google, /feed and
-# /sitemap_index.xml all return 403 with `cf-mitigated: challenge` under a Chrome UA, and
-# `challenges.cloudflare.com` still fails CONNECT (403). Three weeks of SEL loss now; the
-# egress allowlist change is the only fix in reach.
-# STILL BLOCKED 2026-10-13 (fourth consecutive run): /library/platforms/google,
-# /library/platforms/meta, /feed and /sitemap_index.xml all return 403 with
-# `cf-mitigated: challenge` under a Chrome UA, and `challenges.cloudflare.com` still fails
-# to connect at all (curl exit, code 000) under the egress policy. Four weeks of SEL loss;
-# nothing about the block has changed since 2026-09-22.
-# STILL BLOCKED 2026-10-20 (fifth consecutive run): /library/platforms/google,
-# /library/platforms/meta and /feed all return 403 with `cf-mitigated: challenge` under a
-# Chrome UA, and `challenges.cloudflare.com` still fails CONNECT (403) under the egress
-# policy. Five weeks of SEL loss; nothing about the block has changed since 2026-09-22.
-# This costs the pipeline its 5 highest-volume sources (Google, Meta, TikTok, Microsoft,
-# ChatGPT), and Meta + TikTok have no other source at all. HUMAN ACTION NEEDED — see the
-# note on each SEL source below. Re-check every run; if the 403 clears, resume normally.
+# FETCHING (all sources)
+#   - Use an in-session client (curl / requests), NOT the managed WebFetch tool — its
+#     fetcher is blocked by these sites' anti-bot even when egress is open.
+#   - Send a desktop-browser User-Agent and `Accept-Language: en-US`. Allow a 60 s
+#     timeout (ads.tiktok.com pages are ~1.3 MB and occasionally stall).
+#   - Transient failure on a readable/pending source (timeout, 5xx): retry up to 2 more
+#     times with a short pause before treating the source as failed for this run.
+#   - Dates: prefer the article's JSON-LD "datePublished" (or og: / <time> tags); where
+#     the article page has none, use the date shown on the index.
+#   - If an index reads but some article pages fail on every retry: keep what you read,
+#     skip the rest WITHOUT summarising from the headline, and list them in the PR body.
 #
-# PPC LAND TAG-PAGE LAG (observed 2026-09-01, STILL BROKEN 2026-09-08 and 2026-09-15): `/tag/search/`
-# and `/tag/social/` went STALE while the site kept publishing daily — on 2026-09-01 the
-# newest card on /tag/search/ was Aug 19 and on /tag/social/ Aug 17, yet the homepage and
-# `/tag/news/` carried Aug 31 stories. A week later, on 2026-09-08, the two tag pages had
-# not moved AT ALL — still Aug 19 / Aug 17 as their newest cards — while /tag/news/ was
-# current to Sep 8. Treat these tag pages as frozen, not merely lagging. Not a fetch problem (HTTP 200, cache-busting query and
-# `Cache-Control: no-cache` changed nothing) and there are no per-platform tags
-# (/tag/google-ads/, /tag/meta/, … all 404). FALLBACK USED: page back through
-# `https://ppc.land/tag/news/page/N/` (12 cards/page; on 2026-09-08 pages 1–20 ran
-# unbroken from Sep 8 back to Aug 20, i.e. ~18 pages ≈ 2 weeks — the "page 14 falls off a
-# cliff into 2016 archive posts" behaviour seen on 2026-09-01 did NOT recur, so page back
-# by date until the cards precede window_start rather than trusting a page number) and
-# apply the same scope filter — search-side
-# platforms for ppcland_search, social-side for ppcland_social. Items found that way are
-# still recorded under the `PPC Land — Search` / `PPC Land — Social` source titles.
-# On 2026-09-15 the freeze held for a THIRD week — /tag/search/ still newest Aug 19,
-# /tag/social/ still newest Aug 17, both byte-for-byte where they were on 2026-09-01 —
-# while /tag/news/ was current to Sep 15 and paged back unbroken: pages 1–21 covered
-# Sep 15 → Aug 30 (page 22 crossed window_start), ~12 cards/page, no archive cliff.
-# Treat the fallback as the standing method, not an exception.
-# On 2026-09-22 the freeze held for a FOURTH week — /tag/search/ newest still Aug 19,
-# /tag/social/ newest still Aug 17 — while /tag/news/ was current to Sep 22 and paged
-# back unbroken: pages 1–15 covered Sep 22 → Sep 06 (page 16 was entirely before
-# window_start), 12 cards/page, no archive cliff. The tag pages look abandoned rather
-# than lagging; the /tag/news/ fallback is the method for these two sources.
-# On 2026-09-29 the freeze held for a FIFTH week — /tag/search/ newest still Aug 19,
-# /tag/social/ newest still Aug 17 — while /tag/news/ was current to Sep 29 and paged
-# back unbroken: pages 1-18 covered Sep 29 -> Sep 12, 12 cards/page, no archive cliff.
-# On 2026-10-06 the freeze held for a SIXTH week - /tag/search/ newest still Aug 18/19,
-# /tag/social/ newest still Aug 16/17 - while /tag/news/ was current to Oct 6 and paged
-# back unbroken: pages 1-23 covered Oct 6 -> Sep 20 (page 24 was entirely before
-# window_start), 12 cards/page, no archive cliff. Six weeks frozen: treat the tag pages as
-# dead and the /tag/news/ fallback as the only standing method for these two sources.
-# On 2026-10-13 the freeze held for a SEVENTH week - /tag/search/ newest still Aug 19,
-# /tag/social/ newest still Aug 17 - while /tag/news/ was current to Oct 13 and paged back
-# unbroken: pages 1-27 covered Oct 13 -> Sep 26 (page 26 reached window_start Sep 27),
-# ~11 cards/page, no archive cliff. Note the per-page card count reads 11, not 12, once the
-# /signin/ card is discarded. Still the only working method for these two sources.
-# 2026-10-20 - THE /tag/news/ FALLBACK IS GONE AND THE SITE HAS BEEN RESTRUCTURED.
-# `/tag/news/` and `/tag/news/page/N/` now return HTTP 404 (checked pages 1-20, all 404,
-# identical 8,345-byte error body). The tag set was rebuilt around five section tags, all
-# current to 2026-10-20: `pulse` (news - this is what /tag/news/ used to carry), `decoded`
-# (glossary/dictionary entries, high volume, never news), `gridlock` (word games),
-# `intermission` (entertainment), `landline` (telecom/privacy roundups). Meanwhile
-# /tag/search/ and /tag/social/ held frozen for an EIGHTH week - newest cards still Aug 19
-# and Aug 17.
-# NEW STANDING METHOD for ppcland_search / ppcland_social: page back through the HOMEPAGE,
-# `https://ppc.land/` then `https://ppc.land/page/N/`. Each page holds ~12 cards (page 1
-# holds ~63) and runs unbroken newest-first; on 2026-10-20 pages 1-55 covered Oct 20 ->
-# Oct 03, i.e. ~3.5 pages per day, so expect ~55 pages for a 16-day window. Parse each
-# `<article class="card card-post ...">...</article>` block: the link and title are in
-# `<a class="card-post-image-link" aria-label="TITLE" href="/slug/">`, the date in
-# `<time class="card-post-date" datetime="YYYY-MM-DD">` and the section in
-# `<a class="card-post-primary-tag" href="/tag/<section>/">`. KEEP only `pulse` (and skim
-# `landline`); `decoded` is ~40% of all cards and is pure glossary - discard it unread.
-# Then apply the usual scope filter: search-side platforms for ppcland_search, social-side
-# for ppcland_social. Items found this way are still recorded under the `PPC Land - Search`
-# / `PPC Land - Social` source titles. `https://ppc.land/rss/` also works but carries only
-# the last ~2 days, and `sitemap-posts.xml` dates are lastmod (glossary pages are bulk-
-# touched), so neither replaces homepage pagination.
-# Re-check /tag/search/ and /tag/social/ next run; if they are current again, drop the
-# fallback.
-#
-# SEL OUTAGE (observed 2026-08-04): a retry is NOT always enough. The index pages and
-# ~14 article pages read fine, then a fixed subset of article URLs returned Cloudflare
-# 504 / connection timeouts on every attempt (4 retry rounds over ~40 min, varied UA,
-# HTTP/1.1, cache-busting query — all 504), and later the whole domain went 504 for
-# already-fetched URLs too. It is an origin-side outage, not anti-bot and not
-# concurrency. When it happens: keep the items you could read, skip the unreadable
-# ones WITHOUT writing a summary from the index headline, and flag them — the next
-# weekly window will have moved past them, so they are lost unless a human re-runs.
-# archive.org is NOT a fallback here (403 CONNECT under the egress policy).
+# DOMAIN NOTES (shared by several sources)
+#   searchengineland.com — every SEL source is blocked (domain-wide Cloudflare challenge:
+#     HTTP 403, `cf-mitigated: challenge`). When it reads again: index cards are
+#     `<article class="stream-article …">` (extra class tokens follow), link + title in
+#     `<h2 class="headline"><a href=…>`, and the date only in the byline as
+#     `Mon D, YYYY at H:MM am/pm ET` (no datetime=, no JSON-LD on the index). The top
+#     links are a site-wide recent/popular block — pick platform-specific items. Fetch
+#     at a concurrency of 3 or lower (bursts return 504).
+#   www.seroundtable.com — category pages: `<h2 class="text-black-text font-bold
+#     text-xl"><a href=…>TITLE</a></h2>`, then the date as `Mon D, YYYY - H:MM am/pm`.
+#     Page 1 holds ~33 category cards (11 large + a compact list), followed by a
+#     site-wide "latest" block that repeats the newest posts of ALL categories — stop at
+#     the end of the category list. Older pages: `?page=N`. Articles carry JSON-LD
+#     datePublished. Host is `www.seroundtable.com`.
+#   www.socialmediatoday.com — topic pages list ~25 articles `/news/<slug>/<id>/` with
+#     index dates like `Oct. 20, 2026` (`Sept.` for September); page 1 covers 3+ weeks.
+#     The same article often sits on several topic pages — Layer 1 dedup handles that.
+#     Articles carry JSON-LD datePublished. Use the www host (the apex 301s to www).
+#     Most coverage is organic / creator / consumer — filter HARD to ads-manager changes.
 
 sources:
-  # ── Google ──────────────────────────────────────────────────────────────────
+  # ── Google Ads ──────────────────────────────────────────────────────────────
   - key: google_ads_commerce_blog
     platform: google_ads
     title: Google Ads & Commerce Blog
-    url: https://blog.google/products/ads-commerce/
+    url: https://blog.google/products/ads-commerce/rss/
     type: official
     validation: readable
     note: >-
-      Primary Google Ads source. Server-rendered; article links + JSON-LD dates
-      read fine via curl (verified article dated 2026-07-13).
-      USE THE RSS FEED, not the index (found 2026-09-22): the HTML index exposed only 3
-      article links that run, while `https://blog.google/products/ads-commerce/rss/`
-      returned the full dated list (pubDate + title + link per item) and is far easier to
-      window. The feed also carries ads-relevant posts published under OTHER blog.google
-      paths — e.g. the Sep 16 agentic-commerce post lives at
-      /products-and-platforms/products/shopping/… and never appears under
-      /products/ads-commerce/. Record those under this source's title anyway.
-      Note the feed mixes in consumer Search/Shopping posts; filter per criteria.md.
+      RSS feed of the Ads & Commerce blog — full dated list (pubDate + title + link per
+      item); the HTML index exposes only a few links, so use the feed. It also carries
+      ads-relevant posts filed under other blog.google paths (e.g.
+      /products-and-platforms/products/shopping/…) — record those under this source
+      too. It mixes in consumer Search/Shopping posts; filter per criteria.md.
 
   - key: google_ads_announcements
     platform: google_ads
@@ -174,86 +93,60 @@ sources:
     url: https://support.google.com/google-ads/announcements/9048695?hl=en
     type: official
     validation: readable
-    note: Official product announcements. Large server-rendered page, all entries
-      inline (verified). High signal-to-noise for features. Updates infrequently —
-      on 2026-08-03 the newest entry was still May 20, 2026 (GML 2026), so expect
-      this source to contribute nothing on most weekly runs.
+    note: >-
+      Large server-rendered page (~2 MB) with every entry inline and dated. High signal
+      but updates rarely (newest entry May 20, 2026 as of 2026-10-21) — expect nothing on
+      most runs.
+
+  - key: seroundtable_google_ads
+    platform: google_ads
+    title: Search Engine Roundtable — Google Ads
+    url: https://www.seroundtable.com/category/google-adwords
+    type: aggregator
+    validation: readable
+    note: >-
+      SER's Google Ads category (see DOMAIN NOTES). ~2–3 posts a day; page 1 alone spans
+      about 19 days, so it normally covers the whole window. Carries Merchant Center and
+      Hotel Ads items too — filter per criteria.md.
 
   - key: searchengineland_google
     platform: google_ads
     title: Search Engine Land — Google
     url: https://searchengineland.com/library/platforms/google
     type: aggregator
-    validation: blocked  # 2026-09-22: Cloudflare challenge, see header
+    validation: blocked
+    blocked_since: 2026-09-22
     note: >-
-      ~50 article links with JSON-LD dates (verified article dated 2026-07-17).
-      Overlaps official Google sources; prefer official as canonical on dedup. NB the
-      top links are a site-wide recent/popular block — pick platform-specific items.
-      Index dates — each card sits in `<article class="stream-article …">` (the class
-      carries extra tokens, e.g. `stream-article latest ps-0 my-3 pb-4 border-bottom`, so
-      don't anchor on the closing quote) and its link+title are in
-      `<h2 class="headline"><a href=…>`. The date is in the byline as
-      `Mon D, YYYY at H:MM am/pm ET` (re-verified 2026-08-04); there is no `datetime=`
-      attribute and no JSON-LD on the index, so parse that byline.
-      Highest-volume source in the pipeline (~18 in-window ads items on 2026-08-03).
-      BLOCKED 2026-09-22 by the Cloudflare challenge (see header). Google still has two
-      official sources plus PPC Land, so the Google side degrades rather than goes dark.
+      Cloudflare challenge (see DOMAIN NOTES). When readable: ~50 article links, overlaps
+      the official Google sources — prefer official in dedup.
 
-  # ── Meta ────────────────────────────────────────────────────────────────────
-  - key: meta_newsroom_tech
-    platform: meta
-    title: Meta Newsroom — Technologies
-    url: https://about.fb.com/news/category/technologies/
+  # ── Microsoft (Bing) Advertising ────────────────────────────────────────────
+  - key: microsoft_ads_blog
+    platform: bing
+    title: Microsoft Advertising Blog
+    url: https://about.ads.microsoft.com/en/blog?page=1
     type: official
     validation: readable
-    note: Server-rendered newsroom; ~14 article links + JSON-LD dates (verified article
-      dated 2026-07-21). Filter HARD — much is non-ads (consumer/policy/PR).
-
-  - key: searchengineland_meta
-    platform: meta
-    title: Search Engine Land — Meta
-    url: https://searchengineland.com/library/platforms/meta
-    type: aggregator
-    validation: blocked  # 2026-09-22: Cloudflare challenge, see header
     note: >-
-      ~55 article links with dates (verified). Primary practical Meta-ads source.
-      BLOCKED 2026-09-22 by the Cloudflare challenge (see header). CRITICAL: with this
-      source blocked, Meta ads news has NO working source — meta_newsroom_tech is almost
-      entirely non-ads and ppcland_social carries Meta only occasionally. Meta coverage
-      is effectively dark until this reads again or a replacement source is added.
+      Official blog. 6 posts per page, links `/en/blog/post/<month-yyyy>/<slug>` with
+      index dates like `October 21, 2026`; page 1 spans ~6 weeks. Article pages carry no
+      JSON-LD date — use the index date. The monthly "What's new in Microsoft
+      Advertising" post is the main product-update roundup: record it as one item and
+      summarise its account-relevant changes. Microsoft Monetize / publisher posts are
+      not ours (criteria.md → product test); holiday tips and brand posts are excluded.
 
-  # ── TikTok ──────────────────────────────────────────────────────────────────
-  - key: searchengineland_tiktok
-    platform: tiktok
-    title: Search Engine Land — TikTok
-    url: https://searchengineland.com/library/platforms/tiktok
+  - key: seroundtable_microsoft_ads
+    platform: bing
+    title: Search Engine Roundtable — Microsoft Advertising
+    url: https://www.seroundtable.com/category/adcenter
     type: aggregator
-    validation: blocked  # 2026-09-22: Cloudflare challenge, see header
-    note: >-
-      ~57 article links with dates (verified). Primary practical TikTok-ads source.
-      BLOCKED 2026-09-22 by the Cloudflare challenge (see header). CRITICAL: this is the
-      ONLY TikTok source in the pipeline, so TikTok coverage is fully dark while it is
-      blocked (ppcland_social may carry the odd TikTok ads item). Needs a replacement.
-
-  # ── LinkedIn ────────────────────────────────────────────────────────────────
-  - key: socialmediatoday_linkedin
-    platform: linkedin
-    title: Social Media Today — LinkedIn
-    url: https://www.socialmediatoday.com/topic/linkedin/
-    type: aggregator
-    cadence: feed               # normal dated article feed
     validation: readable
     note: >-
-      Standard dated article FEED — apply the normal 2-week window by each article's own
-      published date. Verified 2026-07-24 via curl (HTTP 200): the topic page lists ~28
-      LinkedIn article links (e.g. /news/<slug>/<id>/). NOTE: dates are NOT on the index —
-      open each article and read its JSON-LD `datePublished` / `og:` before applying the
-      window. Egress: the correct host is `www.socialmediatoday.com` (the apex 301s to
-      www; allowlist the www host, not the apex or a `blogs.` subdomain). Filter HARD to
-      ads-manager relevance (Campaign Manager, ad formats, targeting, reporting) — most
-      LinkedIn coverage here is organic/social, not ads.
+      SER's Microsoft Advertising category (slug `adcenter`; see DOMAIN NOTES). Low volume
+      (~1 post a week), almost all ads: Microsoft Ads features plus Bing ad-unit tests.
+      Used instead of `/category/bing`, which carries the same ads posts buried among
+      organic Bing SERP tests.
 
-  # ── Bing / Microsoft Advertising ────────────────────────────────────────────
   - key: bing_blogs
     platform: bing
     title: Bing Blogs
@@ -261,24 +154,20 @@ sources:
     type: official
     validation: readable
     note: >-
-      Server-rendered; article text + <time> tags present (verified). Broad
-      Bing/search news — filter for Microsoft Advertising relevance. Post URLs are
-      `/search/<Month-YYYY>/<Title-Slug>` and the index carries no `datetime=`, so the
-      month in the URL is the date signal. Publishes rarely and skews Webmaster Tools /
-      organic — on 2026-08-03 the newest post was June 2026, i.e. nothing in window.
-      searchengineland_microsoft is the reliable Microsoft Ads source.
+      Server-rendered; post URLs are `/search/<Month-YYYY>/<Title-Slug>` and the month in
+      the URL is the date signal. Publishes rarely and skews Webmaster Tools / organic —
+      filter for Microsoft Advertising relevance.
 
   - key: searchengineland_microsoft
     platform: bing
     title: Search Engine Land — Microsoft Advertising
     url: https://searchengineland.com/library/platforms/microsoft/microsoft-advertising
     type: aggregator
-    validation: blocked  # 2026-09-22: Cloudflare challenge, see header
+    validation: blocked
+    blocked_since: 2026-09-22
     note: >-
-      ~62 article links with dates (verified). Often higher signal for Microsoft Ads than
-      the broad Bing blog. BLOCKED 2026-09-22 by the Cloudflare challenge (see header).
-      bing_blogs publishes rarely and skews organic, so Microsoft Ads now leans on
-      ppcland_search alone.
+      Cloudflare challenge (see DOMAIN NOTES). When readable: ~60 article links, often
+      higher signal for Microsoft Ads than the broad Bing blog.
 
   # ── ChatGPT Ads (OpenAI) ────────────────────────────────────────────────────
   # Search-team platform. Item `platform` = `chatgpt`; deck display name "ChatGPT Ads".
@@ -287,86 +176,185 @@ sources:
     title: Search Engine Roundtable — ChatGPT Ads
     url: https://www.seroundtable.com/category/chatgpt-ads
     type: aggregator
-    cadence: feed
     validation: readable
     note: >-
-      Dedicated ChatGPT Ads category feed — the highest-signal source for this platform.
-      Verified 2026-08-17 via curl (HTTP 200, ~99 KB): index cards are
-      `<h2 class="text-black-text font-bold text-xl"><a href="https://www.seroundtable.com/<slug>-<id>.html">`
-      and the date follows in a `<span class="text-sm …">` as `Mon D, YYYY - H:MM am/pm`.
-      Article pages read fine (HTTP 200) and carry JSON-LD `"datePublished"` — prefer that
-      over the index date. Egress host is `www.seroundtable.com`. Apply the normal 2-week
-      window. Still filter per criteria.md: this category is ads-focused, but drop pure
-      commentary/speculation with no concrete Ads Manager change.
+      Dedicated ChatGPT Ads category (see DOMAIN NOTES) — the highest-signal source for
+      this platform. Drop pure commentary/speculation with no concrete Ads Manager change.
+
+  - key: adexchanger_chatgpt_ads
+    platform: chatgpt
+    title: AdExchanger — ChatGPT Ads
+    url: https://www.adexchanger.com/tag/chatgpt-ads/
+    type: aggregator
+    validation: readable
+    note: >-
+      WordPress tag page. Cards: `<h3 class="fs-3"><a class="link-post" href=…>TITLE</a>`
+      with the date in `<time …>October 21st, 2026</time>` (ordinal suffix). Articles
+      carry JSON-LD datePublished. Many hits are `/daily-news-roundup/…` multi-story
+      posts — open them only to find the ChatGPT Ads story and keep just that story's
+      facts. Ad-tech trade press: lots of commentary, publisher-side and vendor news —
+      filter hard (criteria.md → third-party rule).
 
   - key: searchengineland_chatgpt
     platform: chatgpt
     title: Search Engine Land — ChatGPT
     url: https://searchengineland.com/library/platforms/openai/chatgpt
     type: aggregator
-    cadence: feed
-    validation: blocked  # 2026-09-22: Cloudflare challenge, see header
+    validation: blocked
+    blocked_since: 2026-09-22
     note: >-
-      Verified 2026-08-17 via curl (HTTP 200): ~43 article links, same SEL index structure
-      as the other library pages (`<h2 class="headline"><a href=…>` + byline date
-      `Mon D, YYYY at H:MM am/pm ET`; no `datetime=`/JSON-LD on the index, so parse the
-      byline). **Filter HARD:** this page mixes real ChatGPT *Ads* news (e.g. "ChatGPT Ads
-      rolls out oCPC campaigns", "How to run ChatGPT ads") with lots of SEO/organic and
-      evergreen ChatGPT content ("What is ChatGPT and why SEOs should care") — keep only
-      ads-manager changes per criteria.md. As with other SEL pages, the top links can be a
-      site-wide recent/popular block, so pick platform-specific items. Same SEL fetch
-      caveats apply (concurrency ≤3; possible origin 504s — see header).
-      BLOCKED 2026-09-22 by the Cloudflare challenge (see header); seroundtable_chatgpt_ads
-      still reads and remains the highest-signal ChatGPT Ads source.
+      Cloudflare challenge (see DOMAIN NOTES). When readable: mixes real ChatGPT Ads news
+      with SEO / evergreen ChatGPT content — keep only ads-manager changes.
 
-  # NOTE: SEL /library/ppc was evaluated as a third ChatGPT Ads source (readable, HTTP 200)
-  # but NOT tracked — it is a broad PPC feed whose ChatGPT items also appear on the two
-  # sources above, so it only added duplicates plus evergreen "what is PPC" content.
-
-  # ── PPC Land (multi-platform aggregators) ─────────────────────────────────────
-  - key: ppcland_search
-    platform: mixed            # per-article platform: google_ads | bing | chatgpt
-    title: PPC Land — Search
-    url: https://ppc.land/tag/search/
-    type: aggregator
-    cadence: feed              # dated article feed; dates ARE on the index
+  # ── Meta ────────────────────────────────────────────────────────────────────
+  - key: meta_newsroom_tech
+    platform: meta
+    title: Meta Newsroom — Technologies
+    url: https://about.fb.com/news/category/technologies/
+    type: official
     validation: readable
     note: >-
-      MIXED search-side aggregator (Google + Microsoft/Bing + ChatGPT Ads, plus a lot of
-      pure SEO / organic-search / industry news). Verified 2026-08-03 via curl (HTTP 200): index
-      cards are `<a href="/<slug>/">` with the date on the card as
-      `<time class="card-post-date" datetime="YYYY-MM-DD">`. One index page holds only
-      ~12 cards (~1 week), so page back through `/tag/search/page/2/`, `/page/3/`, …
-      until the dates fall before window_start. Apply the normal 2-week
-      window by that index date. Scope = keep ONLY ads-manager items about platforms in
-      our pipeline: **Google Ads**, **Microsoft/Bing** and **ChatGPT Ads** (set each item's
-      `platform` accordingly — google_ads, bing or chatgpt).
-      This feed carries a lot of **Display & Video 360 / Campaign Manager 360 /
-      Search Ads 360 / Google Ad Manager** news. Those are Google products but they are
-      NOT Google Ads — separate seats we don't run — so drop them and never file one as
-      `platform: google_ads`. Two slipped through that way (editions 3 and 4) before the
-      product test was written into criteria.md; apply it here. This feed does carry ChatGPT
-      Ads news (verified 2026-08-17: 2 of the 12 cards on page 1), so don't drop it — it
-      dedups against the dedicated ChatGPT sources via Layers 1–2.
-      Filter HARD per criteria.md — drop SEO / zero-
-      click / organic-search / consumer stories (e.g. "AI Mode cuts Shopping listings",
-      "zero-click searches", Yelp/Gen-Z items). Aggregator → prefer an official post over
-      this in dedup Layer 2.
+      Server-rendered newsroom; ~14 article links + JSON-LD dates. Filter HARD — most of
+      it is consumer / policy / PR, not ads.
 
-  - key: ppcland_social
-    platform: mixed            # per-article platform: meta | tiktok | linkedin
-    title: PPC Land — Social
-    url: https://ppc.land/tag/social/
+  - key: socialmediatoday_facebook
+    platform: meta
+    title: Social Media Today — Facebook
+    url: https://www.socialmediatoday.com/topic/facebook/
     type: aggregator
-    cadence: feed              # dated article feed; dates ARE on the index
+    validation: readable
+    note: See DOMAIN NOTES (Social Media Today). Keep only Meta Ads Manager changes.
+
+  - key: socialmediatoday_instagram
+    platform: meta
+    title: Social Media Today — Instagram
+    url: https://www.socialmediatoday.com/topic/instagram/
+    type: aggregator
     validation: readable
     note: >-
-      MIXED social-side aggregator (Meta, TikTok, LinkedIn, plus organic-social / creator
-      / industry news). Verified 2026-08-03 via curl (HTTP 200): same structure as
-      ppcland_search (index cards `<a href="/<slug>/">` + `<time … datetime>`; ~12 cards
-      per page, so page back through `/tag/social/page/N/` until dates precede
-      window_start). Apply the normal 2-week window by the index date. Scope = keep ONLY ads-manager items about
-      platforms in our pipeline: **Meta**, **TikTok**, **LinkedIn** (set each item's
-      `platform` to meta / tiktok / linkedin) — the *ads manager* of each, not the
-      platform's publisher, creator or consumer products (criteria.md → product test). Filter HARD per criteria.md — drop organic-
-      social / creator / consumer-app stories. Aggregator → prefer official in dedup.
+      See DOMAIN NOTES (Social Media Today). Overlaps the Facebook topic heavily. Keep
+      only Meta Ads Manager changes (Instagram placements, formats, ads targeting).
+
+  - key: searchengineland_meta
+    platform: meta
+    title: Search Engine Land — Meta
+    url: https://searchengineland.com/library/platforms/meta
+    type: aggregator
+    validation: blocked
+    blocked_since: 2026-09-22
+    note: Cloudflare challenge (see DOMAIN NOTES). When readable — ~55 article links.
+
+  # ── TikTok ──────────────────────────────────────────────────────────────────
+  - key: tiktok_ads_blog
+    platform: tiktok
+    title: TikTok for Business Blog — Announcements
+    url: https://ads.tiktok.com/business/en/blog/category/Announcements
+    type: official
+    validation: readable
+    note: >-
+      Server-rendered (~1.3 MB page). ~12 cards, links `/business/en/blog/<slug>` with
+      dates like `September 30, 2026`. Articles carry JSON-LD datePublished — use it; the
+      "Published …" line in the body can show a different date. The category mixes
+      product news with agency-partner programmes and research — filter per criteria.md.
+
+  - key: socialmediatoday_tiktok
+    platform: tiktok
+    title: Social Media Today — TikTok
+    url: https://www.socialmediatoday.com/topic/tiktok/
+    type: aggregator
+    validation: readable
+    note: >-
+      See DOMAIN NOTES (Social Media Today). Keep only TikTok Ads Manager changes; TikTok
+      Shop seller tools count only where they change ads.
+
+  - key: searchengineland_tiktok
+    platform: tiktok
+    title: Search Engine Land — TikTok
+    url: https://searchengineland.com/library/platforms/tiktok
+    type: aggregator
+    validation: blocked
+    blocked_since: 2026-09-22
+    note: Cloudflare challenge (see DOMAIN NOTES). When readable — ~57 article links.
+
+  # ── LinkedIn ────────────────────────────────────────────────────────────────
+  - key: linkedin_ads_blog
+    platform: linkedin
+    title: LinkedIn Marketing Blog — LinkedIn Ads
+    url: https://www.linkedin.com/business/marketing/blog/linkedin-ads
+    type: official
+    validation: readable
+    note: >-
+      ~13 links `/business/marketing/blog/<category>/<slug>` with index dates like
+      `Sep 28, 2026`; the first card is a pinned evergreen post (dated 2025), which the
+      window drops. Article pages carry no JSON-LD date — use the index date. ~2 posts a
+      month, mostly tips and guides — filter hard to Campaign Manager changes.
+
+  - key: socialmediatoday_linkedin
+    platform: linkedin
+    title: Social Media Today — LinkedIn
+    url: https://www.socialmediatoday.com/topic/linkedin/
+    type: aggregator
+    validation: readable
+    note: >-
+      See DOMAIN NOTES (Social Media Today). Keep only Campaign Manager changes (ad
+      formats, targeting, reporting); most LinkedIn coverage here is organic.
+
+  # ── Multi-platform ──────────────────────────────────────────────────────────
+  - key: ppcland_pulse
+    platform: mixed
+    scope: all
+    title: PPC Land — Pulse
+    url: https://ppc.land/tag/pulse/
+    type: aggregator
+    validation: readable
+    note: >-
+      PPC Land's news section. Cards are `<article class="card card-post …">`: title in
+      the `aria-label` and link in the `href` of `<a class="card-post-image-link">`, date
+      in `<time class="card-post-date" datetime="YYYY-MM-DD">`. 12 cards per page, ~2
+      pages per day — page back through `/tag/pulse/page/N/` (~30–35 pages for the
+      window) until the cards precede window_start. Broad ad-industry news (CTV, retail
+      media, privacy, M&A, ad tech): screen the card titles to discard what is plainly
+      not about our six platforms, then open every remaining candidate. Watch for Google
+      products that are not Google Ads (DV360, CM360, SA360, Ad Manager) — criteria.md →
+      product test. Articles carry JSON-LD datePublished.
+
+  - key: ppcnewsfeed
+    platform: mixed
+    scope: search
+    title: PPC News Feed
+    url: https://ppcnewsfeed.com/ppc-news/
+    type: aggregator
+    validation: readable
+    note: >-
+      PPC-only news (mostly Google Ads + Microsoft Advertising). WordPress: 10 cards per
+      page, `<article class="post-… tag-google-ads tag-microsoft-advertising …">` (platform
+      tags in the class), title + link in `<h2 class="cs-entry__title"><a href=…>`, date in
+      `<div class="cs-meta-date">October 21, 2026</div>`. ~3–4 posts a day — page back
+      through `/ppc-news/page/N/` (~6 pages for the window). Use /ppc-news/, not the
+      homepage: the homepage's `/page/N/` just repeats page 1. Posts are short rewrites of
+      official announcements and usually link the official page; articles carry JSON-LD
+      datePublished.
+
+  - key: sej_ppc
+    platform: mixed
+    scope: search
+    title: Search Engine Journal — PPC
+    url: https://www.searchenginejournal.com/category/news/?ver=pay-per-click
+    type: aggregator
+    validation: readable
+    note: >-
+      SEJ news filtered to PPC. Cards are `<article data-l="News" …>` with links
+      `/<slug>/<id>/` and the date in `<span class="entrydate">Oct 14, 2026</span>`; the
+      first link on the page is a pinned evergreen article — ignore it. Low volume (~1
+      post a week), so page 1 covers months. Articles carry JSON-LD datePublished.
+
+  - key: sej_social
+    platform: mixed
+    scope: social
+    title: Search Engine Journal — Social
+    url: https://www.searchenginejournal.com/category/news/?ver=social
+    type: aggregator
+    validation: readable
+    note: >-
+      SEJ news filtered to social; same structure as sej_ppc. Mostly YouTube, Reddit and
+      organic-social stories — keep only Meta / TikTok / LinkedIn ads-manager changes.

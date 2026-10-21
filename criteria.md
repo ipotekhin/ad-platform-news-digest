@@ -141,7 +141,8 @@ Pick the single best fit. Use `other` sparingly.
 ## Canonical-source preference (dedup)
 
 When the **same story** appears on both an `official` source and an `aggregator`
-(Search Engine Land / PPC Land), keep the **official** one as the canonical record and
+(any third-party news site — Search Engine Roundtable, PPC Land, Social Media Today,
+Search Engine Journal, …), keep the **official** one as the canonical record and
 drop the aggregator duplicate. If only the aggregator has it, keep the aggregator
 version but note it is unconfirmed by an official post. This is what dedup Layer 2
 (semantic) is for — see `routines/routine-1-collect.md`.

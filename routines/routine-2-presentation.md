@@ -320,4 +320,4 @@ is enough. Keep it compact; this note is for Ivan only, not the teams.
 - **Idempotent:** re-running before a successful post just rebuilds; re-running after
   finds nothing new to present.
 - Never invent updates — the deck contains only what's in `updates.json`.
-- Keep the channel message short; depth lives in the deck / canvas.
+- Keep the channel message short; depth lives in the deck.
