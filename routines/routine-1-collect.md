@@ -31,8 +31,9 @@ as the file specifies. Stay inside this routine's job — do not do Routine 2's 
 > if you find yourself wanting to, that is the signal it belongs in this file.
 
 > **Branch note:** `main` is the mainline. Routines can only push to `claude/`-prefixed
-> branches, so each run branches from `main`, pushes to `claude/collect-run`, then
-> merges into `main` via pull request.
+> branches, so each run branches from `main`, pushes to its `claude/*` branch (the
+> session's assigned name, or `claude/collect-run`), merges into `main` via pull
+> request, then **deletes that branch** (step 8).
 
 ---
 
@@ -191,8 +192,12 @@ Compare each source's **outcome** (step 2) with its stored `validation` in `sour
 - Commit `data/updates.json`, `data/state.json`, and — when step 7 changed them —
   `sources.yaml` and `docs/SOURCES_LOG.md`, with a message like
   `collect: +N new items (YYYY-MM-DD)`.
-- Push to `claude/collect-run`, then open a pull request into `main` and merge it.
+- Push to your `claude/*` branch, then open a pull request into `main` and merge it.
   Do **not** build a deck; that's Routine 2.
+- **After the merge, delete the branch** on the remote: `git push origin --delete
+  <branch>` (if it is already gone — GitHub's auto-delete — there is nothing to do).
+  Never delete `main` or a `backup*` branch. If the merge did not happen, keep the
+  branch: it holds the run's results.
 
 ### 9. Alert Ivan — only when something needs his attention
 Send **one** short `slack_send_message` to Ivan's DM (`alert_channel_id` in Open config)

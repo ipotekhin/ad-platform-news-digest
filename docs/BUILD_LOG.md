@@ -498,3 +498,13 @@ status changes into or out of `blocked` / `broken`, or when the run fails to lan
 `main`. One message per run, one line per change, plus what to do (e.g. "add host X to
 Allowed domains"). Nothing is sent while things stay the same. The Routine 1 trigger
 already had the Slack connector attached, so no routine-UI change was needed.
+
+## 17. Branch hygiene (2026-10-21)
+Every routine run and chat session pushes its own platform-named `claude/*` branch, and
+nothing ever deleted them: by 2026-10-21 the remote held 19 merged `claude/*` branches
+next to `main` and the four `backup*` snapshots. All 19 were verified fully merged
+(with full history — a shallow clone makes the July branches look unmerged) and deleted.
+The rule is now in `CLAUDE.md`, both routine docs and `routines/SETUP.md`: **delete your
+branch once its PR is merged**; never delete `main` or a `backup*` branch, or a branch
+whose work is not in `main`. GitHub's "Automatically delete head branches" setting is
+recommended as a backstop.

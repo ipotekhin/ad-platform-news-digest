@@ -116,10 +116,17 @@ as the file specifies. Stay inside this routine's job — do not do Routine 1's 
 ## 6. Branch / merge workflow (main is the mainline)
 
 `main` is the canonical branch and what GitHub Pages serves. Each routine run:
-1. branches from `main` to a short-lived `claude/collect-run` or `claude/present-run`
-   branch (routines can only push to `claude/`-prefixed branches),
+1. branches from `main` to a short-lived `claude/*` branch (routines can only push to
+   `claude/`-prefixed branches; the platform usually assigns the name),
 2. commits + pushes its changes there,
-3. opens a pull request into `main` and merges it.
+3. opens a pull request into `main` and merges it,
+4. **deletes the branch** once it is merged — merged branches are never kept. The same
+   goes for branches from chat sessions. `backup*` branches are Ivan's manual snapshots
+   and are never deleted.
+
+Recommended belt-and-braces: turn on **Settings → General → Pull Requests →
+"Automatically delete head branches"**, so GitHub removes a branch the moment its PR
+merges, even if a run forgets.
 
 This keeps `data/` and `decks/` current on `main` so the published deck and state stay
 in sync. (Set the repo's **default branch to `main`** and point **Settings → Pages** at

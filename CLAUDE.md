@@ -79,4 +79,9 @@ language or step into a prompt, put it in the routine's `.md` instead.
 - **Branches:** `main` is the mainline (GitHub Pages serves it). Routines can only push
   to `claude/`-prefixed branches, so each run branches from `main`, pushes to a
   `claude/*` branch, then merges into `main` via pull request.
+- **Clean up after yourself:** once your PR is merged, delete its `claude/*` branch on
+  the remote (`git push origin --delete <branch>`) — routine runs and chat sessions alike.
+  Never leave a merged branch behind, and never delete `main` or a `backup*` branch
+  (Ivan's manual snapshots). A branch with commits not yet in `main` is not yours to
+  delete.
 - Use **cloud** routines for scheduling (desktop tasks only run while the app is open).
