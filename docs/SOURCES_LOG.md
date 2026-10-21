@@ -36,6 +36,7 @@ from the run environment.
   frozen since August, see below), replaced by the single `ppcland_pulse` (scope: all).
 - `searchengineland_*` (all 5): still `blocked` (Cloudflare challenge). Kept in the list
   in case the site recovers; one request per run, no workarounds.
+- `bing_blogs`: readable → readable (note corrected) — post URLs are now `/search/YYYY/M/<Slug>/` with a numeric month, not `/search/<Month-YYYY>/<Slug>`; newest post June 2026.
 - `sources.yaml` reduced to current state; its dated header notes moved here. Routine 1
   now records status changes here and DMs Ivan in Russian when a status changes.
 

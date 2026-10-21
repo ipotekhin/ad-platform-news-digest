@@ -154,8 +154,8 @@ sources:
     type: official
     validation: readable
     note: >-
-      Server-rendered; post URLs are `/search/<Month-YYYY>/<Title-Slug>` and the month in
-      the URL is the date signal. Publishes rarely and skews Webmaster Tools / organic —
+      Server-rendered; post URLs are `/search/<YYYY>/<M>/<Title-Slug>/` (numeric year and
+      month, e.g. `/search/2026/6/…`) and the month in the URL is the date signal. Publishes rarely and skews Webmaster Tools / organic —
       filter for Microsoft Advertising relevance.
 
   - key: searchengineland_microsoft
