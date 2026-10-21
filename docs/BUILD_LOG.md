@@ -503,8 +503,14 @@ already had the Slack connector attached, so no routine-UI change was needed.
 Every routine run and chat session pushes its own platform-named `claude/*` branch, and
 nothing ever deleted them: by 2026-10-21 the remote held 19 merged `claude/*` branches
 next to `main` and the four `backup*` snapshots. All 19 were verified fully merged
-(with full history — a shallow clone makes the July branches look unmerged) and deleted.
-The rule is now in `CLAUDE.md`, both routine docs and `routines/SETUP.md`: **delete your
-branch once its PR is merged**; never delete `main` or a `backup*` branch, or a branch
-whose work is not in `main`. GitHub's "Automatically delete head branches" setting is
-recommended as a backstop.
+(with full history — a shallow clone makes the July branches look unmerged).
+
+Deleting them from a session failed: `git push origin --delete` returns HTTP 403 from
+the session git proxy for every branch, the session's own included, while ordinary
+pushes work — and the GitHub connector has no delete-branch tool. Routine sessions run
+behind the same proxy, so "delete your branch after merging" cannot be a routine step.
+Cleanup therefore relies on GitHub: **Settings → General → Pull Requests →
+"Automatically delete head branches" = ON** removes a PR's branch the moment it merges,
+whoever merges it. The 19 existing branches were handed to Ivan to delete by hand. The
+rule is in `CLAUDE.md`, both routine docs and `routines/SETUP.md`; `main` and `backup*`
+are never touched.

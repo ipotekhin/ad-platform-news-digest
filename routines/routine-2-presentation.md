@@ -34,8 +34,8 @@ as the file specifies. Stay inside this routine's job — do not do Routine 1's 
 
 > **Branch note:** each run branches from `main`, pushes to its `claude/*` branch (the
 > session's assigned name, or `claude/present-run`), merges into `main` via pull request
-> (the deck must be on `main` before step 6, since that is what GitHub Pages serves),
-> then **deletes that branch** (step 7).
+> (the deck must be on `main` before step 6, since that is what GitHub Pages serves);
+> GitHub then deletes the branch automatically (step 7).
 
 ---
 
@@ -271,11 +271,11 @@ itself is a single file with all platforms; the two links only differ by a `?tea
   `decks/deck-YYYY-MM-DD.html` with a message like `present: deck YYYY-MM-DD, M items -> Slack`.
 - Push to your `claude/*` branch, then open a pull request into `main` and merge it
   (Pages serves `main`, so the deck link resolves after merge).
-- **After each merge, delete the branch** on the remote: `git push origin --delete
-  <branch>` (if it is already gone — GitHub's auto-delete — there is nothing to do).
-  When the run merges twice (deck first, then the presented flags), delete it after the
-  last merge. Never delete `main` or a `backup*` branch; keep a branch whose PR did not
-  merge.
+- **Branch cleanup is GitHub's job:** the repo's "Automatically delete head branches"
+  setting removes the branch when a PR merges. Don't run `git push --delete` — the
+  session's git proxy refuses it (HTTP 403). When the run merges twice (deck first,
+  then the presented flags), the branch is gone after the first merge: pushing the
+  second commit to the same name recreates it, and the second PR opens from it as usual.
 
 ### 8. Backlog status note to Ivan (internal — always to Ivan's DM)
 After the digest is delivered, send a **separate short** `slack_send_message` to

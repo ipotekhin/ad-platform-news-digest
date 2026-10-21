@@ -120,13 +120,12 @@ as the file specifies. Stay inside this routine's job — do not do Routine 1's 
    `claude/`-prefixed branches; the platform usually assigns the name),
 2. commits + pushes its changes there,
 3. opens a pull request into `main` and merges it,
-4. **deletes the branch** once it is merged — merged branches are never kept. The same
-   goes for branches from chat sessions. `backup*` branches are Ivan's manual snapshots
-   and are never deleted.
+4. GitHub deletes the branch as soon as the PR merges — merged branches are never kept.
 
-Recommended belt-and-braces: turn on **Settings → General → Pull Requests →
-"Automatically delete head branches"**, so GitHub removes a branch the moment its PR
-merges, even if a run forgets.
+That last step **requires Settings → General → Pull Requests → "Automatically delete
+head branches" = ON.** Routines and chat sessions cannot delete branches themselves (the
+session git proxy refuses ref deletion with HTTP 403), so without this setting every run
+leaves a branch behind. `backup*` branches are Ivan's manual snapshots — never removed.
 
 This keeps `data/` and `decks/` current on `main` so the published deck and state stay
 in sync. (Set the repo's **default branch to `main`** and point **Settings → Pages** at

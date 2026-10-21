@@ -79,9 +79,10 @@ language or step into a prompt, put it in the routine's `.md` instead.
 - **Branches:** `main` is the mainline (GitHub Pages serves it). Routines can only push
   to `claude/`-prefixed branches, so each run branches from `main`, pushes to a
   `claude/*` branch, then merges into `main` via pull request.
-- **Clean up after yourself:** once your PR is merged, delete its `claude/*` branch on
-  the remote (`git push origin --delete <branch>`) — routine runs and chat sessions alike.
-  Never leave a merged branch behind, and never delete `main` or a `backup*` branch
-  (Ivan's manual snapshots). A branch with commits not yet in `main` is not yours to
-  delete.
+- **Merged branches must not pile up.** GitHub deletes a PR's `claude/*` branch the
+  moment the PR merges — repo **Settings → General → Pull Requests → "Automatically
+  delete head branches"**, which must stay ON. Sessions and routines cannot delete remote
+  branches themselves (the session git proxy refuses ref deletion with HTTP 403 —
+  verified 2026-10-21), so don't try. Never touch `main` or the `backup*` branches
+  (Ivan's manual snapshots).
 - Use **cloud** routines for scheduling (desktop tasks only run while the app is open).
