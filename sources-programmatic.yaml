@@ -1,0 +1,249 @@
+# sources-programmatic.yaml — entry points for Routine 1 — Collect — Programmatic
+#
+# The programmatic track's twin of sources.yaml (which belongs to the performance track).
+# Same rules: this file holds the CURRENT state only — which pages to read, how to read
+# them today, and whether each one works right now. History lives in
+# docs/SOURCES_LOG.md. Never append dated "still broken" notes here.
+#
+# Fields:
+#   key            Stable identifier. MUST match the key used in data/state.json and must
+#                  not collide with a key in sources.yaml (both files share state.json).
+#   platform       ttd | dv360 | amazon_dsp | microsoft_programmatic | ctv | mixed
+#                    mixed = a page that carries several platforms (trade press). The
+#                    collector reads EACH article and sets that item's real platform — one
+#                    of the five above, decided by where the change lands
+#                    (criteria-programmatic.md). `focus` says what the page is mostly about.
+#   focus          mixed sources only — the page's usual subject (a hint, not a filter).
+#   title          Human-readable source name (goes into updates.json -> "source").
+#   url            Entry point to fetch (index page, feed or API).
+#   type           official   = the platform's own site; preferred canonical record.
+#                  aggregator = trade press; often repeats official stories, resolved by
+#                               dedup Layer 2 (prefer official).
+#   validation     Current status — see STATUS below. The programmatic routine keeps it
+#                  current.
+#   blocked_since  Date the source stopped reading. Present only while blocked / broken.
+#   note           How to read this source today (structure, dates, pagination, filter).
+#
+# Every source is a dated feed: the fixed 2-week window applies to all of them.
+#
+# STATUS (`validation`)
+#   readable  Reads normally.
+#   pending   Newly added, not yet confirmed by a run. Fetch it like a readable source;
+#             the run then sets readable / blocked / broken.
+#   blocked   The entry page cannot be fetched: anti-bot challenge, HTTP 4xx/5xx or a
+#             timeout after retries, or the run environment refusing the host
+#             (curl: "CONNECT tunnel failed, response 403" = egress allowlist).
+#   broken    The page fetches (2xx) but no dated article list can be parsed from it —
+#             the layout changed or the page moved.
+#   For blocked / broken sources make ONE request to `url` per run. If it fails the same
+#   way, skip the source at once and move on — no workarounds (no other URLs, feeds,
+#   sitemaps, user agents or headless browsers) and nothing written anywhere. If it
+#   reads, the source has recovered: read it normally.
+#
+# FETCHING (all sources)
+#   - Use an in-session client (curl / requests), NOT the managed WebFetch tool — its
+#     fetcher is blocked by these sites' anti-bot even when egress is open.
+#   - Send a desktop-browser User-Agent and `Accept-Language: en-US`. Allow a 60 s
+#     timeout.
+#   - Transient failure on a readable/pending source (timeout, 5xx): retry up to 2 more
+#     times with a short pause before treating the source as failed for this run.
+#   - Dates: prefer the article's JSON-LD "datePublished" (or og: / <time> tags); where
+#     the article page has none, use the date printed in the article body or on the
+#     index. An article with no date anywhere cannot be windowed — skip it.
+#   - If an index reads but some article pages fail on every retry: keep what you read,
+#     skip the rest WITHOUT summarising from the headline, and list them in the PR body.
+#
+# DOMAIN NOTES (shared by several sources)
+#   www.adexchanger.com — tag / section pages: cards are `<h3 class="fs-3"><a
+#     class="link-post" href=…>TITLE</a>` with the date in `<time …>October 21st,
+#     2026</time>` (ordinal suffix). ~30 cards per page, which covers months. Articles
+#     carry JSON-LD datePublished. `/daily-news-roundup/…` hits are multi-story posts —
+#     open them only to find a story about our platforms and keep just that story's
+#     facts. The same article often sits on several tag pages — Layer 1 dedup handles it.
+#   www.thetradedesk.com — no JSON-LD dates; the date is printed in the article body
+#     (`October 15, 2026`). Pages are large (~400–800 KB).
+
+sources:
+  # ── The Trade Desk ──────────────────────────────────────────────────────────
+  - key: ttd_press_room
+    platform: ttd
+    title: The Trade Desk — Press Room
+    url: https://www.thetradedesk.com/press-room
+    type: official
+    validation: readable
+    note: >-
+      Shows the 3 newest press releases and the 3 newest media-coverage items, each with
+      its date (`October 13, 2026`) next to a `/press-room/<slug>` link. About one
+      release a month, so page 1 always covers the window. Media-coverage items are often
+      interviews or opinion — keep only those announcing a platform change.
+
+  - key: ttd_resources
+    platform: ttd
+    title: The Trade Desk — Resource Desk
+    url: https://www.thetradedesk.com/resources
+    type: official
+    validation: readable
+    note: >-
+      No dates on the index. After the filter block ("Filter by … Region") comes the
+      latest grid: 9 cards, newest first, linking to /resources/, /insights/ and
+      /case-studies/ pages. Open each card in order and read the date in its body; stop
+      once a card is older than window_start. Older pages: `?page=2`, `?page=3`, …
+      (`?page=0` and `?page=1` both return the first page). Everything below the grid
+      ("Browse our videos and webinars", the Kokai showcase) is curated evergreen
+      content, not news — ignore it. Case studies and research/insights pieces are
+      excluded by criteria; platform feature posts (e.g. "See how bulk edits affect scale
+      before you commit") are what we want. A card with no date in its body is skipped.
+
+  # ── DV360 ───────────────────────────────────────────────────────────────────
+  - key: dv360_announcements
+    platform: dv360
+    title: Display & Video 360 Help — Announcements
+    url: https://support.google.com/displayvideo/announcements/9210754?hl=en-GB
+    type: official
+    validation: readable
+    note: >-
+      Official product announcements (~1.5 MB page, server-rendered). Each entry has a
+      title, a "Last updated: <Month D, YYYY>" line (some also "Estimated <date>"), a short
+      summary and a "Read more" link to `/displayvideo/answer/<id>` — use that link as the
+      item URL. Entries are NOT strictly in date order: check every entry's "Last
+      updated" date against the window. An entry whose answer URL is already stored but
+      was updated in the window is not new (Layer 1) unless the update adds a materially
+      new change — then mention it in the PR body rather than adding a duplicate.
+
+  - key: dv360_api_release_notes
+    platform: dv360
+    title: Display & Video 360 API — Release Notes
+    url: https://developers.google.com/display-video/api/release-notes
+    type: official
+    validation: readable
+    note: >-
+      One `<h2 id="month_d_yyyy">Month D, YYYY</h2>` section per release, newest first;
+      releases come every ~2 months. Item URL = this page plus `#<h2 id>`. Mostly
+      developer changes (versions, fields, client libraries) — keep only a release that
+      exposes a new platform capability a trader would use, and describe the capability,
+      not the API.
+
+  - key: gmp_360_blog
+    platform: dv360
+    title: Google Marketing Platform Blog
+    url: https://blog.google/products/marketingplatform/360/rss/
+    type: official
+    validation: readable
+    note: >-
+      RSS feed (pubDate + title + link per item); the HTML index carries no dates. About
+      one post a month. Also carries posts filed under /products/ads-commerce/ that the
+      performance track may already hold — Layer 1 dedup skips those. Keep only changes
+      that land in DV360 (or Google's programmatic buying generally); Search Ads 360 and
+      Campaign Manager 360 items are not ours.
+
+  # ── Amazon DSP ──────────────────────────────────────────────────────────────
+  - key: adexchanger_amazon_dsp
+    platform: mixed
+    focus: amazon_dsp
+    title: AdExchanger — Amazon DSP
+    url: https://www.adexchanger.com/tag/amazon-dsp/
+    type: aggregator
+    validation: readable
+    note: >-
+      See DOMAIN NOTES (AdExchanger). Amazon DSP coverage plus the odd story about other
+      DSPs — set each item's platform by where the change lands.
+
+  - key: adexchanger_amazon_ads
+    platform: mixed
+    focus: amazon_dsp
+    title: AdExchanger — Amazon Ads
+    url: https://www.adexchanger.com/tag/amazon-ads/
+    type: aggregator
+    validation: readable
+    note: >-
+      See DOMAIN NOTES (AdExchanger). Overlaps the Amazon DSP tag heavily. Broader Amazon
+      Ads coverage: earnings, seller and Sponsored Products stories are not programmatic
+      — keep only Amazon DSP / Prime Video / Amazon CTV buying changes.
+
+  # ── Microsoft (programmatic) ────────────────────────────────────────────────
+  - key: microsoft_ads_blog_programmatic
+    platform: microsoft_programmatic
+    title: Microsoft Advertising Blog
+    url: https://about.ads.microsoft.com/en/blog?page=1
+    type: official
+    validation: readable
+    note: >-
+      The same blog the performance track reads (6 posts per page,
+      `/en/blog/post/<month-yyyy>/<slug>`, index dates like `October 21, 2026`; no
+      JSON-LD date on article pages — use the index date). Here keep ONLY posts about
+      Microsoft's programmatic stack — Microsoft Invest, Microsoft Curate, programmatic
+      CTV/Netflix deals (criteria-programmatic.md → Microsoft). Search, Shopping, PMax and
+      Audience-ad posts belong to the performance track; Monetize is publisher-side.
+
+  # ── CTV ─────────────────────────────────────────────────────────────────────
+  - key: adexchanger_tv
+    platform: mixed
+    focus: ctv
+    title: AdExchanger — TV
+    url: https://www.adexchanger.com/tv/
+    type: aggregator
+    validation: readable
+    note: >-
+      See DOMAIN NOTES (AdExchanger). CTV section, ~2 stories a week. Many stories name
+      a DSP ("LinkedIn B2B audiences now available on CTV via DV360" → dv360); use `ctv`
+      only for a CTV publisher's ad-product change not tied to one of our DSPs.
+
+  - key: digiday_future_of_tv
+    platform: mixed
+    focus: ctv
+    title: Digiday — Future of TV
+    url: https://digiday.com/future-of-tv/
+    type: aggregator
+    validation: readable
+    note: >-
+      Section page with dated cards (`October 21, 2026`); the page also carries older
+      featured and most-popular blocks — the window drops them. Articles carry JSON-LD
+      datePublished; some are Digiday+ but the text is served. The weekly "Future of TV
+      Briefing" is a multi-topic column — keep only a concrete ad-product change inside
+      it. Much is streaming business / viewership analysis — filter hard.
+
+  # ── Programmatic, multi-platform ────────────────────────────────────────────
+  - key: ppcland_pulse_programmatic
+    platform: mixed
+    focus: all programmatic platforms
+    title: PPC Land — Pulse
+    url: https://ppc.land/tag/pulse/
+    type: aggregator
+    validation: readable
+    note: >-
+      The same page the performance track reads (key `ppcland_pulse` in sources.yaml):
+      cards `<article class="card card-post …">`, title in the `aria-label` and link in
+      the `href` of `<a class="card-post-image-link">`, date in `<time
+      class="card-post-date" datetime="YYYY-MM-DD">`; 12 cards per page, ~2 pages per day
+      — page back through `/tag/pulse/page/N/` (~30–35 pages for the window). Screen card
+      titles for our five programmatic platforms (The Trade Desk, DV360, Amazon DSP,
+      Microsoft programmatic, CTV) and open every candidate; everything else on the page
+      is the performance track's or nobody's. Articles carry JSON-LD datePublished.
+
+  - key: mediapost_programmatic
+    platform: mixed
+    focus: programmatic industry
+    title: MediaPost — Programmatic
+    url: https://www.mediapost.com/publications/tag/programmatic/
+    type: aggregator
+    validation: readable
+    note: >-
+      Tag page: `/publications/article/<id>/<slug>.html` links, each followed by its date
+      (`October 20, 2026`); ~2 posts a week, so page 1 covers months. Article pages are
+      short news briefs dated `10/21/2026`, behind a subscription upsell that does not
+      hide the text. Mostly industry news — keep only changes inside our platforms.
+
+  - key: adweek_programmatic
+    platform: mixed
+    focus: programmatic industry
+    title: Adweek — Programmatic
+    url: https://www.adweek.com/wp-json/wp/v2/posts?categories=51402&per_page=30&_fields=date,link,title
+    type: aggregator
+    validation: readable
+    note: >-
+      The category page (https://www.adweek.com/category/programmatic/) loads its list by
+      script and its /feed/ returns the site-wide feed, so read the category through the
+      site's WordPress API: JSON array of {date, link, title.rendered}, newest first,
+      ~1 post a week. Open each in-window `link` — article HTML carries the full text and
+      `<meta name="datePublished">`. Mostly business news (earnings, staff, lawsuits) —
+      keep only platform changes.

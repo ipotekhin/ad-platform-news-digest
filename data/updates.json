@@ -1,6 +1,7 @@
 [
   {
     "id": "a993be3ddde2",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "July's Demand Gen Drop expands Checkout Links to nine markets and upgrades tROAS bidding",
@@ -15,6 +16,7 @@
   },
   {
     "id": "cf6619df856a",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Data Manager API adds bulk audience clearing and field-level ingestion warnings",
@@ -29,6 +31,7 @@
   },
   {
     "id": "c67d17daa515",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google documents text disclaimer assets for Search ads",
@@ -43,6 +46,7 @@
   },
   {
     "id": "347219dbe077",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google publishes its first dedicated guide for YouTube audio ads",
@@ -58,6 +62,7 @@
   },
   {
     "id": "dc30bb3ecae5",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Analytics flags campaigns missing GBRAID and gad_ identifiers",
@@ -73,6 +78,7 @@
   },
   {
     "id": "b291e4f2ac00",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Structured Data Files v10.1 lands for DV360; pre-v10 versions deprecated",
@@ -88,6 +94,7 @@
   },
   {
     "id": "3f5913160391",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google extends its AI-generated ad description test to Shopping ads",
@@ -103,6 +110,7 @@
   },
   {
     "id": "36fb61ebb882",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google rolls out AI content labels for ad creatives in asset studio",
@@ -117,6 +125,7 @@
   },
   {
     "id": "7b0511f33213",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Target CPA and Target ROAS now appear as standalone bidding strategies",
@@ -132,6 +141,7 @@
   },
   {
     "id": "54fc58f623dd",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Ads Editor 2.13 adds AI Max for Shopping and PMax customer retention goals",
@@ -147,6 +157,7 @@
   },
   {
     "id": "3fe0252d2fb6",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Household income exclusions surface in Performance Max",
@@ -162,6 +173,7 @@
   },
   {
     "id": "afedba251c70",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "AI Max appears in Standard Shopping campaigns",
@@ -177,6 +189,7 @@
   },
   {
     "id": "50e3350307a4",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google drops the $50K spend requirement for Lead Form assets",
@@ -192,6 +205,7 @@
   },
   {
     "id": "c60dd7b00f43",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Tag Manager adds guided setup for Google Ads purchase conversions",
@@ -207,6 +221,7 @@
   },
   {
     "id": "d534433c5104",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "PMax alpha lets selected advertisers switch off Search Partners and Display",
@@ -221,6 +236,7 @@
   },
   {
     "id": "0649c9a7d1c7",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Ads ends in-account appeals for policy decisions older than 6 months",
@@ -236,6 +252,7 @@
   },
   {
     "id": "6cb91e8d28b5",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google to recognise LegitScript certification for Spanish telemedicine ads from Aug. 5",
@@ -251,6 +268,7 @@
   },
   {
     "id": "6fcfeac9e3c4",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Crypto exchange and wallet ads open in Norway, Iceland and Liechtenstein",
@@ -266,6 +284,7 @@
   },
   {
     "id": "5706ba0bfd9b",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Local Services Ads fold into Google Ads as pay-per-lead PMax; historical reports are lost",
@@ -280,6 +299,7 @@
   },
   {
     "id": "f8f7c36426bc",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google says its August 17 Smart Bidding change is narrower than advertisers fear",
@@ -295,6 +315,7 @@
   },
   {
     "id": "ab269450f871",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC Land — Search",
     "title": "Microsoft retires Predictive Matching and folds it into AI Max search term matching",
@@ -309,6 +330,7 @@
   },
   {
     "id": "4d11f90f5d9a",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC Land — Search",
     "title": "Microsoft Advertising brings Ad Preview Hub to Performance Max",
@@ -323,6 +345,7 @@
   },
   {
     "id": "94496a01bf52",
+    "track": "performance",
     "platform": "meta",
     "source": "PPC Land — Social",
     "title": "Graph/Marketing API v26.0 blocks 47 commerce endpoints and drops Explore Feed and poll ads",
@@ -337,6 +360,7 @@
   },
   {
     "id": "e4d894fc835a",
+    "track": "performance",
     "platform": "tiktok",
     "source": "PPC Land — Social",
     "title": "TikTok's Q3 product preview lets TopView buys exclude up to 40% of sub-regions",
@@ -351,6 +375,7 @@
   },
   {
     "id": "6f027f788573",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "Ask Advisor gains agentic capabilities across Google Ads and Analytics",
@@ -366,6 +391,7 @@
   },
   {
     "id": "0601013f1f36",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google expands Limited Ad Serving policy across all Google Ads",
@@ -380,6 +406,7 @@
   },
   {
     "id": "35db40d8d5ae",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Search campaigns using ACA or campaign-level broad match auto-upgrade to AI Max on Sept 1",
@@ -394,6 +421,7 @@
   },
   {
     "id": "a9fdf956fc50",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Ads adds a report-only option for new customer acquisition",
@@ -409,6 +437,7 @@
   },
   {
     "id": "ab3f11892ddb",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "New help doc details experimental Deal Ends annotations on Shopping ads",
@@ -424,6 +453,7 @@
   },
   {
     "id": "8987dc05e331",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Ads pilots corporate-email requirement for sensitive account actions",
@@ -439,6 +469,7 @@
   },
   {
     "id": "cafcbb1142c7",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google tightens Ads policy for government document and service providers",
@@ -453,6 +484,7 @@
   },
   {
     "id": "bed0e7cfb962",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google publishes setup guides for Performance Max pay-per-lead goals",
@@ -468,6 +500,7 @@
   },
   {
     "id": "bf423b9ce765",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Ads API pilot lets manager accounts allowlist apps for sensitive actions",
@@ -483,6 +516,7 @@
   },
   {
     "id": "864045cbe623",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google tests clickable hyperlinks inside Search ad descriptions",
@@ -498,6 +532,7 @@
   },
   {
     "id": "1e90028c9e67",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "YouTube tests static image ads during horizontal mobile playback",
@@ -513,6 +548,7 @@
   },
   {
     "id": "56a915240e35",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google begins rolling out in-account applications for policy certifications",
@@ -528,6 +564,7 @@
   },
   {
     "id": "294303ab6276",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google publishes a Q&A on the August 17 Smart Bidding target change",
@@ -542,6 +579,7 @@
   },
   {
     "id": "da8fa2d12e4d",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "smec: over a quarter of exact-match impressions in AI Max campaigns are not exact",
@@ -557,6 +595,7 @@
   },
   {
     "id": "1a594f389da3",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC Land — Search",
     "title": "Microsoft Advertising turns on bulk edit and appeals for disapproved assets",
@@ -571,6 +610,7 @@
   },
   {
     "id": "042c6e1f3e54",
+    "track": "performance",
     "platform": "bing",
     "source": "Search Engine Land — Microsoft Advertising",
     "title": "Microsoft Advertising adds Excluded content terms for Audience Ads",
@@ -585,6 +625,7 @@
   },
   {
     "id": "f23d955df982",
+    "track": "performance",
     "platform": "tiktok",
     "source": "PPC Land — Social",
     "title": "TikTok Shop documents an Off-site Performance Analysis report — no Amazon, Walmart or offline sales",
@@ -599,6 +640,7 @@
   },
   {
     "id": "15dcf87d23e2",
+    "track": "performance",
     "platform": "meta",
     "source": "PPC Land — Social",
     "title": "LiveRamp Cross-Media Intelligence now ingests Meta campaign data",
@@ -614,6 +656,7 @@
   },
   {
     "id": "c6502e89a336",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Ads will use generative AI to resize Performance Max video ads",
@@ -628,6 +671,7 @@
   },
   {
     "id": "a56b28aa2011",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Demand Gen view-through conversion optimization goes video-only and on by default",
@@ -642,6 +686,7 @@
   },
   {
     "id": "deff3672031c",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google sets the AI Max migration timeline for legacy Search campaign features",
@@ -656,6 +701,7 @@
   },
   {
     "id": "8644b0db050c",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Ads is removing language targeting from Search and PMax campaigns",
@@ -670,6 +716,7 @@
   },
   {
     "id": "255d4f805147",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Analytics adds custom conversion attribution windows",
@@ -685,6 +732,7 @@
   },
   {
     "id": "e02233ae41c2",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google adds Local customer optimization to Performance Max store-goal campaigns",
@@ -700,6 +748,7 @@
   },
   {
     "id": "0a7f937c051c",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Merchant Center reporting splits out YouTube affiliate traffic from August 24",
@@ -715,6 +764,7 @@
   },
   {
     "id": "97970da5d1d5",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google will auto-migrate Travel campaigns to Search campaigns for Travel",
@@ -730,6 +780,7 @@
   },
   {
     "id": "ace383723326",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google adds a Campaign Data Import Validation Report",
@@ -745,6 +796,7 @@
   },
   {
     "id": "dd6e021ca3a2",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Campaign Manager 360 API gains a real-time reportData.query endpoint",
@@ -760,6 +812,7 @@
   },
   {
     "id": "de287f8d9d8a",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Merchant Center for Agencies now documents a 1,000 client account limit",
@@ -775,6 +828,7 @@
   },
   {
     "id": "48a5ae081c68",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "Search Engine Land — ChatGPT",
     "title": "ChatGPT Ads rolls out oCPC campaigns, automatic advanced matching and product carousels",
@@ -789,6 +843,7 @@
   },
   {
     "id": "15170d26addf",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "PPC Land — Search",
     "title": "ChatGPT ads reach Europe on Free and Go plans this month",
@@ -803,6 +858,7 @@
   },
   {
     "id": "60ec9d1e4aaf",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "Search Engine Roundtable — ChatGPT Ads",
     "title": "OpenAI tests AI-generated descriptive headings above ChatGPT ads",
@@ -817,6 +873,7 @@
   },
   {
     "id": "0774ec099c4a",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "PPC Land — Search",
     "title": "AdRoll opens a ChatGPT ad-buying pilot to selected SMB and B2B customers",
@@ -831,6 +888,7 @@
   },
   {
     "id": "56089a96c9d4",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Ads API v25.1 adds Conversion Lift and Brand Lift resources and category-level benchmarks",
@@ -846,6 +904,7 @@
   },
   {
     "id": "dd17dbf270b7",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Ads tests an Enhanced matching option for Customer Match",
@@ -861,6 +920,7 @@
   },
   {
     "id": "891b283b880f",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "AI Max gets multi-campaign A/B tests, experiments with brand and location controls, and a forecasting Performance Planner",
@@ -875,6 +935,7 @@
   },
   {
     "id": "45d4345ff562",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Local Services Ads eligibility expands to far more granular categories ahead of the Google Ads migration",
@@ -890,6 +951,7 @@
   },
   {
     "id": "534502d36b07",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google unifies Google tag with Tag Manager and adds no-code event tracking",
@@ -904,6 +966,7 @@
   },
   {
     "id": "95a324e26af0",
+    "track": "performance",
     "platform": "meta",
     "source": "Search Engine Land — Meta",
     "title": "Meta AI can now connect to ad accounts to analyze and optimize campaigns",
@@ -918,6 +981,7 @@
   },
   {
     "id": "3ae7341faf42",
+    "track": "performance",
     "platform": "meta",
     "source": "Social Media Today — LinkedIn",
     "title": "Meta is removing the option to exclude ad placements and platforms",
@@ -932,6 +996,7 @@
   },
   {
     "id": "13920d2dd4f8",
+    "track": "performance",
     "platform": "bing",
     "source": "Search Engine Land — Microsoft Advertising",
     "title": "Microsoft Advertising publishes Conversions API documentation for server-side measurement",
@@ -946,6 +1011,7 @@
   },
   {
     "id": "06499566599d",
+    "track": "performance",
     "platform": "bing",
     "source": "Search Engine Land — Microsoft Advertising",
     "title": "Microsoft Advertising rolls out AI Max globally for Search campaigns",
@@ -960,6 +1026,7 @@
   },
   {
     "id": "698b78633e18",
+    "track": "performance",
     "platform": "bing",
     "source": "Search Engine Land — Microsoft Advertising",
     "title": "Microsoft Advertising drops Max CPC from new standalone automated bidding campaigns on Oct 1",
@@ -974,6 +1041,7 @@
   },
   {
     "id": "ea3879c3fcd8",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "Search Engine Land — ChatGPT",
     "title": "ChatGPT Ads adds a Maximize results bid strategy, platform targeting and view-through conversions",
@@ -988,6 +1056,7 @@
   },
   {
     "id": "85e97ca397b8",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "August Demand Gen Drop adds messaging ads, travel personalization and GA for AI video creation",
@@ -1002,6 +1071,7 @@
   },
   {
     "id": "1ded6b4e7453",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Display & Video 360 API drops content-label and sensitive-category exclusions on Oct. 1",
@@ -1016,6 +1086,7 @@
   },
   {
     "id": "044c56d3ef4f",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Ads API Developer Assistant v4.0 rebuilds as a global plugin, breaking older installs",
@@ -1031,6 +1102,7 @@
   },
   {
     "id": "50513a6adcc3",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "New Product titles report shows which AI-generated Shopping titles Google is serving",
@@ -1046,6 +1118,7 @@
   },
   {
     "id": "05b6796063d9",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Performance Max alpha lets advertisers nudge channel priority",
@@ -1061,6 +1134,7 @@
   },
   {
     "id": "e0a0e6ef6bc1",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Gemini Omni video generation arrives in Google Ads Asset Studio",
@@ -1076,6 +1150,7 @@
   },
   {
     "id": "4876c9c67b0a",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Local Services Ads direct booking expands from 20 to over 500 partners",
@@ -1091,6 +1166,7 @@
   },
   {
     "id": "c0e17731f333",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Local Services Ads will charge for missed calls over 20 seconds from Oct. 1",
@@ -1105,6 +1181,7 @@
   },
   {
     "id": "ca0e4471a9fe",
+    "track": "performance",
     "platform": "bing",
     "source": "Search Engine Land — Microsoft Advertising",
     "title": "Microsoft Advertising previews a redesigned advertiser console",
@@ -1119,6 +1196,7 @@
   },
   {
     "id": "2d00da0d9b1f",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Offline conversions uploaded more than 7 days late never reach data-driven attribution",
@@ -1134,6 +1212,7 @@
   },
   {
     "id": "86d433af5174",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "LSA migration documentation: standalone dashboard dies on transition day, reports do not carry over",
@@ -1148,6 +1227,7 @@
   },
   {
     "id": "e5bd5a5fea71",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Merchant Center will stop approving product images under 500x500 pixels on Jan. 31, 2027",
@@ -1163,6 +1243,7 @@
   },
   {
     "id": "72864b9cd025",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "PPC Land — Search",
     "title": "ChatGPT Ads reach 41 markets as India goes live",
@@ -1177,6 +1258,7 @@
   },
   {
     "id": "d319342dd5bb",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "PPC Land — Search",
     "title": "ChatGPT Ads drops the 25,000-user floor for exclusion audiences and adds an Ads Manager plugin",
@@ -1191,6 +1273,7 @@
   },
   {
     "id": "d7b363db8ab0",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Display & Video 360 archives legacy mCPV and Video reach 1.0 line items on Oct. 26 — migration is manual",
@@ -1205,6 +1288,7 @@
   },
   {
     "id": "05320334a8db",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Ads Developer Policies ban programmatic proxies and require a dedicated Cloud project per integration",
@@ -1219,6 +1303,7 @@
   },
   {
     "id": "23418a95d76f",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "Google details Qualified Future Conversions, which credits sales up to 180 days after a click",
@@ -1234,6 +1319,7 @@
   },
   {
     "id": "4d4bb05ec047",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Exact and phrase match keywords become eligible for AI Mode text ads in a limited test",
@@ -1248,6 +1334,7 @@
   },
   {
     "id": "29ce48980ef9",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google tests shopping ads inside the body of AI Mode answers, plus a second unit at the foot of the page",
@@ -1263,6 +1350,7 @@
   },
   {
     "id": "5833cf93d44f",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Lookalike segments come to Video campaigns, keeping the 2.5/5/10% reach tiers Demand Gen lost",
@@ -1278,6 +1366,7 @@
   },
   {
     "id": "84691aa128e5",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Waze Ads expand from the US to 42 markets inside Performance Max for store goals",
@@ -1293,6 +1382,7 @@
   },
   {
     "id": "bcb629461937",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "YouTube opens personalized advertising to alcohol advertisers from Oct. 30",
@@ -1308,6 +1398,7 @@
   },
   {
     "id": "ed4efc59bc48",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google Analytics reported zero traffic for Sept. 1 across accounts",
@@ -1323,6 +1414,7 @@
   },
   {
     "id": "1a04562e9ae9",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "Data Manager lands in GA4 and DV360, and a Data Strength Uplift metric arrives in Google Ads",
@@ -1337,6 +1429,7 @@
   },
   {
     "id": "4eee23c9644c",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Local Customer Optimization comes to Performance Max store goals, and store sales connect through Data Manager",
@@ -1351,6 +1444,7 @@
   },
   {
     "id": "71dc3c6efda4",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Ads API access moves to the Cloud Console and developer tokens are sunset",
@@ -1365,6 +1459,7 @@
   },
   {
     "id": "a165bea87c4c",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "AI Dashboards start appearing in Google Ads accounts",
@@ -1380,6 +1475,7 @@
   },
   {
     "id": "51fc26b8d175",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Analytics adds a drag-and-drop Dashboards report, capped at 15 cards",
@@ -1395,6 +1491,7 @@
   },
   {
     "id": "27293a02f541",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Advertisers report Google Ads promotional credits being invalidated after the qualifying spend",
@@ -1410,6 +1507,7 @@
   },
   {
     "id": "4cb63b2b3727",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Land — Google",
     "title": "Google rewrites Location asset requirements for clarity, with no change to enforcement",
@@ -1425,6 +1523,7 @@
   },
   {
     "id": "a703f1da2598",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Judge declines to break up Google's ad exchange and imposes auction-rule remedies instead",
@@ -1440,6 +1539,7 @@
   },
   {
     "id": "1615c111fbff",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC Land — Search",
     "title": "Microsoft Advertising documents a server-side Conversions API, gated behind per-account pilot approval",
@@ -1454,6 +1554,7 @@
   },
   {
     "id": "e273eee09d88",
+    "track": "performance",
     "platform": "bing",
     "source": "Search Engine Land — Microsoft Advertising",
     "title": "Microsoft Advertising publishes rules for AI-generated and synthetic ad creative",
@@ -1468,6 +1569,7 @@
   },
   {
     "id": "5d32769a9c8d",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Analytics adds Include hostname filters, turning spam blocking into an allowlist",
@@ -1482,6 +1584,7 @@
   },
   {
     "id": "1e1b0450a54c",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google says its invalid-traffic filters do not stop fake leads, and puts form checks on advertisers",
@@ -1496,6 +1599,7 @@
   },
   {
     "id": "325333fe58bb",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google removes free Shopping listings and popular product carousels across the EEA",
@@ -1510,6 +1614,7 @@
   },
   {
     "id": "ce233b6ccfa8",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "Search Engine Roundtable — ChatGPT Ads",
     "title": "ChatGPT Ads tests Sponsored Agents and adds impression-billed conversion campaigns, attribution windows and platform targeting",
@@ -1524,6 +1629,7 @@
   },
   {
     "id": "dd00b8482f90",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "Business Agent comes to YouTube ads in a US beta, and Merchant Center AI performance insights reach five markets",
@@ -1538,6 +1644,7 @@
   },
   {
     "id": "c4ab1b7603f6",
+    "track": "performance",
     "platform": "meta",
     "source": "PPC Land — Social",
     "title": "Frankfurt court rules running an ad auction is editorial control, ending Meta's DSA hosting shield",
@@ -1552,6 +1659,7 @@
   },
   {
     "id": "752cfe8b1d23",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC Land — Search",
     "title": "Microsoft Advertising sets two Max CPC sunset dates as AI Max completes its global rollout",
@@ -1566,6 +1674,7 @@
   },
   {
     "id": "ef1fbe6723bd",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Meridian GeoX reaches general availability for geo experiments feeding Google's open-source MMM",
@@ -1580,6 +1689,7 @@
   },
   {
     "id": "926fc025b163",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "September Demand Gen Drop adds one-click image ads on Shorts and Gmail, plus affiliate location pins in Maps",
@@ -1594,6 +1704,7 @@
   },
   {
     "id": "007ebac07c4c",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "AI Brief beta expands to seven more languages and AI Max gets a unified Search journey report",
@@ -1608,6 +1719,7 @@
   },
   {
     "id": "f83fc48a3bb3",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "Google details a lead intent scoring pilot and journey-aware bidding for long lead-gen cycles",
@@ -1622,6 +1734,7 @@
   },
   {
     "id": "0eddffa14236",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Customer Match lists can now carry raw IP addresses and interaction timestamps, except in Europe",
@@ -1636,6 +1749,7 @@
   },
   {
     "id": "cc6c92fc2dce",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "PPC Land — Search",
     "title": "ChatGPT Ads open in seven more Asian markets with self-service buying from day one",
@@ -1650,6 +1764,7 @@
   },
   {
     "id": "ac6649d48037",
+    "track": "performance",
     "platform": "meta",
     "source": "PPC Land — Social",
     "title": "Meta appears to be lifting the per-Page ad limit in some Ads Manager accounts",
@@ -1664,6 +1779,7 @@
   },
   {
     "id": "b150180591e3",
+    "track": "performance",
     "platform": "meta",
     "source": "PPC Land — Social",
     "title": "Apple forces a redesigned tracking prompt in five EU countries and lets apps re-ask yearly",
@@ -1678,6 +1794,7 @@
   },
   {
     "id": "d6ba84695528",
+    "track": "performance",
     "platform": "linkedin",
     "source": "Social Media Today — LinkedIn",
     "title": "LinkedIn opens a Creator Discovery beta with new filters for sourcing campaign creators",
@@ -1692,6 +1809,7 @@
   },
   {
     "id": "dfc3c041371e",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Ads starts auto-applying promotions scraped from advertiser websites on Oct. 12",
@@ -1706,6 +1824,7 @@
   },
   {
     "id": "14cccd4a20cd",
+    "track": "performance",
     "platform": "tiktok",
     "source": "PPC Land — Social",
     "title": "TikTok opens its TTAN off-app ad network to US advertisers and adds agentic commerce tools",
@@ -1720,6 +1839,7 @@
   },
   {
     "id": "9011c17b98c3",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "PPC Land — Search",
     "title": "ChatGPT Ads gets a visual ad format inside image generation, and its measurement roster grows to 18 vendors",
@@ -1734,6 +1854,7 @@
   },
   {
     "id": "5602179eec6b",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "Search Engine Roundtable — ChatGPT Ads",
     "title": "ChatGPT Ads Manager adds bulk product-feed campaign creation and product review status",
@@ -1748,6 +1869,7 @@
   },
   {
     "id": "865014765776",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google's Site Kit plugin now auto-tracks purchases and form leads into Analytics and on to Google Ads",
@@ -1762,6 +1884,7 @@
   },
   {
     "id": "a64e65e31c1a",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Local Services Ads starts charging for unanswered calls held past 20 seconds",
@@ -1776,6 +1899,7 @@
   },
   {
     "id": "33237dbdb1fd",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google's Aug. 17 bidding change pulls budget-capped tROAS Shopping campaigns down toward their target",
@@ -1790,6 +1914,7 @@
   },
   {
     "id": "c1f46bfdd01f",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "Asset Studio turns website URLs and photos into Demand Gen video with Gemini Omni",
@@ -1804,6 +1929,7 @@
   },
   {
     "id": "f4cf75270eab",
+    "track": "performance",
     "platform": "meta",
     "source": "Meta Newsroom — Technologies",
     "title": "Meta's Muse agent gains business skills and connects straight to Meta ad accounts",
@@ -1818,6 +1944,7 @@
   },
   {
     "id": "3330ace6cf57",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Merchant Center stops blocking products over low image quality — only the 500x500 floor still rejects",
@@ -1832,6 +1959,7 @@
   },
   {
     "id": "8838e4035ae2",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Ads API moves to two releases a month from v26, with majors still capped at four a year",
@@ -1846,6 +1974,7 @@
   },
   {
     "id": "ed11d16e7595",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Ads will allow a business name that doesn't match the destination domain, under three conditions",
@@ -1860,6 +1989,7 @@
   },
   {
     "id": "6f3fd906d53f",
+    "track": "performance",
     "platform": "meta",
     "source": "PPC Land — Social",
     "title": "Meta freezes new US political and social-issue ads for the eight days before the midterms",
@@ -1874,6 +2004,7 @@
   },
   {
     "id": "0caec212447e",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google bans prediction-market ads in Connecticut, the fifth US state excluded",
@@ -1888,6 +2019,7 @@
   },
   {
     "id": "95f32589e9ed",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Ads opens Colombia to online lottery advertising from October 21",
@@ -1902,6 +2034,7 @@
   },
   {
     "id": "371d746f13da",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Tag Manager containers now ignore gtag('config') waits and surface the command as a dataLayer event",
@@ -1916,6 +2049,7 @@
   },
   {
     "id": "626fa9ccd3a5",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "YouTube Masthead opens to certified online gambling advertisers on October 21",
@@ -1930,6 +2064,7 @@
   },
   {
     "id": "31e739010e47",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Merchant Center gains a Universal Commerce Protocol hub for US merchants, with Canada and Australia waiting until 2027",
@@ -1944,6 +2079,7 @@
   },
   {
     "id": "9e015a46f36f",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC Land — Search",
     "title": "Microsoft Advertising adds a two-way HubSpot integration and 10,000-row company lists for LinkedIn targeting",
@@ -1958,6 +2094,7 @@
   },
   {
     "id": "b725ab68d122",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "Google Ads replaces all-or-nothing network opt-outs with channel priority tiers and a percentage spend cap",
@@ -1972,6 +2109,7 @@
   },
   {
     "id": "f22ea74c31f4",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "October's Demand Gen Drop is all first-party data: a Data Strength Uplift metric lands in Google Ads",
@@ -1986,6 +2124,7 @@
   },
   {
     "id": "b792a990c3cc",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "Universal Cart goes live in the US across Search and Gemini, moving the pre-purchase basket inside Google",
@@ -2000,6 +2139,7 @@
   },
   {
     "id": "b45faad561c8",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Ads Data Manager stops requiring SHA-256 hashing on November 16 and takes encrypted customer data instead",
@@ -2014,6 +2154,7 @@
   },
   {
     "id": "9e8e1f09b1bf",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Ads API v26 adds 15 Search Lift metrics, Local Services PMax creation, and renames five hotel bid fields",
@@ -2028,6 +2169,7 @@
   },
   {
     "id": "782117a274db",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google PM says changing a target or budget on an established campaign triggers no learning period",
@@ -2042,6 +2184,7 @@
   },
   {
     "id": "d8622edfbfd0",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Gambling advertisers can now apply for Google Ads certification from inside the account",
@@ -2056,6 +2199,7 @@
   },
   {
     "id": "345a81ec8560",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google rewrites its sexual content ad policy page with dozens of examples — without changing enforcement",
@@ -2070,6 +2214,7 @@
   },
   {
     "id": "5a6a07d3d0bb",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "From October 21, UAE CFD and forex advertisers must hold one of three named licences",
@@ -2084,6 +2229,7 @@
   },
   {
     "id": "f0014504ad7c",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Search",
     "title": "Google Analytics user groups become manageable by API, with 14 new alpha methods",
@@ -2098,6 +2244,7 @@
   },
   {
     "id": "f085d1556d4f",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "Search Engine Roundtable — ChatGPT Ads",
     "title": "ChatGPT Ads gets wider visual formats, a redesigned conversions page and weekly performance emails",
@@ -2112,6 +2259,7 @@
   },
   {
     "id": "c156d62db7c0",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "Search Engine Roundtable — ChatGPT Ads",
     "title": "OpenAI starts assigning named Account Managers to ChatGPT Ads advertisers",
@@ -2126,6 +2274,7 @@
   },
   {
     "id": "02d7cc1db90e",
+    "track": "performance",
     "platform": "meta",
     "source": "PPC Land — Social",
     "title": "Meta lets each creative carry its own age and gender — but only if the ad set stays open to everyone",
@@ -2140,6 +2289,7 @@
   },
   {
     "id": "f01a514f08a7",
+    "track": "performance",
     "platform": "meta",
     "source": "PPC Land — Social",
     "title": "Meta's October 30 commercial terms let it crawl every business advertiser's website to train its AI",
@@ -2154,6 +2304,7 @@
   },
   {
     "id": "8ecb1e88ebf0",
+    "track": "performance",
     "platform": "meta",
     "source": "PPC Land — Social",
     "title": "Meta starts selling 3-to-24-hour ad bursts that lock category rivals out of the window",
@@ -2168,6 +2319,7 @@
   },
   {
     "id": "27650544c3cc",
+    "track": "performance",
     "platform": "meta",
     "source": "PPC Land — Social",
     "title": "Meta switches product browsing on in existing Facebook and Instagram ads on October 28, opt-out only",
@@ -2182,6 +2334,7 @@
   },
   {
     "id": "3bd511688868",
+    "track": "performance",
     "platform": "meta",
     "source": "PPC Land — Social",
     "title": "Meta folds ad prediction for all its surfaces into one GEM model, claiming +18.9% conversions",
@@ -2196,6 +2349,7 @@
   },
   {
     "id": "7c5639c1311e",
+    "track": "performance",
     "platform": "linkedin",
     "source": "PPC Land — Social",
     "title": "LinkedIn opens a US test of In-Stream Ads, putting pre-roll video in front of creator content",
@@ -2210,6 +2364,7 @@
   },
   {
     "id": "7d8f38c23150",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "Google rewrites its Smart Bidding learning doc: 'Learning' status now never lasts more than 7 days",
@@ -2224,6 +2379,7 @@
   },
   {
     "id": "877c95210f42",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "PMax asset groups get a 'Save and test asset group changes' A/B toggle",
@@ -2238,6 +2394,7 @@
   },
   {
     "id": "a6dc371ec676",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "Merchant Center sets the delivery days that qualify for 'fast shipping' in each country",
@@ -2252,6 +2409,7 @@
   },
   {
     "id": "597f49d1132c",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Google Ads & Commerce Blog",
     "title": "Google Ads brings Financial Services Verification to the US and Canada in early 2027",
@@ -2266,6 +2424,7 @@
   },
   {
     "id": "340f8e69d28c",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "Google starts testing ads in AI Mode for users who connect apps via Personal Intelligence",
@@ -2280,6 +2439,7 @@
   },
   {
     "id": "3b57f0441939",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "Local Services Ads stop showing featured professionals; headshots become optional",
@@ -2294,6 +2454,7 @@
   },
   {
     "id": "a085b6aac45a",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google Ads lead forms let you mark which answers qualify a lead",
@@ -2308,6 +2469,7 @@
   },
   {
     "id": "56d66dd1130a",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Automotive model feeds (Vehicle Top Ads) open in beta for car manufacturers on Search",
@@ -2322,6 +2484,7 @@
   },
   {
     "id": "c147000d57f8",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "Google Ads shows a combined 'Search terms and ad combinations' report",
@@ -2336,6 +2499,7 @@
   },
   {
     "id": "4cfcad1318c5",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "Prediction markets get their own section in the main Google Ads policy",
@@ -2350,6 +2514,7 @@
   },
   {
     "id": "64330abbcfc6",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "Google now allows certain pharmaceutical ads in AI Mode and AI Overviews (US test)",
@@ -2364,6 +2529,7 @@
   },
   {
     "id": "88a80436fe7d",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google rewrites its Data Strength best-practices guide around first-party data, with uplift figures",
@@ -2378,6 +2544,7 @@
   },
   {
     "id": "918fd67bb7de",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "Google Ads tests AI-first campaign creation: describe your goal, Google suggests goals and assets",
@@ -2392,6 +2559,7 @@
   },
   {
     "id": "d191006af7ab",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "AI Max text customization now previews generated headlines before you opt in",
@@ -2406,6 +2574,7 @@
   },
   {
     "id": "a211c12a2d83",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Merchant Center may disapprove products whose price or availability changes more than once a day",
@@ -2420,6 +2589,7 @@
   },
   {
     "id": "60a503737268",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "Google Ads adds AI Max reporting columns: brand inclusions, locations of interest, commission, optimized targeting",
@@ -2434,6 +2604,7 @@
   },
   {
     "id": "134c7bedd189",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Conversion Lift becomes self-serve for Search and Performance Max",
@@ -2448,6 +2619,7 @@
   },
   {
     "id": "cd4a8c64e9e3",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "Google Ads tests a redesigned billing menu with twice as many links",
@@ -2462,6 +2634,7 @@
   },
   {
     "id": "e0575bb1d8ba",
+    "track": "performance",
     "platform": "google_ads",
     "source": "Search Engine Roundtable — Google Ads",
     "title": "Google tests showing the advertiser's name inside call assets",
@@ -2476,6 +2649,7 @@
   },
   {
     "id": "a6cc1f37f1f3",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "AI campaign localization tool (beta) translates whole Search campaigns into new languages",
@@ -2490,6 +2664,7 @@
   },
   {
     "id": "9cd2a6a29b58",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Performance Max now uses sourced videos by default — advertisers must opt out",
@@ -2504,6 +2679,7 @@
   },
   {
     "id": "5a1eb21f1050",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Seasonality adjustments now work for Demand Gen campaigns",
@@ -2518,6 +2694,7 @@
   },
   {
     "id": "befd9a7d31fd",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Shopping ads in AI Mode start showing promotions such as 'Buy 4, get $20 off'",
@@ -2532,6 +2709,7 @@
   },
   {
     "id": "46285e160dbb",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google tests clickable underlined phrases inside Search ad descriptions",
@@ -2546,6 +2724,7 @@
   },
   {
     "id": "ed29fe7f9035",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Pulse",
     "title": "Google's channel caps work in the API and in Experiments at launch, and PMax can set Search partners to 0%",
@@ -2560,6 +2739,7 @@
   },
   {
     "id": "157021734e57",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "AI Max is being switched on automatically in some Google Ad Grants accounts",
@@ -2574,6 +2754,7 @@
   },
   {
     "id": "be2cc07417cd",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google Ads can scan another website or social profile to source image assets",
@@ -2588,6 +2769,7 @@
   },
   {
     "id": "fd5b6a4c504e",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google tests sitelinks showing the URL path and brand favicon",
@@ -2602,6 +2784,7 @@
   },
   {
     "id": "7644f82ffa3b",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google Ads redesigns the Conversions recommendations page with lead-funnel setup prompts",
@@ -2616,6 +2799,7 @@
   },
   {
     "id": "3c77a883f87e",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Reach Planner suggests a weekly frequency benchmark for YouTube plans",
@@ -2630,6 +2814,7 @@
   },
   {
     "id": "e11f70bbae5d",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Build-to-order vehicle ads start serving in nine countries",
@@ -2644,6 +2829,7 @@
   },
   {
     "id": "90901e067537",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "AI Max experiments get 1-click 50/50 setup and ad-group-level controls",
@@ -2658,6 +2844,7 @@
   },
   {
     "id": "11ad47ea58b0",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Advertiser verification may now require a second proof-of-address document",
@@ -2672,6 +2859,7 @@
   },
   {
     "id": "66f5b39d49bf",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Merchant Center adds a warranty attribute for all products",
@@ -2686,6 +2874,7 @@
   },
   {
     "id": "cc5da8eff2eb",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Demand Gen gets Campaign Type Attribution in beta",
@@ -2700,6 +2889,7 @@
   },
   {
     "id": "835215bf0c1a",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Merchant Center requires a store_address attribute for local inventory ads",
@@ -2714,6 +2904,7 @@
   },
   {
     "id": "15f5fd35d572",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google explains GG_ transaction IDs: your own ID isn't being passed",
@@ -2728,6 +2919,7 @@
   },
   {
     "id": "8006d57e6419",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google documents how to unpause accounts suspended for suspicious payments",
@@ -2742,6 +2934,7 @@
   },
   {
     "id": "a59109b2af82",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google bans fixed-quota betting ads in Brazil and revokes lottery and horse-racing certifications",
@@ -2756,6 +2949,7 @@
   },
   {
     "id": "c35354278a7b",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Video reach campaigns get automated bidding in beta, no target CPM required",
@@ -2770,6 +2964,7 @@
   },
   {
     "id": "28975a6161b9",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google redefines a video 'engagement': 10 seconds watched instead of 5",
@@ -2784,6 +2979,7 @@
   },
   {
     "id": "a26d84032b22",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Demand Gen adds an 'Overlay on videos' optimization that appears to be on by default",
@@ -2798,6 +2994,7 @@
   },
   {
     "id": "3efc6c37a158",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google Ads calculates a break-even target ROAS from your profit margin",
@@ -2812,6 +3009,7 @@
   },
   {
     "id": "73e57de71798",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google documents commerce audience sharing for retail-media campaigns",
@@ -2826,6 +3024,7 @@
   },
   {
     "id": "1be7044e06fe",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google Ads experiments get an AI summary panel with recommended actions",
@@ -2840,6 +3039,7 @@
   },
   {
     "id": "2d8250c09872",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Overview page adds video impressions to conversion paths and a 'Performance by stage' card",
@@ -2854,6 +3054,7 @@
   },
   {
     "id": "07723ece3e57",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google allows 0% alcohol ads in India, Indonesia and Egypt with certification",
@@ -2868,6 +3069,7 @@
   },
   {
     "id": "7486e0889fd7",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Demand Gen counts view-through conversions from any rendered impression, not Active View",
@@ -2882,6 +3084,7 @@
   },
   {
     "id": "bb3d70e14e69",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google tests a 'Direct offer' asset that serves promo codes in AI Mode",
@@ -2896,6 +3099,7 @@
   },
   {
     "id": "05178ce96973",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google Ads Editor 2.10 and older stopped working on October 19",
@@ -2910,6 +3114,7 @@
   },
   {
     "id": "f00982d701a4",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Loyalty Customer Match expands to AI Mode, Gemini and 14 countries",
@@ -2924,6 +3129,7 @@
   },
   {
     "id": "7a40319d3e92",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Manager accounts can create Google Ads accounts without building a campaign",
@@ -2938,6 +3144,7 @@
   },
   {
     "id": "7ad7fb4120a3",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google tests Local Services Ads that reveal the phone number only on hover",
@@ -2952,6 +3159,7 @@
   },
   {
     "id": "1179df25aaca",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "AI Mode shows three ads at the bottom of answers instead of two",
@@ -2966,6 +3174,7 @@
   },
   {
     "id": "89b0f94c78d8",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google tests two new ad designs in AI Mode",
@@ -2980,6 +3189,7 @@
   },
   {
     "id": "e3276c96a9b6",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google tests sitelinks on ads in AI Mode",
@@ -2994,6 +3204,7 @@
   },
   {
     "id": "b50b2470b0c2",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC News Feed",
     "title": "Google tests new review displays inside Search ads",
@@ -3008,6 +3219,7 @@
   },
   {
     "id": "f72325a56ee2",
+    "track": "performance",
     "platform": "google_ads",
     "source": "PPC Land — Pulse",
     "title": "Safari cuts server-set cookies to 7 days on tracking subdomains hosted elsewhere",
@@ -3022,6 +3234,7 @@
   },
   {
     "id": "f59761b96e39",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC News Feed",
     "title": "Bing tests a 'Learn more' CTA button in Copilot ads",
@@ -3036,6 +3249,7 @@
   },
   {
     "id": "185d7b35fc1e",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC News Feed",
     "title": "Microsoft Advertising rewrites its surveillance policy as 'Surveillance Products and Services'",
@@ -3050,6 +3264,7 @@
   },
   {
     "id": "502b11e447f7",
+    "track": "performance",
     "platform": "bing",
     "source": "Search Engine Roundtable — Microsoft Advertising",
     "title": "Bing tests a large single sponsored ad unit at the top of results",
@@ -3064,6 +3279,7 @@
   },
   {
     "id": "939aa6b0954e",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC News Feed",
     "title": "Bing tests 'Popular links' in Search ads, possibly a new label for sitelinks",
@@ -3078,6 +3294,7 @@
   },
   {
     "id": "bce99f8096c5",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC News Feed",
     "title": "Microsoft Advertising requires 18+ targeting for several restricted categories",
@@ -3092,6 +3309,7 @@
   },
   {
     "id": "1524db6c5046",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC News Feed",
     "title": "Microsoft Advertising sign-up builds a draft PMax campaign from a 'business snapshot'",
@@ -3106,6 +3324,7 @@
   },
   {
     "id": "ede18df47a96",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC News Feed",
     "title": "Microsoft Conversions API can now restate and retract conversions",
@@ -3120,6 +3339,7 @@
   },
   {
     "id": "b0b822d8cd39",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC News Feed",
     "title": "Microsoft Advertising adds OR filters, filter-by-selected-rows and custom columns in trend charts",
@@ -3134,6 +3354,7 @@
   },
   {
     "id": "a5b750ab3188",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC News Feed",
     "title": "Microsoft Ads API adds bulk conversion value rules, AI text tone and a brand-exclusion setting",
@@ -3148,6 +3369,7 @@
   },
   {
     "id": "f9f79b929f4d",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC News Feed",
     "title": "Microsoft Advertising bans online casino and sports-betting ads in Brazil",
@@ -3162,6 +3384,7 @@
   },
   {
     "id": "71f7785f1695",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC News Feed",
     "title": "Microsoft adds Messaging guidelines to text guardrails for AI Max (closed pilot)",
@@ -3176,6 +3399,7 @@
   },
   {
     "id": "d2e1b48146af",
+    "track": "performance",
     "platform": "bing",
     "source": "PPC News Feed",
     "title": "Microsoft keeps shipping new features in the SOAP API until January 31, 2027",
@@ -3190,6 +3414,7 @@
   },
   {
     "id": "f5d9d64e906e",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "Search Engine Roundtable — ChatGPT Ads",
     "title": "ChatGPT Ads turns on creative enhancements for all self-serve campaigns from October 30",
@@ -3204,6 +3429,7 @@
   },
   {
     "id": "0f59db0f0422",
+    "track": "performance",
     "platform": "chatgpt",
     "source": "AdExchanger — ChatGPT Ads",
     "title": "ChatGPT Ads expands to 26 more countries, 14 of them in Latin America",
@@ -3218,6 +3444,7 @@
   },
   {
     "id": "f969948bb5e3",
+    "track": "performance",
     "platform": "meta",
     "source": "Social Media Today — Facebook",
     "title": "Meta is removing placement controls and points advertisers to per-placement creative and bids instead",
@@ -3232,6 +3459,7 @@
   },
   {
     "id": "0b1b63e80f2d",
+    "track": "performance",
     "platform": "meta",
     "source": "Social Media Today — Facebook",
     "title": "Meta's business AI can now edit budgets and targeting by prompt; Ads Creative Studio and Ads MCP widen",
@@ -3246,6 +3474,7 @@
   },
   {
     "id": "216de00e2df4",
+    "track": "performance",
     "platform": "meta",
     "source": "Social Media Today — Facebook",
     "title": "Meta drops the separate access-verification review for apps using clients' business data",
@@ -3260,6 +3489,7 @@
   },
   {
     "id": "514d5d65c11e",
+    "track": "performance",
     "platform": "meta",
     "source": "Search Engine Journal — Social",
     "title": "Meta drops 'train' from its Oct 30 crawl clause but keeps the right to crawl business websites",

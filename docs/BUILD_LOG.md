@@ -514,3 +514,38 @@ Cleanup therefore relies on GitHub: **Settings → General → Pull Requests →
 whoever merges it. The 19 existing branches were handed to Ivan to delete by hand. The
 rule is in `CLAUDE.md`, both routine docs and `routines/SETUP.md`; `main` and `backup*`
 are never touched.
+
+## 18. Programmatic track — collection (2026-10-22, branch, not yet on `main`)
+The digest gains a second audience: programmatic traders. Platforms (exact list, like the
+performance product test): **The Trade Desk, DV360, Amazon DSP, Microsoft programmatic,
+CTV.** Other DSPs and SSPs (PubMatic, Magnite, Yahoo DSP, …) are treated as vendors.
+
+**Architecture.** A separate collect routine rather than one routine with two modes:
+the two tracks disagree on the product test (DV360 is "not ours" for performance and
+core for programmatic), and one instruction holding both would invite exactly the
+mis-filing that let DV360 into editions 3 and 4. So:
+- **Routine 1 — Collect — Performance** (`routines/routine-1-collect-performance.md`,
+  renamed from `routine-1-collect.md`; a stub at the old path redirects until the
+  trigger prompt is re-pasted) and **Routine 1 — Collect — Programmatic**
+  (`routines/routine-1-collect-programmatic.md`), each with its own sources file
+  (`sources.yaml` / `sources-programmatic.yaml`) and criteria (`criteria.md` /
+  `criteria-programmatic.md`).
+- **One database.** Both append to `data/updates.json`; every record now carries
+  `"track": "performance" | "programmatic"` (all 230 existing records backfilled as
+  performance). Shared `data/state.json`, `docs/SOURCES_LOG.md` and alert DM. One URL is
+  one record across tracks (Layer 1). The two runs are scheduled a few hours apart so
+  their PRs never touch `updates.json` at the same time.
+- **Microsoft split** (from Microsoft's own guide to programmatic advertising): the
+  Microsoft Advertising account — Search, Shopping, PMax, Audience ads, UET — stays
+  performance (`bing`); the programmatic stack from Xandr — Invest, Curate,
+  programmatic CTV/Netflix, open-exchange display/native/DOOH on CPM — is
+  `microsoft_programmatic`. Monetize is in neither.
+- **"Where it lands" rule** for partners differs from performance: a vendor capability
+  usable inside our DSP (new data segments, inventory) is in; the vendor's own product
+  news is out.
+
+**Routine 2 is shared, not split.** Until programmatic delivery exists (deck filter,
+Slack destination — next steps), its step 1 skips `"track": "programmatic"` records
+entirely, so a programmatic collection can never leak into a performance edition.
+
+13 programmatic sources validated; details in `docs/SOURCES_LOG.md` (2026-10-22).

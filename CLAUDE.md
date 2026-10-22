@@ -5,19 +5,26 @@ memory. Read [`README.md`](README.md) for the full design. This file is the quic
 operational reference for a routine session.
 
 ## What you might be asked to do
-- **Run Routine 1 (Collect):** follow [`routines/routine-1-collect.md`](routines/routine-1-collect.md) exactly.
+- **Run Routine 1 — Collect — Performance:** follow [`routines/routine-1-collect-performance.md`](routines/routine-1-collect-performance.md) exactly.
+- **Run Routine 1 — Collect — Programmatic:** follow [`routines/routine-1-collect-programmatic.md`](routines/routine-1-collect-programmatic.md) exactly.
 - **Run Routine 2 (Presentation):** follow [`routines/routine-2-presentation.md`](routines/routine-2-presentation.md) exactly.
-- **Edit relevance rules:** they live in [`criteria.md`](criteria.md) (human-owned).
+- **Edit relevance rules:** they live in [`criteria.md`](criteria.md) (performance) and
+  [`criteria-programmatic.md`](criteria-programmatic.md) (programmatic) — human-owned.
 - **Re-skin the deck:** CSS vars in [`style/deck-template.html`](style/deck-template.html).
 
 ## Control model (how this stays autonomous)
 The routines are meant to run **hands-off from the repo**: the trigger prompts are tiny
 pointers, and every decision lives in these repo files. All tuning happens by editing
 the repo (via chat) — never by rewriting the routine prompts:
-- **Sources** → `sources.yaml` (current state only; history in `docs/SOURCES_LOG.md`)
-  ·   **Relevance** → `criteria.md`
-- **Source alerts** → `routines/routine-1-collect.md` → Open config (`alert_channel_id`,
-  Ivan's DM; Russian; sent only when a source breaks or recovers)
+- **Two tracks, one database.** Performance (Google Ads, Microsoft Advertising account,
+  ChatGPT Ads, Meta, TikTok, LinkedIn) and programmatic (The Trade Desk, DV360, Amazon
+  DSP, Microsoft programmatic, CTV) are collected by separate routines into the same
+  `data/updates.json`; every record carries `"track": "performance" | "programmatic"`.
+- **Sources** → `sources.yaml` (performance) / `sources-programmatic.yaml` (programmatic)
+  — current state only; history for both in `docs/SOURCES_LOG.md`
+  ·   **Relevance** → `criteria.md` / `criteria-programmatic.md`
+- **Source alerts** → each collect routine's Open config (`alert_channel_id`, Ivan's DM;
+  Russian; sent only when a source breaks or recovers)
 - **Design** → `style/deck-template.html` (+ `assets/stickers/`)   ·   **UI strings in
   other languages** → also `style/deck-template.html` (interface chrome is pre-baked and
   English-only; only the hero subtitle, card titles/summaries and TL;DR bullets are
@@ -41,7 +48,11 @@ language or step into a prompt, put it in the routine's `.md` instead.
 ## Hard rules
 - `presented` is set **only after** a confirmed Slack post (Routine 2), **per team** —
   items in a team whose message failed or was skipped stay un-presented. Never before.
-- Routine 1 **never** builds a deck; Routine 2 **never** collects.
+- Routine 1 (either track) **never** builds a deck; Routine 2 **never** collects.
+- Each collect routine writes only its own `track` and never edits the other track's
+  records. One URL is one record (Layer 1), whichever track stored it first.
+- **Programmatic is not delivered yet:** Routine 2 skips `"track": "programmatic"` records
+  until the deck filter and Slack destination for it are built.
 - Dedup: Layer 1 = canonical-URL exact match (`sha1(canonical_url)[:12]`); Layer 2 =
   LLM semantic match, preferring official sources over aggregators.
 - **i18n:** Routine 2 pre-translates at build time (EN base → RU / ES / SR-**Latin**) and
@@ -69,7 +80,7 @@ language or step into a prompt, put it in the routine's `.md` instead.
   container. (GTM lives in every deck because it's in the template; keep it there.)
 
 ## Data files (don't hand-corrupt)
-- `data/updates.json` — array of update records (see README schema).
+- `data/updates.json` — array of update records (see README schema), both tracks.
 - `data/state.json` — `{ "<source_key>": { "last_collected": "YYYY-MM-DD" } }`.
 
 ## Environment gotchas

@@ -64,6 +64,10 @@ the schedule is set to fire every Wednesday. If the registry is empty, continue 
 edition). Threshold lives in Open config.
 
 ### 1. Expire stale backlog, then select candidates
+- **Programmatic track is not delivered yet.** Work only on records with
+  `"track": "performance"`. Leave every `"track": "programmatic"` record completely
+  untouched — don't expire it, select it, present it or mention it — until this step is
+  replaced by the programmatic delivery rules (deck filter + Slack destination).
 - **Expiry pass first.** For every item with `presented == false` and no `expired`
   flag, if its `first_seen` is **older than 28 days** (from today), set `expired: true`.
   Expired items are permanently out of the running — a digest is about recent news, and

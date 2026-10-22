@@ -1,8 +1,13 @@
 # Ad Platform News Digest
 
-Automatically collect marketing-relevant updates from the major ad platforms
-(Google Ads, Microsoft/Bing, ChatGPT Ads, Meta, LinkedIn, TikTok), keep only what
-matters, and every two weeks build an easy-to-read mini-deck that gets posted to Slack.
+Automatically collect marketing-relevant updates from the major ad platforms, keep only
+what matters, and every two weeks build an easy-to-read mini-deck that gets posted to
+Slack. Two tracks:
+
+- **Performance** — Google Ads, Microsoft Advertising (the account formerly Bing Ads),
+  ChatGPT Ads, Meta, TikTok, LinkedIn.
+- **Programmatic** — The Trade Desk, DV360, Amazon DSP, Microsoft programmatic, CTV.
+  *Collection is being built; delivery (deck filter + Slack) comes next.*
 
 Discovery and relevance filtering are done by an **LLM agent** (two Claude routines),
 not a fixed scraper — article URLs are unknown in advance and "is this relevant" is a
@@ -13,12 +18,13 @@ links. This GitHub repo is the system's **persistent memory**.
 
 ## How it works
 
-Two scheduled **routines** + this repo as state:
+Three scheduled **routines** + this repo as state:
 
 | Routine | Cadence | What it does |
 |---|---|---|
-| **[Routine 1 — Collect](routines/routine-1-collect.md)** | weekly | Visits each source, finds new items, dedupes them, appends to `data/updates.json`; DMs Ivan (in Russian) when a source breaks or recovers. |
-| **[Routine 2 — Presentation](routines/routine-2-presentation.md)** | every 2 weeks | Filters the un-presented items, builds the deck, posts a summary + link to Slack, then marks them `presented`. |
+| **[Routine 1 — Collect — Performance](routines/routine-1-collect-performance.md)** | weekly | Reads `sources.yaml`, filters by `criteria.md`, dedupes, appends `"track": "performance"` items to `data/updates.json`; DMs Ivan (in Russian) when a source breaks or recovers. |
+| **[Routine 1 — Collect — Programmatic](routines/routine-1-collect-programmatic.md)** | weekly, a few hours apart from the performance run | Same job for the programmatic track: `sources-programmatic.yaml`, `criteria-programmatic.md`, `"track": "programmatic"`. |
+| **[Routine 2 — Presentation](routines/routine-2-presentation.md)** | every 2 weeks | Filters the un-presented items, builds the deck, posts a summary + link to Slack, then marks them `presented`. (Programmatic items are skipped until their delivery is built.) |
 
 Each routine's trigger prompt is just a short pointer to its instruction doc in
 `routines/`; all logic lives in those docs.
@@ -28,8 +34,10 @@ Each routine's trigger prompt is just a short pointer to its instruction doc in
 ## Repository layout
 
 ```
-sources.yaml          # entry points per platform + each one's current status
-criteria.md           # relevance rules + impact scoring (human-edited)
+sources.yaml          # performance entry points + each one's current status
+sources-programmatic.yaml  # programmatic entry points + status
+criteria.md           # performance relevance rules + impact scoring (human-edited)
+criteria-programmatic.md   # programmatic relevance rules (human-edited)
 style/
   deck-template.html  # data-driven HTML deck ("Zine" skin)
   slack-summary.md    # Slack channel message format
@@ -37,11 +45,12 @@ style/
 assets/
   stickers/           # colorized sticker PNGs the deck template references
 data/
-  updates.json        # all collected updates + collected/presented flags
-  state.json          # last-collected date per source (Routine 1's window)
+  updates.json        # all collected updates (both tracks) + collected/presented flags
+  state.json          # last-collected date per source, both tracks (informational)
 decks/                # generated presentations (deck-YYYY-MM-DD.html)
 routines/
-  routine-1-collect.md
+  routine-1-collect-performance.md
+  routine-1-collect-programmatic.md
   routine-2-presentation.md
 docs/
   SOURCES_LOG.md      # history of source changes (added / broke / recovered)
@@ -53,7 +62,10 @@ README.md / CLAUDE.md # repo context
 ```json
 {
   "id": "a3f9c2b1e004",
-  "platform": "google_ads",
+  "track": "performance",   // performance | programmatic — which routine collected it
+  "platform": "google_ads", // performance: google_ads | bing | chatgpt | meta | tiktok |
+                            //   linkedin; programmatic: ttd | dv360 | amazon_dsp |
+                            //   microsoft_programmatic | ctv
   "source": "Google Ads & Commerce Blog",
   "title": "...",
   "url": "https://...",
@@ -87,7 +99,7 @@ the semantic dedup itself.
   canonical record.
 
 ## Collection window
-- Routine 1 collects over a **fixed last-2-weeks window** (`today − 14 days`, ~2 days
+- Both collect routines use a **fixed last-2-weeks window** (`today − 14 days`, ~2 days
   margin) on every run. Earlier periods are never revisited.
 - Dedup against `data/updates.json` (checked first) prevents re-adding items already
   collected in an overlapping earlier run.
@@ -145,11 +157,12 @@ the fetch fails with a `403 CONNECT` policy denial (not a code bug).
 tool.** Once egress is open, curl gets HTTP 200 from the source domains, but
 `WebFetch`'s fetcher is still blocked by the sites' anti-bot (403).
 
-`sources.yaml` lists **24 sources** across the six platforms (re-validated 2026-10-21:
-19 `readable`, 5 Search Engine Land pages `blocked` by a Cloudflare challenge and kept
-in case the site recovers). Each source carries its current status; Routine 1 updates it,
-records every change in [`docs/SOURCES_LOG.md`](docs/SOURCES_LOG.md) and DMs Ivan when a
-source breaks or recovers. The hosts to allow are listed in
+`sources.yaml` lists **24 performance sources** (re-validated 2026-10-21: 19 `readable`,
+5 Search Engine Land pages `blocked` by a Cloudflare challenge and kept in case the site
+recovers); `sources-programmatic.yaml` lists **13 programmatic sources** (validated
+2026-10-22, all `readable`). Each source carries its current status; its collect routine
+updates it, records every change in [`docs/SOURCES_LOG.md`](docs/SOURCES_LOG.md) and DMs
+Ivan when a source breaks or recovers. The hosts to allow are listed in
 [`routines/SETUP.md`](routines/SETUP.md) → step 1.
 
 ## Status / next actions
