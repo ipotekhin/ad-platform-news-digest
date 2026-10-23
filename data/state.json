@@ -70,5 +70,44 @@
   },
   "sej_social": {
     "last_collected": "2026-10-21"
+  },
+  "ttd_press_room": {
+    "last_collected": "2026-10-23"
+  },
+  "ttd_resources": {
+    "last_collected": "2026-10-23"
+  },
+  "dv360_announcements": {
+    "last_collected": "2026-10-23"
+  },
+  "dv360_api_release_notes": {
+    "last_collected": "2026-10-23"
+  },
+  "gmp_360_blog": {
+    "last_collected": "2026-10-23"
+  },
+  "adexchanger_amazon_dsp": {
+    "last_collected": "2026-10-23"
+  },
+  "adexchanger_amazon_ads": {
+    "last_collected": "2026-10-23"
+  },
+  "microsoft_ads_blog_programmatic": {
+    "last_collected": "2026-10-23"
+  },
+  "adexchanger_tv": {
+    "last_collected": "2026-10-23"
+  },
+  "digiday_future_of_tv": {
+    "last_collected": "2026-10-23"
+  },
+  "ppcland_pulse_programmatic": {
+    "last_collected": "2026-10-23"
+  },
+  "mediapost_programmatic": {
+    "last_collected": "2026-10-23"
+  },
+  "adweek_programmatic": {
+    "last_collected": "2026-10-23"
   }
 }
