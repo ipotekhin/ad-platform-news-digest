@@ -36,11 +36,10 @@ deck-data changes needed:
   fall back to the name (`teamOf`): Meta / TikTok / LinkedIn → *Social*, The Trade Desk /
   DV360 / Amazon DSP / Microsoft Programmatic / CTV → *Programmatic*, everything else
   (Google Ads, Microsoft Advertising, ChatGPT Ads) → *Search*.
-- **Team headings.** Each team's block opens with a "*Search* / *Social* /
-  *Programmatic* **News**" heading (team word in the hero's italic-blue accent), centred
-  between two rules, with no counter. All news shows all three; with a team selected only
-  its heading shows, so it always names the section being read. (Style under review on
-  the test page — `?hv=a|b|c|d` there switches between candidates.)
+- **Team headings.** Each team's block opens with a blue banner — "*Search* /
+  *Social* / *Programmatic* **News**" in white Playfair, the team word in lime italic
+  (the hero's "Bi-Weekly" accent), no counter. All news shows all three; with a team
+  selected only its heading shows, so it always names the section being read.
 - **Hero subtitle follows the filter.** `subtitles.all` leads with one top story per
   team; `subtitles.search|social|programmatic` with that team's own top stories.
 - **No TL;DR block** (removed 2026-10 with the programmatic team: one cross-team list
