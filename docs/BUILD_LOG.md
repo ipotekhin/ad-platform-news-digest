@@ -144,7 +144,7 @@ Per-platform GRAB/IGNORE table included. Otherwise R1 applies the rules loosely
 - Data-driven: only the `#deck-data` JSON changes per edition. Loads Google Fonts
   (Playfair Display, Courier Prime) + local PNG stickers from `assets/stickers/` — the
   only external/local requests. Light/cream editorial look, no dark mode.
-- **Footer:** "Made for Performance Team with 💜 by Ivan Potekhin".
+- **Footer:** "Made for Performance Team with 💜 by Ivan Potekhin" (credit removed 2026-10 with the programmatic team; the footer now shows the update count and period only).
 - **Stickers** (`assets/stickers/`, 35 PNGs; `arrows-grid` and `flag` were removed):
   randomized per edition, seeded by the edition date (deterministic). Pools by slot —
   `POOL_GENERAL` (hero/tldr/archive/cards; no arrows-grid/flag/folder-star/paperclip),
