@@ -549,3 +549,19 @@ Slack destination — next steps), its step 1 skips `"track": "programmatic"` re
 entirely, so a programmatic collection can never leak into a performance edition.
 
 13 programmatic sources validated; details in `docs/SOURCES_LOG.md` (2026-10-22).
+
+### Test run on the branch (2026-10-23)
+A one-off trigger ran Routine 1 — Collect — Programmatic against this branch (PR #95 into
+the branch, `main` untouched): all 13 sources read, **12 items** (DV360 6, The Trade
+Desk 5, Amazon DSP 1), window Oct 7–23, every URL 200, no cross-track duplicates, no
+status changes so no alert. Platform assignment followed "where it lands" (LinkedIn CTV
+inventory in DV360 → `dv360`; Netflix targeting in Kokai → `ttd`).
+
+It surfaced one gap in Layer 1: the rule said "strip the trailing slash", but 6 of the 12
+IDs were hashed from the raw href (8 of 114 slash-ended performance records show the same
+drift), so a later, correct run would miss the duplicate by ID. Fixed in both collect
+docs: the canonical URL is now an explicit four-step recipe, the ID is hashed from it,
+and "already collected" also matches stored URLs canonicalised the same way, so older
+records hashed differently are still caught. Items that are anchors on one page (DV360
+API release notes) keep their `#fragment`. The 6 test IDs were recomputed; nothing had
+been presented, so nothing else referenced them.

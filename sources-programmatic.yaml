@@ -118,7 +118,9 @@ sources:
     validation: readable
     note: >-
       One `<h2 id="month_d_yyyy">Month D, YYYY</h2>` section per release, newest first;
-      releases come every ~2 months. Item URL = this page plus `#<h2 id>`. Mostly
+      releases come every ~2 months. Items are sections of one page: item URL = this
+      page plus `#<h2 id>`, and the fragment stays in the canonical URL (Layer 1 step 3)
+      — otherwise every release would share one ID. Mostly
       developer changes (versions, fields, client libraries) — keep only a release that
       exposes a new platform capability a trader would use, and describe the capability,
       not the API.

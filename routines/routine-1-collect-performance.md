@@ -127,12 +127,22 @@ Apply `criteria.md` **loosely** here — *lean include*. The strict filter happe
 Routine 2. Drop only obvious non-fits (pure PR, consumer news, inspiration posts).
 
 ### 4. Dedup — Layer 1 (exact, no LLM)
-For each surviving candidate, compute the **canonical URL**:
-- lowercase host, strip `utm_*` and other tracking params, strip `#fragment`, strip
-  trailing slash.
-- **Stable ID** = `sha1(canonical_url)` truncated to 12 hex chars.
+For each surviving candidate, compute the **canonical URL** — exactly these steps, in
+this order, so every run gets the same string:
+1. lowercase the scheme and host;
+2. drop `utm_*` and other tracking params (`ref_`, `ref`, `fbclid`, `gclid`, `mc_cid`,
+   `mc_eid`); keep every other query param;
+3. drop the `#fragment` — **unless** the source's note says its items are sections of
+   one page (e.g. DV360 API release notes): then the fragment *is* the item, keep it;
+4. drop the trailing slash (`…/slug/` → `…/slug`).
+
+- **Stable ID** = `sha1(canonical_url)` truncated to 12 hex chars. Hash the canonical
+  string, never the raw href (the record's `url` stays the raw href — see step 6).
 - If a source has no per-item URL: `id = sha1(source + published + title)[:12]`.
-- If the ID already exists in `data/updates.json` → **skip** (already collected).
+- **Already collected → skip** if the ID exists in `data/updates.json` **or** any stored
+  record's `url`, canonicalised the same way, equals this candidate's canonical URL.
+  (Some older records were hashed from the raw href, so the ID check alone can miss
+  them; the URL check cannot.)
 
 ### 5. Dedup — Layer 2 (semantic, LLM)
 Take the candidates that survived Layer 1 **plus** the titles+summaries already stored
