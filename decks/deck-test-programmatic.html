@@ -108,20 +108,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     #news-filter .opts button.active{background:transparent;color:#fff}
     #news-filter .flt-ind{display:block;position:absolute;left:0;top:0;bottom:0;z-index:0;border-radius:999px;background:var(--aid-blue);transition:transform .3s cubic-bezier(.5,1.5,.4,1),width .3s cubic-bezier(.5,1.5,.4,1)}
   }
-  /* ── Section headings: "All News" over the feed, "Search News" … per team ──
-     Same accent as the hero's italic "Bi-Weekly": Playfair, team word in italic
-     blue. The view heading names what the filter shows; the team headings divide
-     the feed in All news and hide when one team is selected (the view heading
-     already says which). */
-  .view-head,.team-head{display:flex;align-items:flex-end;flex-wrap:wrap;gap:10px 18px}
-  .view-head{margin:0 0 40px;padding-bottom:16px;border-bottom:3px solid var(--aid-ink)}
-  .team-head{margin:12px 0 30px;padding-bottom:12px;border-bottom:2px dashed rgba(26,26,26,.35)}
-  .view-head h2,.team-head h3{font-family:'Playfair Display',Georgia,serif;font-weight:800;line-height:.95;letter-spacing:-.015em;margin:0;color:var(--aid-ink)}
-  .view-head h2{font-size:clamp(44px,6vw,72px)}
-  .team-head h3{font-size:clamp(32px,4vw,46px)}
-  .view-head em,.team-head em{font-style:italic;color:var(--aid-blue)}
-  .th-pill{font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--aid-ink);background:var(--aid-lime);border:2px solid var(--aid-ink);border-radius:999px;padding:5px 14px 4px;box-shadow:3px 3px 0 var(--aid-ink);margin-bottom:6px;white-space:nowrap}
-  .team-head .th-pill{background:#fff;box-shadow:none;margin-bottom:4px}
+  /* ── Team headings ("Search News" …) ──
+     Centred between two rules, in the hero's accent: the team word in italic blue,
+     like "Bi-Weekly". One heads each team's block in All news; with a team selected
+     only that team's heading shows, so it always names the section being read. */
+  .team-head{display:flex;align-items:center;gap:22px;margin:10px 0 36px}
+  .team-head::before,.team-head::after{content:"";flex:1;height:2px;background:var(--aid-ink)}
+  .team-head h3{font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(34px,4.6vw,52px);line-height:1;letter-spacing:-.01em;margin:0;color:var(--aid-ink);white-space:nowrap}
+  .team-head em{font-style:italic;color:var(--aid-blue)}
   /* ── Typewriter caret ── */
   .tw-caret::after{content:"";display:inline-block;width:.055em;height:.92em;background:currentColor;margin-left:.05em;vertical-align:-.06em;animation:tw-blink .8s steps(1) infinite}
   @keyframes tw-blink{50%{opacity:0}}
@@ -159,15 +153,36 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
        Shorter pill (30px), same explicit height + 1px top bias as desktop. */
     .hdr-ctl{gap:7px}
     .dd-toggle{height:30px;padding:1px 10px 0;gap:5px;letter-spacing:.02em}
-    /* Section headings: the pill wraps under the heading instead of squeezing it. */
-    .view-head{margin-bottom:30px}
-    .th-pill{white-space:normal}
+    .team-head{gap:12px}
+    .team-head h3{font-size:32px}
     /* Platform sections sit inside <main>, which already has the gutter — don't add a
        second one, so cards line up with the section headings. */
     #d-body > section{padding-left:0!important;padding-right:0!important}
     /* Platform names at 38px push the icon, name and counter onto three lines. */
     #d-body > section h2{font-size:30px!important}
   }
+</style>
+
+<style id="hv-test">
+  /* B — mono-caps lime pill sitting on a full-width rule */
+  body.hv-b .team-head{position:relative;justify-content:center;gap:0}
+  body.hv-b .team-head::before{position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px}
+  body.hv-b .team-head::after{display:none}
+  body.hv-b .team-head h3{position:relative;font-family:'Courier Prime',monospace;font-weight:700;font-size:15px;letter-spacing:.18em;text-transform:uppercase;background:var(--aid-lime);border:2px solid var(--aid-ink);border-radius:999px;padding:10px 24px 9px;box-shadow:3px 3px 0 var(--aid-ink)}
+  body.hv-b .team-head em{font-style:normal;color:var(--aid-ink)}
+  /* C — blue banner block, white heading with the team word in lime italic */
+  body.hv-c .team-head{justify-content:center;background:var(--aid-blue);border:2px solid var(--aid-ink);border-radius:20px;padding:26px 20px 28px;box-shadow:10px 11px 0 var(--aid-ink)}
+  body.hv-c .team-head::before,body.hv-c .team-head::after{display:none}
+  body.hv-c .team-head h3{color:#fff}
+  body.hv-c .team-head em{color:var(--aid-lime)}
+  /* D — editorial: mono kicker over a large left-aligned heading, thick top rule */
+  body.hv-d .team-head{flex-direction:column;align-items:flex-start;gap:8px;border-top:3px solid var(--aid-ink);padding-top:18px}
+  body.hv-d .team-head::after{display:none}
+  body.hv-d .team-head::before{content:attr(data-kicker);flex:none;height:auto;background:none;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--aid-mute)}
+  body.hv-d .team-head h3{font-size:clamp(44px,6vw,68px)}
+  #hv-bar{position:fixed;left:16px;bottom:16px;z-index:90;display:flex;align-items:center;gap:6px;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:#fff;border:2px solid var(--aid-ink);border-radius:999px;padding:6px 8px 6px 14px;box-shadow:3px 3px 0 var(--aid-ink)}
+  #hv-bar a{color:var(--aid-ink);border:1.5px solid var(--aid-ink);border-radius:999px;padding:3px 10px}
+  #hv-bar a.on{background:var(--aid-blue);color:#fff}
 </style>
 </head>
 <body>
@@ -233,8 +248,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ══ UPDATES ══ -->
 <main id="updates" style="max-width:1120px;margin:0 auto;padding:48px 32px 20px">
-  <!-- View heading: names what the news filter shows (All / Search / Social / Programmatic). -->
-  <div id="d-view-head" class="view-head reveal"><h2 id="d-view-title"><em>All</em> News</h2><span id="d-view-pill" class="th-pill"></span></div>
   <p id="d-team-empty" class="empty" style="display:none;margin:0 0 40px"></p>
   <div id="d-body"></div>
 </main>
@@ -309,7 +322,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
        "subtitle":       "…",                   // older single subhead, used when `subtitles` is absent; falls back
                                                 //   to "Updates published <period_label>"
        "read_minutes":   5,                     // falls back to an estimate from item count
-       "author":         "Ivan Potekhin",       // footer credit; falls back to "Ivan Potekhin"
        "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"deck-2026-07-05.html" }]  // FALLBACK for the editions strip; BARE filename (no decks/ prefix). At view time the
                                                 //   strip prefers the live registry data/editions.json (same origin), which is what lets an
                                                 //   already-published deck link FORWARD to editions released after it. This array is only used
@@ -1285,21 +1297,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var em = document.createElement("em"); em.textContent = TEAM_LABEL[team] || "All";
     return [em, document.createTextNode(" News")];
   }
-  function teamsPresent(){
-    return TEAMS.filter(function(t){ return platforms.some(function(p){ return teamOf(p) === t; }); });
-  }
-  // The hero subtitle and the view heading both follow the news filter.
+  // The hero subtitle follows the news filter.
   function setTeamView(team){
     curTeam = team;
     document.getElementById("d-subtitle").textContent = subtitleFor(curLang, team);
-    var title = document.getElementById("d-view-title"), pill = document.getElementById("d-view-pill");
-    if (title) { title.textContent = ""; headingNodes(team).forEach(function(n){ title.appendChild(n); }); }
-    if (pill) {
-      pill.textContent = team === "all"
-        ? teamsPresent().map(function(t){ return TEAM_LABEL[t]; }).join(" · ")
-        : platforms.filter(function(p){ return teamOf(p) === team; }).map(function(p){ return p.name; }).join(" · ");
-      pill.style.display = pill.textContent ? "" : "none";
-    }
   }
 
   function renderContent(lang){
@@ -1308,10 +1309,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   document.documentElement.lang = lang;
   body.textContent = "";
 
-  // Hero subtitle + view heading (the subtitle is the one line of hero copy that IS translated)
+  // Hero subtitle (the one line of hero copy that IS translated)
   setTeamView(curTeam);
 
-  // Updates, grouped by team (a heading per team, shown in All news) and platform
+  // Updates, grouped by team (a heading per team) and platform
   if (!platforms.length) {
     body.appendChild(el("p", { color:"var(--aid-mute)", fontStyle:"italic" }, "No qualifying updates in this period."));
   }
@@ -1320,11 +1321,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var team = teamOf(pf);
     if (team !== lastTeam) {
       lastTeam = team;
-      var n = platforms.filter(function(p){ return teamOf(p) === team; }).reduce(function(a, p){ return a + p.items.length; }, 0);
       var h3 = document.createElement("h3"); headingNodes(team).forEach(function(x){ h3.appendChild(x); });
-      var th = el("div", null, h3, el("span", null, n + (n === 1 ? " update" : " updates")));
+      var th = el("div", null, h3);
       th.className = "team-head reveal"; th.setAttribute("data-team", team);
-      th.lastChild.className = "th-pill";
       body.appendChild(th);
     }
     var heading = el("div", { display:"flex", alignItems:"center", flexWrap:"wrap", gap:"14px", marginBottom:"24px" },
@@ -1466,7 +1465,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   // Footer
   document.getElementById("d-footer").textContent =
-    total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "") + " · Made for Performance Team with 💜 by " + (data.author || "Ivan Potekhin");
+    total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "");
   document.title = "Ad Platform News Digest — " + (data.period_label || "");
 })();
 </script>
@@ -1545,9 +1544,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function apply(team){
       var secs=[].slice.call(document.querySelectorAll('#d-body > section'));
       secs.forEach(function(s){ s.style.display=(team==="all"||s.getAttribute("data-team")===team)?"":"none"; });
-      // Team headings divide the feed in All news; with one team selected the view
-      // heading above the feed already names it.
-      [].forEach.call(document.querySelectorAll('#d-body > .team-head'), function(h){ h.style.display=(team==="all")?"":"none"; });
+      // Team headings: every one in All news, only the selected team's otherwise.
+      [].forEach.call(document.querySelectorAll('#d-body > .team-head'), function(h){ h.style.display=(team==="all"||h.getAttribute("data-team")===team)?"":"none"; });
       var vis=secs.filter(function(s){return s.style.display!=="none";});
       var items=0; vis.forEach(function(s){ items+=s.querySelectorAll('article').length; });
       var su=document.getElementById('stat-updates'); if(su) su.textContent=items;
@@ -1682,6 +1680,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       active_filter: af ? af.getAttribute("data-team") : ""
     });
   }, true);
+})();
+</script>
+
+<script id="hv-test-js">
+(function(){
+  var p=new URLSearchParams(location.search), v=(p.get("hv")||"a").toLowerCase();
+  if("abcd".indexOf(v)<0||v.length!==1) v="a";
+  document.body.classList.add("hv-"+v);
+  function number(){ var hs=document.querySelectorAll("#d-body > .team-head");
+    [].forEach.call(hs,function(h,i){ h.setAttribute("data-kicker","Section "+String(i+1).padStart(2,"0")+" / "+String(hs.length).padStart(2,"0")); }); }
+  number(); document.addEventListener("deck:rendered", number);
+  var bar=document.createElement("div"); bar.id="hv-bar"; bar.appendChild(document.createTextNode("Heading "));
+  "abcd".split("").forEach(function(x){ var q=new URLSearchParams(location.search); q.set("hv",x);
+    var a=document.createElement("a"); a.textContent=x.toUpperCase(); a.href="?"+q.toString(); if(x===v) a.className="on"; bar.appendChild(a); });
+  document.body.appendChild(bar);
 })();
 </script>
 </body>
