@@ -135,8 +135,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     /* The large floating stickers are positioned for the wide layout and cover
        text on narrow screens — hide them here. Inline heading/card stickers stay. */
     #dec-hero-1,#dec-hero-2,#dec-signoff-1,#dec-signoff-2{display:none}
-    /* Center the footer credits instead of stretching them edge-to-edge. */
-    footer>div{flex-direction:column;text-align:center}
+    /* Footer: the three columns stack, each centred. */
+    footer>.foot-row{grid-template-columns:1fr!important;justify-items:center;text-align:center}
+    footer>.foot-row>span{justify-self:center!important;text-align:center!important}
     /* Tighter side gutters + block padding so cards/headings don't hug the edge. */
     body section,body main,body header>div,footer>div{padding-left:20px!important;padding-right:20px!important}
     .signoff-card{padding:40px 26px!important}
@@ -253,9 +254,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ══ FOOTER ══ -->
 <footer style="border-top:2px solid var(--aid-ink);background:#f4f1ea">
-  <div style="max-width:1120px;margin:0 auto;padding:28px 32px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;font-family:'Courier Prime',monospace;font-size:12px;color:var(--aid-mute)">
-    <span id="d-footer"></span>
-    <span>AI Digital · Ad Platform News Digest</span>
+  <!-- Three columns: edition facts left, credit centred, brand right. -->
+  <div class="foot-row" style="max-width:1120px;margin:0 auto;padding:28px 32px;display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;font-family:'Courier Prime',monospace;font-size:12px;color:var(--aid-mute)">
+    <span id="d-footer" style="justify-self:start"></span>
+    <span id="d-credit" style="justify-self:center;text-align:center"></span>
+    <span style="justify-self:end;text-align:right">AI Digital · Ad Platform News Digest</span>
   </div>
 </footer>
 
@@ -1444,7 +1447,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   // Footer
   document.getElementById("d-footer").textContent =
-    total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "") + " · Made for MPO Team with 💜 by " + (data.author || "Ivan Potekhin");
+    total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "");
+  document.getElementById("d-credit").textContent =
+    "Made for MPO Team with 💜 by " + (data.author || "Ivan Potekhin");
   document.title = "Ad Platform News Digest — " + (data.period_label || "");
 })();
 </script>
