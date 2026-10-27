@@ -228,7 +228,8 @@ sources:
     title: MediaPost — Programmatic
     url: https://www.mediapost.com/publications/tag/programmatic/
     type: aggregator
-    validation: readable
+    validation: blocked
+    blocked_since: 2026-10-27
     note: >-
       Tag page: `/publications/article/<id>/<slug>.html` links, each followed by its date
       (`October 20, 2026`); ~2 posts a week, so page 1 covers months. Article pages are

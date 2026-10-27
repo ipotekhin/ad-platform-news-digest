@@ -4071,5 +4071,50 @@
     "impact": "medium",
     "collected": true,
     "presented": false
+  },
+  {
+    "id": "f3dbaa09542f",
+    "track": "programmatic",
+    "platform": "dv360",
+    "source": "PPC Land — Pulse",
+    "title": "Pinterest Programmatic Deals become buyable in DV360 and Amazon DSP (Americas and APAC)",
+    "url": "https://ppc.land/pinterest-sells-ads-through-amazon-and-google-dsps-in-3-regions-not-europe/",
+    "published": "2026-10-26",
+    "first_seen": "2026-10-27T17:46:41Z",
+    "summary": "Pinterest made Programmatic Deals generally available in North America, South America and Asia Pacific: selected Pinterest display and video inventory can now be bought as deals in Display & Video 360 and Amazon's DSP (Amazon Ads DVA+), with Magnite as the main supply partner. Europe is excluded, access goes through a Pinterest sales rep, and Pinterest has not said which placements are included.",
+    "category": "feature",
+    "impact": "medium",
+    "collected": true,
+    "presented": false
+  },
+  {
+    "id": "d9d84bbc58f3",
+    "track": "programmatic",
+    "platform": "ctv",
+    "source": "Adweek — Programmatic",
+    "title": "Netflix adds a Netflix Pixel and expanded Conversion API for lower-funnel measurement and targeting",
+    "url": "https://www.adweek.com/convergent-tv/netflix-announces-new-ad-updates-for-measurement-and-capabilities/",
+    "published": "2026-10-20",
+    "first_seen": "2026-10-27T17:46:41Z",
+    "summary": "Netflix Ads Suite gains a Netflix Pixel alongside an enhanced Conversion API, giving advertisers 20+ lower-funnel conversion events for conversion lift, attribution and A/B tests, and letting them build Netflix audience segments from their own conversion data. Netflix also offers in-DSP measurement of programmatic Netflix buys (live in Yahoo DSP, coming to The Trade Desk).",
+    "category": "measurement",
+    "impact": "medium",
+    "collected": true,
+    "presented": false
+  },
+  {
+    "id": "4f9af5be2da6",
+    "track": "programmatic",
+    "platform": "ttd",
+    "source": "PPC Land — Pulse",
+    "title": "WebKit confirms Safari 27 blocks email-based identity resolution services on iOS and macOS",
+    "url": "https://ppc.land/safari-27-blocks-identity-firms-that-turn-email-addresses-into-tracking-ids/",
+    "published": "2026-10-19",
+    "first_seen": "2026-10-27T17:46:41Z",
+    "summary": "Apple's WebKit team says Safari in iOS, iPadOS, macOS and visionOS 27 blocks network access to third parties that turn login or newsletter email addresses into persistent tracking IDs, with no exceptions and no published list. The domains The Trade Desk reported as blocked include Unified ID 2.0 endpoints, so expect UID2 and other email-based IDs to stop being generated in Safari — review reach and identity-based targeting on Apple traffic.",
+    "category": "policy",
+    "impact": "high",
+    "collected": true,
+    "presented": false
   }
 ]
