@@ -1,8 +1,10 @@
 # Relevance Criteria
 
-> **Human-edited file.** Ivan (and future editors) tune the rules here. Both routines
-> read this file at run time — Routine 1 applies it *loosely* (lean include), Routine 2
-> applies it *strictly*. Keep it in plain language — the LLM applies judgment, not regex.
+> **Human-edited file — performance track.** Ivan (and future editors) tune the rules
+> here. Routine 1 — Collect — Performance applies it *loosely* (lean include), Routine 2
+> applies it *strictly* to `"track": "performance"` records. The programmatic track has
+> its own rules in [`criteria-programmatic.md`](criteria-programmatic.md). Keep it in
+> plain language — the LLM applies judgment, not regex.
 
 ---
 
@@ -44,9 +46,19 @@ are bought through separate seats we do not have:
 | **Google Ad Manager (GAM) / AdSense / AdMob** | publisher-side monetisation |
 
 A line-item change, API deprecation or migration deadline inside one of those is
-invisible in our Google Ads account, so it is **out — no matter how urgent its headline
-sounds.** The same applies elsewhere: Meta's publisher tools, Microsoft's Monetize/PubCenter,
-LinkedIn's sales or hiring products.
+invisible in our Google Ads account, so it is **out of this track — no matter how urgent
+its headline sounds.** The same applies elsewhere: Meta's publisher tools, Microsoft's
+Monetize/PubCenter, LinkedIn's sales or hiring products.
+
+**DV360 and the rest of the programmatic stack** — DV360, The Trade Desk, Amazon DSP,
+Microsoft's programmatic stack (Invest, Curate) and CTV bought through those DSPs — are
+not dropped from the digest altogether: they belong to the **programmatic track**,
+collected by its own routine under [`criteria-programmatic.md`](criteria-programmatic.md).
+Here, in the performance track, they are out. CM360, SA360 and Ad Manager / AdSense / AdMob are in
+neither track. **The account a campaign is bought in decides:** YouTube, Video, Demand Gen
+and Masthead campaigns bought in Google Ads — including YouTube on TV screens, and Reach
+Planner — stay here as `google_ads`; only YouTube bought in DV360 is programmatic. Likewise
+CTV placements of Microsoft Advertising account campaigns stay here as `bing`.
 
 **But judge by where the change lands, not by which product is named.** An item that
 mentions DV360 *and* delivers something in our stack stays in — e.g. "Data Manager lands
@@ -96,7 +108,7 @@ feeding them)?* If the only answer involves a product from the table above → d
 - Pure thought-leadership / trend commentary with no concrete product change.
 - Safety/policy news that doesn't touch advertiser-facing rules or eligibility.
 
-When in doubt at **collection** time (Routine 1), lean include; the strict filter and
+When in doubt at **collection** time (Routine 1 — Performance), lean include; the strict filter and
 impact scoring at **presentation** time (Routine 2) do the trimming. **The third-party
 exclusion is the exception — apply it at both stages:** don't even collect vendor news,
 since it would only sit in the backlog until it expires.
@@ -145,4 +157,4 @@ When the **same story** appears on both an `official` source and an `aggregator`
 Search Engine Journal, …), keep the **official** one as the canonical record and
 drop the aggregator duplicate. If only the aggregator has it, keep the aggregator
 version but note it is unconfirmed by an official post. This is what dedup Layer 2
-(semantic) is for — see `routines/routine-1-collect.md`.
+(semantic) is for — see `routines/routine-1-collect-performance.md`.

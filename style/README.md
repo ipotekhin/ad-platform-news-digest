@@ -29,10 +29,21 @@ this skin is a light/cream editorial look by design.
 These are template chrome — they work automatically for every edition, no
 deck-data changes needed:
 
-- **Team filter.** The header holds an **All news / Search / Social** segmented
-  control. Selecting a team shows/hides platform sections and recomputes the header
-  stats. Teams are derived from the platform name (`teamOf`): Meta / TikTok / LinkedIn
-  → *Social*, everything else (Google Ads, Microsoft/Bing, ChatGPT Ads) → *Search*.
+- **Team filter.** The header holds an **All news / Search / Social / Programmatic**
+  segmented control (`?team=search|social|programmatic` deep-links it). Selecting a team
+  shows/hides platform sections and recomputes the header stats (updates, platforms,
+  minutes). Each platform carries its team in the deck data (`team`); decks without it
+  fall back to the name (`teamOf`): Meta / TikTok / LinkedIn → *Social*, The Trade Desk /
+  DV360 / Amazon DSP / Microsoft Programmatic / CTV → *Programmatic*, everything else
+  (Google Ads, Microsoft Advertising, ChatGPT Ads) → *Search*.
+- **Team headings.** Each team's block opens with a blue banner — "*Search* /
+  *Social* / *Programmatic* **News**" in white Playfair, the team word in lime italic
+  (the hero's "Bi-Weekly" accent), no counter. All news shows all three; with a team
+  selected only its heading shows, so it always names the section being read.
+- **Hero subtitle follows the filter.** `subtitles.all` leads with one top story per
+  team; `subtitles.search|social|programmatic` with that team's own top stories.
+- **No TL;DR block** (removed 2026-10 with the programmatic team: one cross-team list
+  either grows long or shows two of three teams someone else's news).
 - **Language pill.** A dropdown next to the filter offers 🇺🇸 EN / 🇷🇺 RU / 🇪🇸 ES /
   🇷🇸 SR (Serbian in **Latin** script). Picking one re-renders the content from the
   translations baked into the deck data — see *Translations* below. **The URL is the only
@@ -66,14 +77,15 @@ deck-data changes needed:
   load. All motion is disabled under `prefers-reduced-motion`.
 - **Mobile.** A `≤640px` media query hides the large floating stickers (they overlap
   text on narrow screens), centers the footer, keeps the brand left / controls right,
-  drops the TL;DR to one column, and shrinks the sign-off heading. Desktop (≥641px) is
+  lines platform sections up with the section headings, shrinks platform names to fit
+  icon + name on one line, and shrinks the sign-off heading. Desktop (≥641px) is
   unaffected.
 
 ### Translations
 
 The deck is **pre-translated at build time** by Routine 2 — there is no runtime
-translation API and no key to leak. Only **four** things are translated: the hero
-subtitle, card titles, card summaries and TL;DR bullets. Everything else is fixed English chrome baked into
+translation API and no key to leak. Only **three** things are translated: the hero
+subtitles (one per filter), card titles and card summaries. Everything else is fixed English chrome baked into
 this template and is never regenerated per edition. Switching language re-runs the
 content render from the same deck data, so stickers, layout and stats stay identical
 across languages (the sticker RNG is re-seeded from a language-independent sub-seed).
@@ -85,42 +97,39 @@ Sticker PNGs live in `assets/stickers/`. Each edition shuffles which PNG lands i
 fixed slot (seeded by the edition date, so a given deck always looks the same). Which
 stickers may appear **where** is controlled by pools in the template's `<script>`:
 
-- `POOL_GENERAL` — hero / TL;DR / archive / **cards**. Excludes `arrows-grid`, `flag`,
+- `POOL_GENERAL` — hero / archive / **cards**. Excludes `arrows-grid`, `flag`,
   `folder-star`, `paperclip`.
 - `POOL_HERO` = `POOL_GENERAL` + `paperclip` — the hero (`section:nth-child(2)`) may use
   paperclip.
 - `POOL_WRAP` — the dark-blue "THAT'S A WRAP" block only. A hand-curated set that reads
   well on blue (the only place `folder-star` and `paperclip-green-pink` appear).
-- Platform-heading icons stay a meaningful shape per platform (globe / notepad / doc)
-  with a random colour — see `FAM` / `PF_FAM`.
+- Platform-heading icons stay a meaningful shape per platform with a random colour —
+  see `FAM` / `PF_FAM`: globe (Google Ads, Microsoft, Meta, DV360), notepad (LinkedIn),
+  doc (TikTok, ChatGPT Ads), brain-star (The Trade Desk), shooting-star (Amazon DSP),
+  sleepy-dome (CTV).
 
 `arrows-grid` and `flag` PNGs were removed from the repo. To change what appears where,
 edit the pool arrays; positions/sizes are fixed in the HTML so nothing shifts.
 
 ## Deck-data schema
 
-Required fields are unchanged (`period_label`, `generated`, `tldr`, `platforms[].items[]`
-— see the schema comment inside `deck-template.html`). The Zine skin also accepts
-optional fields that degrade gracefully if Routine 2 doesn't supply them:
-`edition_no`, `subtitle`, `read_minutes`, `author`, `archive`, plus the translation
-fields `subtitle_i18n`, `tldr_i18n` and per-item `i18n` (see the schema comment in the
-template). None of these require
-changes to `routines/routine-2-presentation.md` — the template falls back sensibly
-(e.g. no "No. N" prefix without `edition_no`, an estimated read time without
-`read_minutes`) so the existing automation keeps working unmodified.
+Required: `period_label`, `generated`, `platforms[]` with `name`, `team`
+(`search` | `social` | `programmatic`) and `items[]` — see the schema comment inside
+`deck-template.html`. Optional fields degrade gracefully: `edition_no`, `subtitles`
+(`all` / `search` / `social` / `programmatic`; older decks' single `subtitle` still
+works), `read_minutes`, `author`, `archive`, plus the translation fields
+`subtitles_i18n` and per-item `i18n`. `tldr` / `tldr_i18n` are no longer rendered.
 
 ## Deck content rules (applied by Routine 2)
 
-- Order platforms **Search block first, then Social**: **Google Ads → Microsoft/Bing →
-  ChatGPT Ads → Meta → TikTok → LinkedIn** (drop empty ones). The deck renders in
-  deck-data order.
+- Order platforms **Search → Social → Programmatic**: **Google Ads → Microsoft
+  Advertising → ChatGPT Ads → Meta → TikTok → LinkedIn → The Trade Desk → DV360 → Amazon
+  DSP → Microsoft Programmatic → CTV** (drop empty ones). The deck groups by team and
+  keeps the data order within a team.
 - Within a platform, order items **high → medium → low** impact.
-- TL;DR: **3–4 bullets** (4 is the ceiling — 5 leaves an odd gap in the two-column grid),
-  the single most important change first. **One sentence each, max
-  ~20 words / ~140 characters** — it's a skim block; detail belongs on the card. On phones
-  the TL;DR grid drops to a single column (two columns squeeze the text unreadably).
-  Length limits are defined **in English** (the base language); translations match the
-  English in meaning and length rather than having their own character caps.
-- No overall size cap; **per-platform cap 6** (up to 8 to fit all `high`s) keeps Search
-  vs Social balanced. Overflow carries to a future edition (see `criteria.md`).
+- Subtitles: `all` = one top story per team that has items; each team's subtitle = its
+  own top 2–3 stories, one sentence. Length is set in English; translations match it.
+- No overall size cap; **per-platform cap 6** (up to 8 to fit all `high`s) keeps the
+  teams balanced. Overflow carries to a future edition (see `criteria.md` /
+  `criteria-programmatic.md`).
 - Every item links to its **canonical** source URL (official over aggregator).

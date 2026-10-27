@@ -144,7 +144,7 @@ Per-platform GRAB/IGNORE table included. Otherwise R1 applies the rules loosely
 - Data-driven: only the `#deck-data` JSON changes per edition. Loads Google Fonts
   (Playfair Display, Courier Prime) + local PNG stickers from `assets/stickers/` — the
   only external/local requests. Light/cream editorial look, no dark mode.
-- **Footer:** "Made for Performance Team with 💜 by Ivan Potekhin".
+- **Footer:** "Made for Performance Team with 💜 by Ivan Potekhin" (since 2026-10, with the programmatic team: "Made for MPO Team with 💜 by Ivan Potekhin").
 - **Stickers** (`assets/stickers/`, 35 PNGs; `arrows-grid` and `flag` were removed):
   randomized per edition, seeded by the edition date (deterministic). Pools by slot —
   `POOL_GENERAL` (hero/tldr/archive/cards; no arrows-grid/flag/folder-star/paperclip),
@@ -514,3 +514,113 @@ Cleanup therefore relies on GitHub: **Settings → General → Pull Requests →
 whoever merges it. The 19 existing branches were handed to Ivan to delete by hand. The
 rule is in `CLAUDE.md`, both routine docs and `routines/SETUP.md`; `main` and `backup*`
 are never touched.
+
+## 18. Programmatic track — collection (2026-10-22, branch, not yet on `main`)
+The digest gains a second audience: programmatic traders. Platforms (exact list, like the
+performance product test): **The Trade Desk, DV360, Amazon DSP, Microsoft programmatic,
+CTV.** Other DSPs and SSPs (PubMatic, Magnite, Yahoo DSP, …) are treated as vendors.
+
+**Architecture.** A separate collect routine rather than one routine with two modes:
+the two tracks disagree on the product test (DV360 is "not ours" for performance and
+core for programmatic), and one instruction holding both would invite exactly the
+mis-filing that let DV360 into editions 3 and 4. So:
+- **Routine 1 — Collect — Performance** (`routines/routine-1-collect-performance.md`,
+  renamed from `routine-1-collect.md`; a stub at the old path redirects until the
+  trigger prompt is re-pasted) and **Routine 1 — Collect — Programmatic**
+  (`routines/routine-1-collect-programmatic.md`), each with its own sources file
+  (`sources.yaml` / `sources-programmatic.yaml`) and criteria (`criteria.md` /
+  `criteria-programmatic.md`).
+- **One database.** Both append to `data/updates.json`; every record now carries
+  `"track": "performance" | "programmatic"` (all 230 existing records backfilled as
+  performance). Shared `data/state.json`, `docs/SOURCES_LOG.md` and alert DM. One URL is
+  one record across tracks (Layer 1). The two runs are scheduled a few hours apart so
+  their PRs never touch `updates.json` at the same time.
+- **Microsoft split** (from Microsoft's own guide to programmatic advertising): the
+  Microsoft Advertising account — Search, Shopping, PMax, Audience ads, UET — stays
+  performance (`bing`); the programmatic stack from Xandr — Invest, Curate,
+  programmatic CTV/Netflix, open-exchange display/native/DOOH on CPM — is
+  `microsoft_programmatic`. Monetize is in neither.
+- **"Where it lands" rule** for partners differs from performance: a vendor capability
+  usable inside our DSP (new data segments, inventory) is in; the vendor's own product
+  news is out.
+
+**Routine 2 is shared, not split.** Until programmatic delivery exists (deck filter,
+Slack destination — next steps), its step 1 skips `"track": "programmatic"` records
+entirely, so a programmatic collection can never leak into a performance edition.
+
+13 programmatic sources validated; details in `docs/SOURCES_LOG.md` (2026-10-22).
+
+### Test run on the branch (2026-10-23)
+A one-off trigger ran Routine 1 — Collect — Programmatic against this branch (PR #95 into
+the branch, `main` untouched): all 13 sources read, **12 items** (DV360 6, The Trade
+Desk 5, Amazon DSP 1), window Oct 7–23, every URL 200, no cross-track duplicates, no
+status changes so no alert. Platform assignment followed "where it lands" (LinkedIn CTV
+inventory in DV360 → `dv360`; Netflix targeting in Kokai → `ttd`).
+
+It surfaced one gap in Layer 1: the rule said "strip the trailing slash", but 6 of the 12
+IDs were hashed from the raw href (8 of 114 slash-ended performance records show the same
+drift), so a later, correct run would miss the duplicate by ID. Fixed in both collect
+docs: the canonical URL is now an explicit four-step recipe, the ID is hashed from it,
+and "already collected" also matches stored URLs canonicalised the same way, so older
+records hashed differently are still caught. Items that are anchors on one page (DV360
+API release notes) keep their `#fragment`. The 6 test IDs were recomputed; nothing had
+been presented, so nothing else referenced them.
+
+## 19. Programmatic delivery — deck, Slack, Routine 2 (2026-10-23 → 10-27)
+Built on the branch, reviewed by Ivan on a test page published at
+`decks/deck-test-programmatic.html` (edition 6 + the programmatic block; PRs #96–#99 put
+just that file on `main` so it could be seen on Pages; removed again with this merge).
+
+**Deck (`style/deck-template.html`).**
+- Header filter **All news / Search / Social / Programmatic** (`?team=programmatic`);
+  platforms carry an explicit `team` in the deck data (name-based fallback for old data).
+- **TL;DR block removed.** With three audiences one cross-team list either grows long or
+  shows two of three teams someone else's news. Its job moved to the **hero subtitle,
+  which follows the filter**: `subtitles.all` leads with one top story per team,
+  `subtitles.<team>` with that team's own; translated like card text.
+- **Team headings**: a blue banner per team — "*Search* / *Social* / *Programmatic*
+  **News**", team word in lime italic (the hero's "Bi-Weekly" accent), no counter. All
+  news shows all three; a filtered view shows only its own, so it names the section being
+  read. Chosen from four candidates (centred between rules, pill on a rule, banner,
+  editorial kicker) switchable on the test page; an "All News" heading above the feed was
+  tried and dropped.
+- Stats (updates, platforms, minutes) recompute per filter; icons for The Trade Desk
+  (brain-star), Amazon DSP (shooting-star), CTV (sleepy-dome), DV360 (globe).
+- Footer in three columns: "N updates · period" left, **"Made for MPO Team with 💜 by
+  Ivan Potekhin"** centred, brand right.
+- Mobile: platform sections align with the headings; platform names fit on one line.
+
+**Slack.** A third message per edition for the Programmatic team in
+**#media_performance** (`C065RGQMUKF`, private — Ivan is a member). Same structure as
+Search/Social; greetings never name the team ("Hi team!", "Hi guys!").
+
+**Routine 2.** One routine, both tracks: a team/track/platform table at the top; step 2
+filters each track by its own criteria and may **move a mis-filed record between tracks**
+(a DV360 story collected as performance becomes programmatic instead of being lost to
+Layer 1 dedup); caps unchanged per platform; subtitles instead of TL;DR; three Slack
+messages, presented per team; backlog note grouped by team.
+
+**Criteria.** CTV vs DSP made unambiguous: a story naming one of our DSPs goes to that DSP;
+Prime Video → Amazon DSP, YouTube → DV360; `ctv` only for a publisher's own change bought
+through several DSPs (Netflix, Disney+, Roku, …) — expect it empty in many editions.
+
+**Pre-merge review** (independent read of the whole branch diff; no blockers). Fixed:
+- **The account a campaign is bought in decides the track.** "YouTube → DV360" and "CTV
+  buying is programmatic" were unqualified, so Routine 2 could have moved Google Ads
+  YouTube items (Masthead, Reach Planner — both pending for edition 7) out of Search.
+  Now: YouTube / Video / Demand Gen / Masthead bought in Google Ads stay `google_ads`, CTV
+  placements of Microsoft Advertising campaigns stay `bing`; only the DSP side moves.
+- **Layer 2 (semantic dedup) is same-track only.** Comparing across tracks let one team's
+  record hide a change that lands in both (Demand Gen in Google Ads *and* DV360) from the
+  other team. Layer 1 stays cross-track (one URL, one record); Routine 2 drops a
+  mis-filed record instead of moving it when the target track already has the story.
+- Smaller: `url` is the verified href everywhere (the schema said "canonical"); Slack
+  template says "Microsoft Advertising" next to "Microsoft Programmatic"; the Programmatic
+  example lost a placeholder CTV line that invited a made-up one; the programmatic routine
+  has its own fallback branch (`claude/collect-programmatic-run`); stale two-routine
+  wording in README / CLAUDE.md / `sources.yaml`.
+- Known limit, left as is: the Microsoft Advertising monthly "What's new" post is one
+  performance record, so Invest / Curate news that appears *only* there can't reach the
+  programmatic track (they normally get their own posts).
+
+First programmatic edition: No. 7, 2026-10-28.

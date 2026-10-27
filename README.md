@@ -1,10 +1,15 @@
 # Ad Platform News Digest
 
-Automatically collect marketing-relevant updates from the major ad platforms
-(Google Ads, Microsoft/Bing, ChatGPT Ads, Meta, LinkedIn, TikTok), keep only what
-matters, and every two weeks build an easy-to-read mini-deck that gets posted to Slack.
+Automatically collect marketing-relevant updates from the major ad platforms, keep only
+what matters, and every two weeks build an easy-to-read mini-deck that gets posted to
+Slack. Two tracks:
 
-Discovery and relevance filtering are done by an **LLM agent** (two Claude routines),
+- **Performance** — Google Ads, Microsoft Advertising (the account formerly Bing Ads),
+  ChatGPT Ads, Meta, TikTok, LinkedIn.
+- **Programmatic** — The Trade Desk, DV360, Amazon DSP, Microsoft programmatic, CTV
+  (first edition 2026-10-28).
+
+Discovery and relevance filtering are done by an **LLM agent** (the Claude routines below),
 not a fixed scraper — article URLs are unknown in advance and "is this relevant" is a
 judgment call. The routines start from stable blog **index** pages and follow the fresh
 links. This GitHub repo is the system's **persistent memory**.
@@ -13,12 +18,13 @@ links. This GitHub repo is the system's **persistent memory**.
 
 ## How it works
 
-Two scheduled **routines** + this repo as state:
+Three scheduled **routines** + this repo as state:
 
 | Routine | Cadence | What it does |
 |---|---|---|
-| **[Routine 1 — Collect](routines/routine-1-collect.md)** | weekly | Visits each source, finds new items, dedupes them, appends to `data/updates.json`; DMs Ivan (in Russian) when a source breaks or recovers. |
-| **[Routine 2 — Presentation](routines/routine-2-presentation.md)** | every 2 weeks | Filters the un-presented items, builds the deck, posts a summary + link to Slack, then marks them `presented`. |
+| **[Routine 1 — Collect — Performance](routines/routine-1-collect-performance.md)** | weekly | Reads `sources.yaml`, filters by `criteria.md`, dedupes, appends `"track": "performance"` items to `data/updates.json`; DMs Ivan (in Russian) when a source breaks or recovers. |
+| **[Routine 1 — Collect — Programmatic](routines/routine-1-collect-programmatic.md)** | weekly, a few hours apart from the performance run | Same job for the programmatic track: `sources-programmatic.yaml`, `criteria-programmatic.md`, `"track": "programmatic"`. |
+| **[Routine 2 — Presentation](routines/routine-2-presentation.md)** | every 2 weeks | Filters the un-presented items of both tracks (each by its own criteria), builds one deck for three teams, posts one summary + link per team to Slack, then marks them `presented`. |
 
 Each routine's trigger prompt is just a short pointer to its instruction doc in
 `routines/`; all logic lives in those docs.
@@ -28,8 +34,10 @@ Each routine's trigger prompt is just a short pointer to its instruction doc in
 ## Repository layout
 
 ```
-sources.yaml          # entry points per platform + each one's current status
-criteria.md           # relevance rules + impact scoring (human-edited)
+sources.yaml          # performance entry points + each one's current status
+sources-programmatic.yaml  # programmatic entry points + status
+criteria.md           # performance relevance rules + impact scoring (human-edited)
+criteria-programmatic.md   # programmatic relevance rules (human-edited)
 style/
   deck-template.html  # data-driven HTML deck ("Zine" skin)
   slack-summary.md    # Slack channel message format
@@ -37,11 +45,12 @@ style/
 assets/
   stickers/           # colorized sticker PNGs the deck template references
 data/
-  updates.json        # all collected updates + collected/presented flags
-  state.json          # last-collected date per source (Routine 1's window)
+  updates.json        # all collected updates (both tracks) + collected/presented flags
+  state.json          # last-collected date per source, both tracks (informational)
 decks/                # generated presentations (deck-YYYY-MM-DD.html)
 routines/
-  routine-1-collect.md
+  routine-1-collect-performance.md
+  routine-1-collect-programmatic.md
   routine-2-presentation.md
 docs/
   SOURCES_LOG.md      # history of source changes (added / broke / recovered)
@@ -53,7 +62,10 @@ README.md / CLAUDE.md # repo context
 ```json
 {
   "id": "a3f9c2b1e004",
-  "platform": "google_ads",
+  "track": "performance",   // performance | programmatic — which routine collected it
+  "platform": "google_ads", // performance: google_ads | bing | chatgpt | meta | tiktok |
+                            //   linkedin; programmatic: ttd | dv360 | amazon_dsp |
+                            //   microsoft_programmatic | ctv
   "source": "Google Ads & Commerce Blog",
   "title": "...",
   "url": "https://...",
@@ -78,16 +90,18 @@ different sites with different URLs/wording. Heavy web-scale machinery (MinHash/
 embeddings, vector DBs) is overkill for ~a dozen items a week, so the LLM does
 the semantic dedup itself.
 
-- **Layer 1 — exact (no LLM):** canonicalize the URL (strip `utm_*`, `#fragment`,
-  trailing slash); ID = `sha1(canonical_url)[:12]`. Fallback ID when no per-item URL:
+- **Layer 1 — exact (no LLM), across both tracks:** canonicalize the URL (lowercase
+  scheme + host, strip tracking params, strip `#fragment` unless the source's items are
+  sections of one page, strip the trailing slash); ID = `sha1(canonical_url)[:12]`. The
+  record's `url` keeps the verified href as found. Fallback ID when no per-item URL:
   `sha1(source + published + title)[:12]`.
-- **Layer 2 — semantic (LLM):** ask the model whether a candidate is the same story as
-  anything already stored in the current window. Prefer the **official** source over an
+- **Layer 2 — semantic (LLM), within one track:** ask the model whether a candidate is
+  the same story as anything that track already stored in the current window. Prefer the **official** source over an
   **aggregator** (Search Engine Roundtable, PPC Land, Social Media Today, …) as the
   canonical record.
 
 ## Collection window
-- Routine 1 collects over a **fixed last-2-weeks window** (`today − 14 days`, ~2 days
+- Both collect routines use a **fixed last-2-weeks window** (`today − 14 days`, ~2 days
   margin) on every run. Earlier periods are never revisited.
 - Dedup against `data/updates.json` (checked first) prevents re-adding items already
   collected in an overlapping earlier run.
@@ -106,16 +120,18 @@ the semantic dedup itself.
 The connected Slack MCP has **no file-upload tool**, so the deck is **not** attached.
 Routine 2 posts a short text summary of the top items with the **GitHub Pages link**
 embedded in the message:
-- **Two team channels.** Each edition is announced to **two audiences** — **Search**
-  (Google Ads + Microsoft/Bing + ChatGPT Ads) and **Social** (Meta + TikTok + LinkedIn)
-  — as a separate message adapted to that team. A team with no items this edition gets no message.
-- **Deep-linked filter.** Both messages link to the *same* deck, but with `?team=search`
-  / `?team=social` appended so the page opens **pre-filtered to that team's view**; the
-  reader can switch to *All news* in the header.
+- **Three team channels.** Each edition is announced to **three audiences** — **Search**
+  (Google Ads + Microsoft Advertising + ChatGPT Ads), **Social** (Meta + TikTok +
+  LinkedIn) and **Programmatic** (The Trade Desk + DV360 + Amazon DSP + Microsoft
+  Programmatic + CTV) — as a separate message adapted to that team. A team with no items
+  this edition gets no message.
+- **Deep-linked filter.** All messages link to the *same* deck, with `?team=search` /
+  `?team=social` / `?team=programmatic` appended so the page opens **pre-filtered to that
+  team's view** — its banner heading, its platforms and a hero subtitle about its own top
+  stories; the reader can switch to *All news* in the header.
 - **Four languages.** A header pill switches the deck between 🇺🇸 EN (base), 🇷🇺 RU,
-  🇪🇸 ES and 🇷🇸 SR (Latin). Routine 2 pre-translates the hero subtitle, card titles,
-  card summaries and TL;DR bullets when it builds the edition — the interface itself stays
-  English. `?lang=ru|es|sr` deep-links a language and composes with `?team=`; no param
+  🇪🇸 ES and 🇷🇸 SR (Latin). Routine 2 pre-translates the hero subtitles, card titles
+  and card summaries when it builds the edition — the interface itself stays English. `?lang=ru|es|sr` deep-links a language and composes with `?team=`; no param
   means English. Each Slack message carries all four language links, and moving between
   editions inside the deck keeps the language you're reading in.
 - **GitHub Pages** — enable once in *Settings → Pages* (serve `main` / root); deck URL is
@@ -123,8 +139,8 @@ embedded in the message:
 - Delivery is **GitHub Pages only** — no Slack Canvas.
 - The Slack messages post **from Ivan's own identity** (the connector is authorized under
   his account), not a separate bot. Channel IDs live in `routines/routine-2-presentation.md`
-  → Open config (`#paid-search-team` / `#paid-social-team`; the internal backlog note still
-  goes to Ivan's DM).
+  → Open config (`#paid-search-team` / `#paid-social-team` / `#media_performance`; the
+  internal backlog note still goes to Ivan's DM).
 
 Deck format is a single HTML file per edition, still portable and prints cleanly to
 PDF. It is not zero-request: the "Zine" skin loads Playfair Display / Courier Prime
@@ -138,18 +154,20 @@ clicks. GitHub Pages serves all of it fine alongside the deck.
 ## Network requirement (important)
 
 A routine runs as a full cloud Claude Code session. **Outbound HTTPS to every source
-domain in `sources.yaml` must be allowed by the run environment's egress policy**, or
+domain in `sources.yaml` and `sources-programmatic.yaml` must be allowed by the run
+environment's egress policy**, or
 the fetch fails with a `403 CONNECT` policy denial (not a code bug).
 
 **Fetch with an in-session client (`curl` / `requests`), not the managed `WebFetch`
 tool.** Once egress is open, curl gets HTTP 200 from the source domains, but
 `WebFetch`'s fetcher is still blocked by the sites' anti-bot (403).
 
-`sources.yaml` lists **24 sources** across the six platforms (re-validated 2026-10-21:
-19 `readable`, 5 Search Engine Land pages `blocked` by a Cloudflare challenge and kept
-in case the site recovers). Each source carries its current status; Routine 1 updates it,
-records every change in [`docs/SOURCES_LOG.md`](docs/SOURCES_LOG.md) and DMs Ivan when a
-source breaks or recovers. The hosts to allow are listed in
+`sources.yaml` lists **24 performance sources** (re-validated 2026-10-21: 19 `readable`,
+5 Search Engine Land pages `blocked` by a Cloudflare challenge and kept in case the site
+recovers); `sources-programmatic.yaml` lists **13 programmatic sources** (validated
+2026-10-22, all `readable`). Each source carries its current status; its collect routine
+updates it, records every change in [`docs/SOURCES_LOG.md`](docs/SOURCES_LOG.md) and DMs
+Ivan when a source breaks or recovers. The hosts to allow are listed in
 [`routines/SETUP.md`](routines/SETUP.md) → step 1.
 
 ## Status / next actions

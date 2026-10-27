@@ -17,6 +17,32 @@ Entry format:
 
 ---
 
+## 2026-10-22
+Programmatic track added: new file `sources-programmatic.yaml`, read by Routine 1 —
+Collect — Programmatic. Every entry point validated via curl from the run environment;
+keys never collide with `sources.yaml` (both share `data/state.json`).
+- **Added, all `readable`:** `ttd_press_room`, `ttd_resources`, `dv360_announcements`,
+  `dv360_api_release_notes`, `gmp_360_blog`, `adexchanger_amazon_dsp`,
+  `adexchanger_amazon_ads`, `microsoft_ads_blog_programmatic`, `adexchanger_tv`,
+  `digiday_future_of_tv`, `ppcland_pulse_programmatic`, `mediapost_programmatic`,
+  `adweek_programmatic`. Hosts added to the egress allowlist first:
+  `www.thetradedesk.com`, `developers.google.com`, `digiday.com`, `www.mediapost.com`,
+  `www.adweek.com`.
+- **How they read:** `ttd_resources` has no dates on its index — its grid is newest
+  first (9 cards; `?page=0` and `?page=1` are both the first page, `?page=2` the next),
+  dates are in each article's body. `gmp_360_blog` is read through its RSS feed (no
+  dates on the HTML index). `adweek_programmatic` is read through the WordPress API
+  (`/wp-json/wp/v2/posts?categories=51402`): the category page loads its list by
+  script and its `/feed/` returns the site-wide feed.
+- **Evaluated and not added** (Ivan's table marks them NO):
+  `investors.thetradedesk.com` (Cloudflare challenge, RSS too), eMarketer (Cloudflare
+  captcha, paywalled), StreamTV Insider (Cloudflare on pages and articles; only the
+  site-wide RSS reads, with two-line teasers), the Amazon Ads API release notes (a
+  script-rendered page whose bundle comes from `m.media-amazon.com`, not allowed), the
+  Amazon Ads newsroom (readable but newest item June 23, 2026), and Search Engine Land
+  — Microsoft (already `blocked` in the performance track). Bing Blogs and SER
+  `adcenter` were dropped from the programmatic list: search-only content.
+
 ## 2026-10-21
 Source list rebuilt from Ivan's updated table; every entry point re-validated via curl
 from the run environment.

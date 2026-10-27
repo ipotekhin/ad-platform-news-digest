@@ -1,6 +1,6 @@
 # Slack message format (Routine 2 output)
 
-> Routine 2 sends **up to two messages per edition — one per team** — via
+> Routine 2 sends **up to three messages per edition — one per team** — via
 > `slack_send_message`, from Ivan's own Slack identity. The deck is **linked**, never
 > attached.
 >
@@ -8,8 +8,10 @@
 > **`**double asterisks**`** for bold; a single `*word*` renders as *italic* (that's the
 > bug the first run hit — platform names came out italic). Emoji via `:shortcode:`.
 >
-> - **Search** team (Google Ads + Microsoft/Bing + ChatGPT Ads) → `search_channel_id` = **#paid-search-team**.
+> - **Search** team (Google Ads + Microsoft Advertising + ChatGPT Ads) → `search_channel_id` = **#paid-search-team**.
 > - **Social** team (Meta + TikTok + LinkedIn) → `social_channel_id` = **#paid-social-team**.
+> - **Programmatic** team (The Trade Desk + DV360 + Amazon DSP + Microsoft Programmatic +
+>   CTV) → `programmatic_channel_id` = **#media_performance**.
 > - Targets (channel IDs) live in `routines/routine-2-presentation.md` → Open config. The
 >   internal backlog/system note (step 8) still goes to **Ivan's DM `U065VBRHYV7`**, not the
 >   team channels.
@@ -17,7 +19,7 @@
 > Each message covers **only its own team's platforms** (highlights + summary count), and
 > its link opens the deck **pre-filtered to that team** via a `?team=` param (see the link
 > line below). Build each message from the same structure/wording options below, but keep
-> the two messages independently randomized so they don't read identically.
+> the messages independently randomized so they don't read identically.
 >
 > **Empty team → no message for that team.** If the whole edition is empty, send nothing.
 
@@ -40,22 +42,24 @@
 
 Rules:
 - **Per team:** highlights and the summary use **only this team's platforms** (Search =
-  Google Ads + Microsoft/Bing + ChatGPT Ads · Social = Meta + TikTok + LinkedIn).
+  Google Ads + Microsoft Advertising + ChatGPT Ads · Social = Meta + TikTok + LinkedIn ·
+  Programmatic = The Trade Desk + DV360 + Amazon DSP + Microsoft Programmatic + CTV).
 - **One highlight line per platform** — the platform's **single hottest** item (highest
   impact; break ties by recency). Do **not** list several updates from the same platform;
   the deck holds the full detail, the message is a teaser of the top change per platform.
   So the number of highlight lines = the number of this team's platforms with items
-  (e.g. Search with Google + Microsoft → 2 lines; a team with one platform → 1 line).
-- `[DIGEST SUMMARY]` counts **this team's** updates in the deck, not the other team's.
+  (e.g. Search with Google Ads + Microsoft Advertising → 2 lines; a team with one platform → 1 line).
+- `[DIGEST SUMMARY]` counts **this team's** updates in the deck, not the other teams'.
 - Date range: short month names, no year — e.g. `Jul 20 – Aug 3`.
-- **Deep-linked deck URL:** append `?team=search` or `?team=social` to the deck URL so the
-  link opens on that team's filtered view — e.g.
+- **Deep-linked deck URL:** append `?team=search`, `?team=social` or `?team=programmatic`
+  to the deck URL so the link opens on that team's filtered view — e.g.
   `…/decks/deck-YYYY-MM-DD.html?team=social`. No tracking params, ever.
 - **Four language links on one line.** The deck ships in English, Russian, Spanish and
   Serbian, so the CTA carries **four links, embedded in the text next to a flag** — not a
   bare URL:
   `:us: [EN](…?team=T), :ru: [RU](…?team=T&lang=ru), :es: [ES](…?team=T&lang=es) and :flag-rs: [SR](…?team=T&lang=sr)`
-  - `T` = this message's own team (`search` / `social`), the same on all four links.
+  - `T` = this message's own team (`search` / `social` / `programmatic`), the same on all
+    four links.
   - **English carries no `lang` param** — it is the deck's default.
   - Labels are **language** codes — `EN`, `RU`, `ES`, `SR` — matching the deck's own
     language pill and the `lang=` param. (The Serbian flag shortcode is `:flag-rs:`
@@ -63,22 +67,27 @@ Rules:
   - Markdown links (`[EN](url)`) — this connector renders standard markdown, so the URL
     itself never appears in the message text.
 - **Rotate** the wording each edition (options below) so it never reads canned, and keep
-  the Search and Social messages worded differently from each other.
+  the three teams' messages worded differently from each other.
 
 ## Wording options (rotate per edition)
 
-**[GREETING]** — pick one at **random** each time (keep it varied). The pool has **both**
-common greetings and **team-named** ones; for each team, the team-named variant swaps in
-its own name (`Search team` / `Social team`). Rotate freely across both kinds — just make
-sure the team-named options below stay available for each team so it's not always generic.
+**[GREETING]** — pick one at **random** each time (keep it varied).
+- **Search and Social:** the pool has **both** common greetings and **team-named** ones;
+  the team-named variant swaps in the team's own name (`Search team` / `Social team`).
+  Rotate freely across both kinds — just make sure the team-named options stay available
+  so it's not always generic.
+- **Programmatic: common greetings only** — never name the team ("Hi Programmatic
+  team!" is out).
 
-_Common_ (either team):
+_Common_ (any team):
 - `Hi team! Hope your week is going well 🤗`
+- `Hi guys! Hope your week is going well 🤗`
+- `Hey team! Hope you're having a great day 🤗`
 - `Hey everyone! Hope your week is treating you well ☀️`
 - `Hi everyone! Hope you're having a productive but not-too-busy week 😄`
 - `Happy [Weekday], team! Hope you're having a good one ✨`
 
-_Team-named_ (use the message's own team — Search or Social):
+_Team-named_ (Search and Social only — use the message's own team):
 - `Hi Search team! Hope your week is going well 🤗`  ·  `Hi Social team! Hope your week is going well 🤗`
 - `Hey Search team! Hope you're having a great day 🤗`  ·  `Hey Social team! Hope you're having a great day 🤗`
 - `Happy [Weekday], Search team! Hope you're having a good one ✨`  ·  `Happy [Weekday], Social team! …`
@@ -105,12 +114,14 @@ _Team-named_ (use the message's own team — Search or Social):
 - Technical / setup: `:gear:`
 - Research / discovery: `:mag:`
 - B2B / LinkedIn: `:briefcase:`
+- CTV / TV inventory: `:tv:`
+- Inventory, deals, marketplace: `:handshake:`
 
 **[DIGEST SUMMARY]**
 - `We've included **[N] updates** in total across [PLATFORM NAMES].`
 - `This edition includes **[N] updates** across [PLATFORM NAMES].`
 - `In total, we've collected **[N] updates** from [PLATFORM NAMES].`
-- `[PLATFORM NAMES]` = e.g. `Google Ads and Microsoft`, or `across the major ad platforms` if many.
+- `[PLATFORM NAMES]` = e.g. `Google Ads and Microsoft Advertising`, or `across the major ad platforms` if many.
 
 **[LINK EMOJI]** `:point_right:` / `:link:`
 
@@ -123,7 +134,7 @@ _Team-named_ (use the message's own team — Search or Social):
 
 ## Worked examples (edition Jul 20 – Aug 3, 2026) — one per team, one line per platform
 
-**Search channel** (Google Ads + Microsoft/Bing + ChatGPT Ads), link `?team=search`:
+**Search channel** (Google Ads + Microsoft Advertising + ChatGPT Ads), link `?team=search`:
 
 ```
 Happy Monday, Search team! Hope you're having a good one ✨
@@ -133,9 +144,9 @@ It's time for another round of **Ad Platform Updates**, covering **Jul 20 – Au
 A few updates worth keeping on your radar:
 
 :eyes: **Google Ads** — Local Services Ads fold into Performance Max as pay-per-lead from August
-:loudspeaker: **Microsoft** — Predictive Matching is retired and folded into AI Max search-term matching
+:loudspeaker: **Microsoft Advertising** — Predictive Matching is retired and folded into AI Max search-term matching
 
-This edition includes **8 updates** across Google Ads and Microsoft.
+This edition includes **8 updates** across Google Ads and Microsoft Advertising.
 
 :point_right: The full overview is available here: :us: [EN](<DECK_URL>?team=search), :ru: [RU](<DECK_URL>?team=search&lang=ru), :es: [ES](<DECK_URL>?team=search&lang=es) and :flag-rs: [SR](<DECK_URL>?team=search&lang=sr)
 ```
@@ -158,5 +169,28 @@ This edition includes **5 updates** from Meta, TikTok and LinkedIn.
 :link: You can find the full digest here: :us: [EN](<DECK_URL>?team=social), :ru: [RU](<DECK_URL>?team=social&lang=ru), :es: [ES](<DECK_URL>?team=social&lang=es) and :flag-rs: [SR](<DECK_URL>?team=social&lang=sr)
 ```
 
-(If a team has no items this edition, that team's message is simply not sent. One line
+**Programmatic channel** (The Trade Desk + DV360 + Amazon DSP + Microsoft Programmatic +
+CTV), link `?team=programmatic` — illustrated with the October 2026 programmatic test data:
+
+```
+Hi team! Hope your week is going well 🤗
+
+It's time for another round of **Ad Platform Updates**, covering **Oct 1 – Oct 14**.
+
+Here's what stood out this time:
+
+:dart: **The Trade Desk** — Netflix ads in Kokai get first- and third-party data targeting from November
+:handshake: **DV360** — Gemini-curated Marketplace bundles and LinkedIn CTV inventory land in DV360
+:bar_chart: **Amazon DSP** — Brand penetration maps in nine countries, no Amazon Marketing Cloud needed
+
+This edition includes **12 updates** across The Trade Desk, DV360 and Amazon DSP.
+
+:point_right: The full overview is available here: :us: [EN](<DECK_URL>?team=programmatic), :ru: [RU](<DECK_URL>?team=programmatic&lang=ru), :es: [ES](<DECK_URL>?team=programmatic&lang=es) and :flag-rs: [SR](<DECK_URL>?team=programmatic&lang=sr)
+```
+
+(No CTV or Microsoft Programmatic line above: the test data had no items for them, and a
+platform without items gets no line — never write one for it. A CTV line, when there is
+one, uses `:tv:` like any other platform.
+
+If a team has no items this edition, that team's message is simply not sent. One line
 per platform means a team with a single platform sends a single highlight line.)

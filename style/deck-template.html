@@ -108,6 +108,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     #news-filter .opts button.active{background:transparent;color:#fff}
     #news-filter .flt-ind{display:block;position:absolute;left:0;top:0;bottom:0;z-index:0;border-radius:999px;background:var(--aid-blue);transition:transform .3s cubic-bezier(.5,1.5,.4,1),width .3s cubic-bezier(.5,1.5,.4,1)}
   }
+  /* ── Team headings ("Search News" …) ──
+     A blue banner block (the sign-off card's look, slimmer): white Playfair heading
+     with the team word in lime italic, the way "Bi-Weekly" is set in the hero. One
+     heads each team's block in All news; with a team selected only that team's
+     heading shows, so it always names the section being read. */
+  .team-head{display:flex;align-items:center;justify-content:center;margin:10px 0 40px;background:var(--aid-blue);border:2px solid var(--aid-ink);border-radius:20px;padding:26px 20px 28px;box-shadow:10px 11px 0 var(--aid-ink)}
+  .team-head h3{font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(34px,4.6vw,52px);line-height:1;letter-spacing:-.01em;margin:0;color:#fff;text-align:center}
+  .team-head em{font-style:italic;color:var(--aid-lime)}
   /* ── Typewriter caret ── */
   .tw-caret::after{content:"";display:inline-block;width:.055em;height:.92em;background:currentColor;margin-left:.05em;vertical-align:-.06em;animation:tw-blink .8s steps(1) infinite}
   @keyframes tw-blink{50%{opacity:0}}
@@ -126,12 +134,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   @media (max-width:640px){
     /* The large floating stickers are positioned for the wide layout and cover
        text on narrow screens — hide them here. Inline heading/card stickers stay. */
-    #dec-hero-1,#dec-hero-2,#dec-tldr,#dec-signoff-1,#dec-signoff-2{display:none}
-    /* Center the footer credits instead of stretching them edge-to-edge. */
-    footer>div{flex-direction:column;text-align:center}
+    #dec-hero-1,#dec-hero-2,#dec-signoff-1,#dec-signoff-2{display:none}
+    /* Footer: the three columns stack, each centred. */
+    footer>.foot-row{grid-template-columns:1fr!important;justify-items:center;text-align:center}
+    footer>.foot-row>span{justify-self:center!important;text-align:center!important}
     /* Tighter side gutters + block padding so cards/headings don't hug the edge. */
     body section,body main,body header>div,footer>div{padding-left:20px!important;padding-right:20px!important}
-    #d-tldr-wrap{padding:26px 22px!important}
     .signoff-card{padding:40px 26px!important}
     /* Sign-off heading: smaller on phones and let both sentences flow together
        (drop the forced break) so it fills ~2 lines instead of 4. */
@@ -146,9 +154,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
        Shorter pill (30px), same explicit height + 1px top bias as desktop. */
     .hdr-ctl{gap:7px}
     .dd-toggle{height:30px;padding:1px 10px 0;gap:5px;letter-spacing:.02em}
-    /* TL;DR: one column on phones — two columns squeeze each bullet into a narrow
-       ribbon of text that is hard to read. */
-    #d-tldr{grid-template-columns:1fr!important;gap:14px!important}
+    .team-head{padding:20px 16px 22px;box-shadow:7px 8px 0 var(--aid-ink)}
+    .team-head h3{font-size:32px}
+    /* Platform sections sit inside <main>, which already has the gutter — don't add a
+       second one, so cards line up with the section headings. */
+    #d-body > section{padding-left:0!important;padding-right:0!important}
+    /* Platform names at 38px push the icon, name and counter onto three lines. */
+    #d-body > section h2{font-size:30px!important}
   }
 </style>
 </head>
@@ -174,6 +186,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <button class="flt active" data-team="all" role="tab">All news</button>
           <button class="flt" data-team="search" role="tab">Search</button>
           <button class="flt" data-team="social" role="tab">Social</button>
+          <button class="flt" data-team="programmatic" role="tab">Programmatic</button>
         </div>
       </div>
       <div id="lang-dd" class="dd">
@@ -193,7 +206,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section style="max-width:1120px;margin:0 auto;padding:66px 32px 26px;position:relative">
   <div id="d-badge" style="display:inline-flex;align-items:center;gap:9px;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--aid-ink);background:var(--aid-lime);border:2px solid var(--aid-ink);border-radius:999px;padding:6px 16px;box-shadow:3px 3px 0 var(--aid-ink)"></div>
   <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(52px,8vw,104px);line-height:.95;letter-spacing:-.015em;margin:26px 0 14px;max-width:920px;text-wrap:balance" id="hero-title">The <span style="font-style:italic;color:var(--aid-blue)">Bi-Weekly</span> Brief</h1>
-  <p id="d-subtitle" style="font-size:19px;line-height:1.5;color:var(--aid-slate);margin:0;max-width:560px;text-wrap:pretty"></p>
+  <p id="d-subtitle" style="font-size:19px;line-height:1.5;color:var(--aid-slate);margin:0;max-width:720px;text-wrap:pretty"></p>
   <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:30px">
     <div style="background:#fff;border:2px solid var(--aid-ink);border-radius:14px;padding:16px 22px;box-shadow:5px 5px 0 var(--aid-blue);min-width:118px">
       <div id="stat-updates" style="font-family:'Playfair Display',serif;font-weight:800;font-size:44px;line-height:1;color:var(--aid-ink)"></div>
@@ -212,20 +225,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <img id="dec-hero-2" class="stk-in" src="../assets/stickers/thumbs-up-blue-pink.png" alt="" style="position:absolute;right:250px;top:246px;width:64px;--r:8deg;animation:floaty 5.5s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.16))">
 </section>
 
-<!-- ══ TL;DR ══ -->
-<section id="tldr" class="reveal" style="max-width:1120px;margin:0 auto;padding:30px 32px 10px">
-  <div id="d-tldr-wrap" style="background:#fff;border:2px solid var(--aid-ink);border-radius:20px;padding:34px 38px;box-shadow:10px 12px 0 var(--aid-blue);position:relative;overflow:hidden">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px">
-      <span style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--aid-blue);background:var(--aid-lime);border:1.5px solid var(--aid-ink);border-radius:999px;padding:4px 12px">TL;DR</span>
-      <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:var(--aid-slate)">what matters this edition</span>
-    </div>
-    <ul id="d-tldr" style="margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:18px 44px"></ul>
-    <img id="dec-tldr" class="stk-in" src="../assets/stickers/shooting-star-pink.png" alt="" style="position:absolute;width:82px;--r:-6deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 14px rgba(0,0,0,.16));left:974px;top:-4px">
-  </div>
-</section>
-
 <!-- ══ UPDATES ══ -->
 <main id="updates" style="max-width:1120px;margin:0 auto;padding:48px 32px 20px">
+  <p id="d-team-empty" class="empty" style="display:none;margin:0 0 40px"></p>
   <div id="d-body"></div>
 </main>
 
@@ -252,9 +254,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ══ FOOTER ══ -->
 <footer style="border-top:2px solid var(--aid-ink);background:#f4f1ea">
-  <div style="max-width:1120px;margin:0 auto;padding:28px 32px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;font-family:'Courier Prime',monospace;font-size:12px;color:var(--aid-mute)">
-    <span id="d-footer"></span>
-    <span>AI Digital · Ad Platform News Digest</span>
+  <!-- Three columns: edition facts left, credit centred, brand right. -->
+  <div class="foot-row" style="max-width:1120px;margin:0 auto;padding:28px 32px;display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;font-family:'Courier Prime',monospace;font-size:12px;color:var(--aid-mute)">
+    <span id="d-footer" style="justify-self:start"></span>
+    <span id="d-credit" style="justify-self:center;text-align:center"></span>
+    <span style="justify-self:end;text-align:right">AI Digital · Ad Platform News Digest</span>
   </div>
 </footer>
 
@@ -262,14 +266,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ─────────────────────────────────────────────────────────────────────────
      DECK_DATA — Routine 2 replaces the contents of this script block.
-     Required (unchanged from the previous template):
+     Required:
      {
        "period_label": "Jul 7 – Jul 21, 2026",   // window covered
        "generated": "2026-07-21",                  // ISO date deck was built
-       "tldr": ["one-line highlight", "..."],      // 3–5 bullets, most important first
        "platforms": [                              // ordered; empty ones omitted
          {
-           "name": "Google Ads",
+           "name": "Google Ads",                   // display name (e.g. "Microsoft Programmatic")
+           "team": "search",                       // search | social | programmatic — which filter it sits under
            "items": [
              {
                "title": "…",
@@ -284,45 +288,56 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
          }
        ]
      }
-     Items within a platform should be ordered high -> medium -> low impact.
+     The feed shows teams in the order Search → Social → Programmatic, each under its
+     own "<Team> News" heading in All news; within a team, platforms keep the order
+     given here. Items within a platform should be ordered high -> medium -> low.
+     A platform without `team` is placed by its name (Meta/TikTok/LinkedIn = social,
+     The Trade Desk/DV360/Amazon DSP/…Programmatic/CTV = programmatic, else search).
 
-     Optional (new in this skin — omit any/all, the deck degrades gracefully):
+     Optional (omit any/all, the deck degrades gracefully):
        "edition_no":     14,                    // shown as "No. 14 · <period_label>"; omitted -> just period_label
-       "subtitle":       "…",                   // hero subhead; falls back to "Updates published <period_label>"
+       "subtitles":      { "all":"…", "search":"…", "social":"…", "programmatic":"…" }
+                                                // hero subhead, follows the news filter. `all` = one top story per
+                                                //   team; `<team>` = that team's top stories. A missing key falls
+                                                //   back to `all`.
+       "subtitle":       "…",                   // older single subhead, used when `subtitles` is absent; falls back
+                                                //   to "Updates published <period_label>"
        "read_minutes":   5,                     // falls back to an estimate from item count
-       "author":         "Ivan Potekhin",       // footer credit; falls back to "Ivan Potekhin"
+       "author":         "Ivan Potekhin",       // footer credit ("Made for MPO Team with 💜 by …"); falls back to "Ivan Potekhin"
        "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"deck-2026-07-05.html" }]  // FALLBACK for the editions strip; BARE filename (no decks/ prefix). At view time the
                                                 //   strip prefers the live registry data/editions.json (same origin), which is what lets an
                                                 //   already-published deck link FORWARD to editions released after it. This array is only used
                                                 //   when that read fails (opened from disk, offline), so keep supplying it: prior editions only.
+     There is no TL;DR block any more (removed with the programmatic team, 2026-10);
+     a `tldr` field is ignored.
 
      TRANSLATIONS (optional; the header language pill offers EN / RU / ES / SR).
-     English is the base language and is always what `subtitle`/`title`/`summary`/
-     `tldr` hold. Routine 2 pre-translates at build time — there is no runtime
-     API — and supplies EXACTLY FOUR things per language: the hero subtitle, card
-     titles, card summaries and TL;DR bullets. Everything else on the page is
-     fixed English chrome. Serbian is written in LATIN script (`sr`). A missing
-     language, item or field silently falls back to English, so pre-i18n decks
-     still render.
-       "subtitle_i18n": { "ru":"…", "es":"…", "sr":"…" }
-       "tldr_i18n":     { "ru":[ … ], "es":[ … ], "sr":[ … ] }  // same count & order as "tldr"
+     English is the base language and is always what `subtitles`/`title`/`summary`
+     hold. Routine 2 pre-translates at build time — there is no runtime API — and
+     supplies EXACTLY THREE things per language: the hero subtitles, card titles
+     and card summaries. Everything else on the page is fixed English chrome.
+     Serbian is written in LATIN script (`sr`). A missing language, item or field
+     silently falls back to English, so pre-i18n decks still render.
+       "subtitles_i18n": { "ru":{ "all":"…","search":"…","social":"…","programmatic":"…" }, "es":{…}, "sr":{…} }
+       "subtitle_i18n":  { "ru":"…", "es":"…", "sr":"…" }   // only with the older single `subtitle`
        …and on each item:
        "i18n": { "ru":{"title":"…","summary":"…"}, "es":{…}, "sr":{…} }
-     Deep link with ?lang=ru|es|sr. The URL is the ONLY source of language (same
-     as ?team=): no param — or ?lang=en — always opens in English, and nothing is
-     stored, so a shared link renders the same for everyone who opens it.
+     Deep link with ?lang=ru|es|sr and ?team=search|social|programmatic (they compose).
+     The URL is the ONLY source of either: no param always opens English / All news,
+     and nothing is stored, so a shared link renders the same for everyone.
   ────────────────────────────────────────────────────────────────────────── -->
   <script id="deck-data" type="application/json">
   {
     "period_label": "SAMPLE — replace me",
     "generated": "2026-07-21",
-    "tldr": [
-      "This is the deck template with placeholder data.",
-      "Routine 2 replaces the #deck-data JSON with the real digest."
-    ],
+    "subtitles": {
+      "all": "This is the deck template with placeholder data.",
+      "search": "Routine 2 replaces the #deck-data JSON with the real digest."
+    },
     "platforms": [
       {
         "name": "Google Ads",
+        "team": "search",
         "items": [
           {
             "title": "Example: New Performance Max control rolls out",
@@ -343,7 +358,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 (function(){
   var data;
   try { data = JSON.parse(document.getElementById('deck-data').textContent); }
-  catch(e){ data = {period_label:'(invalid deck data)', tldr:[], platforms:[]}; }
+  catch(e){ data = {period_label:'(invalid deck data)', platforms:[]}; }
 
   var CAT = { feature:"Feature", beta:"Beta", policy:"Policy", deprecation:"Deprecation", measurement:"Measurement", api:"API", other:"Update" };
   var IMP = {
@@ -370,24 +385,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   var FAM = {
     globe:  ["globe-blue-pink.png","globe-green-blue.png","globe-pink-blue.png"],
     notepad:["todo-notepad-blue.png","todo-notepad-green.png","todo-notepad-pink.png"],
-    doc:    ["document-sparkle-blue.png","document-sparkle-green.png","document-sparkle-pink.png"]
+    doc:    ["document-sparkle-blue.png","document-sparkle-green.png","document-sparkle-pink.png"],
+    brain:  ["brain-star-blue.png","brain-star-green.png","brain-star-pink.png"],
+    star:   ["shooting-star-blue.png","shooting-star-green.png","shooting-star-pink.png"],
+    dome:   ["sleepy-dome-blue.png","sleepy-dome-green.png","sleepy-dome-pink.png"]
   };
-  var PF_FAM = [{k:"linkedin",f:"notepad"},{k:"tiktok",f:"doc"},{k:"meta",f:"globe"},{k:"facebook",f:"globe"},{k:"microsoft",f:"globe"},{k:"bing",f:"globe"},{k:"google",f:"globe"},{k:"chatgpt",f:"doc"},{k:"openai",f:"doc"}];
+  // First match wins, so the longer programmatic names come before "microsoft" / "google".
+  var PF_FAM = [{k:"trade desk",f:"brain"},{k:"dv360",f:"globe"},{k:"display & video",f:"globe"},{k:"amazon",f:"star"},{k:"ctv",f:"dome"},{k:"linkedin",f:"notepad"},{k:"tiktok",f:"doc"},{k:"meta",f:"globe"},{k:"facebook",f:"globe"},{k:"microsoft",f:"globe"},{k:"bing",f:"globe"},{k:"google",f:"globe"},{k:"chatgpt",f:"doc"},{k:"openai",f:"doc"}];
   function hashStr(s){var h=2166136261>>>0;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h>>>0;}
   function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
   var SEED = String((typeof data!=="undefined" && (data.generated||data.period_label)) || "seed");
   var _rng = mulberry32(hashStr(SEED));
   function pickFrom(pool){ return STK + pool[Math.floor(_rng()*pool.length)]; }
-  // Social = Meta / TikTok / LinkedIn; everything else (Google Ads, Microsoft/Bing,
-  // ChatGPT Ads, …) belongs to the Search team.
-  function teamOf(name){var n=(name||"").toLowerCase();return (n.indexOf("meta")>=0||n.indexOf("tiktok")>=0||n.indexOf("linkedin")>=0||n.indexOf("facebook")>=0)?"social":"search";}
+  // Teams, in the order the feed shows them. Each platform says which team it
+  // belongs to (`team` in the deck data); decks built before that field existed
+  // fall back to the name: Meta / TikTok / LinkedIn = Social, the programmatic
+  // platforms = Programmatic, everything else (Google Ads, Microsoft, ChatGPT Ads) =
+  // Search.
+  var TEAMS = ["search","social","programmatic"];
+  var TEAM_LABEL = { all:"All", search:"Search", social:"Social", programmatic:"Programmatic" };
+  function teamOf(pf){
+    if(pf && TEAMS.indexOf(pf.team) >= 0) return pf.team;
+    var n=((pf && pf.name)||"").toLowerCase();
+    if(/meta|tiktok|linkedin|facebook/.test(n)) return "social";
+    if(/trade desk|dv360|display & video|amazon dsp|programmatic|ctv/.test(n)) return "programmatic";
+    return "search";
+  }
   function iconFor(name){
     var n=(name||"").toLowerCase(), fam="globe";
     for(var i=0;i<PF_FAM.length;i++){ if(n.indexOf(PF_FAM[i].k)>=0){ fam=PF_FAM[i].f; break; } }
     return pickFrom(FAM[fam]);
   }
   // Assign the fixed decorative slots from their allowed pools (image swaps; position/size untouched).
-  var SLOT_POOL = { "dec-tldr":POOL_GENERAL, "dec-archive":POOL_GENERAL };
+  var SLOT_POOL = { "dec-archive":POOL_GENERAL };
   // Base "type" of a sticker = filename minus trailing colour tokens
   // (blob-face-green -> blob-face, paperclip-green-pink -> paperclip, globe-blue-pink -> globe).
   function stkType(file){ return file.replace(/\.png$/,"").replace(/(-(?:green|pink|blue))+$/,""); }
@@ -428,14 +458,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   // ── Language (i18n) ──────────────────────────────────────────────────────
-  // Only FOUR things are translated: the hero subtitle, card titles, card
-  // summaries and TL;DR bullets. Everything else — brand, filters, hero
-  // headline, dates, counters, platform names, category/impact chips, card
-  // meta, archive, sign-off, footer — is pre-baked English chrome and is
-  // never regenerated.
-  //   item.i18n         = { ru:{title,summary}, es:{…}, sr:{…} }
-  //   data.tldr_i18n     = { ru:[…], es:[…], sr:[…] }
-  //   data.subtitle_i18n = { ru:"…", es:"…", sr:"…" }
+  // Only THREE things are translated: the hero subtitles, card titles and card
+  // summaries. Everything else — brand, filters, hero headline, section headings,
+  // dates, counters, platform names, category/impact chips, card meta, archive,
+  // sign-off, footer — is pre-baked English chrome and is never regenerated.
+  //   item.i18n          = { ru:{title,summary}, es:{…}, sr:{…} }
+  //   data.subtitles_i18n = { ru:{all,search,social,programmatic}, es:{…}, sr:{…} }
+  //   data.subtitle_i18n  = { ru:"…", es:"…", sr:"…" }   (single-subtitle decks)
   // All optional: a missing language (or field) falls back to the English
   // base, so decks built before i18n keep rendering unchanged.
   var LANGS = ["en","ru","es","sr"];
@@ -443,11 +472,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if(lang !== "en" && it.i18n && it.i18n[lang] && it.i18n[lang][field]) return it.i18n[lang][field];
     return it[field] || "";
   }
-  function tldrFor(lang){
-    if(lang !== "en" && data.tldr_i18n && data.tldr_i18n[lang] && data.tldr_i18n[lang].length) return data.tldr_i18n[lang];
-    return data.tldr || [];
-  }
-  function subtitleFor(lang){
+  // The hero subtitle follows the news filter: `subtitles.all` leads with one top
+  // story per team, `subtitles.<team>` with that team's own. Decks with a single
+  // `subtitle` show it for every filter.
+  function subtitleFor(lang, team){
+    var S = data.subtitles, SI = data.subtitles_i18n;
+    if(S){
+      var keys = [team, "all"];
+      for(var i=0;i<keys.length;i++){
+        var k = keys[i];
+        if(lang !== "en" && SI && SI[lang] && SI[lang][k]) return SI[lang][k];
+        if(S[k]) return S[k];
+      }
+    }
     if(lang !== "en" && data.subtitle_i18n && data.subtitle_i18n[lang]) return data.subtitle_i18n[lang];
     return data.subtitle || (data.period_label ? ("Updates published " + data.period_label) : "");
   }
@@ -459,8 +496,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           if(q && LANGS.indexOf(q.toLowerCase()) >= 0) return q.toLowerCase(); } catch(e){}
     return "en";
   }
+  // Same rule for the team: read here too, so the first paint already shows the
+  // right subtitle and heading (the chrome script below owns the filter control).
+  function resolveTeam(){
+    try { var q = new URLSearchParams(window.location.search).get("team");
+          if(q && (q.toLowerCase() === "all" || TEAMS.indexOf(q.toLowerCase()) >= 0)) return q.toLowerCase(); } catch(e){}
+    return "all";
+  }
 
+  // Platforms with items, grouped by team in TEAMS order; within a team the deck
+  // data's own order is kept.
   var platforms = (data.platforms || []).filter(function(p){ return p.items && p.items.length; });
+  platforms = TEAMS.reduce(function(acc, t){ return acc.concat(platforms.filter(function(p){ return teamOf(p) === t; })); }, []);
   var total = platforms.reduce(function(a, p){ return a + p.items.length; }, 0);
 
   // Hero
@@ -469,51 +516,58 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     : "● " + (data.period_label || "");
   document.getElementById("d-badge").textContent = badge;
 
+  // Reading time for what the filter shows: the deck's own `read_minutes` for All
+  // news, an estimate (~30 s a card) for a single team.
+  function readMinutes(items, team){
+    return (team === "all" && data.read_minutes) || Math.max(2, Math.round(items * 0.5));
+  }
   document.getElementById("stat-updates").textContent = total;
   document.getElementById("stat-platforms").textContent = platforms.length;
-  document.getElementById("stat-readmin").textContent =
-    data.read_minutes || Math.max(2, Math.round(total * 0.5));
+  document.getElementById("stat-readmin").textContent = readMinutes(total, "all");
 
   // ── Content render (language-aware) ──────────────────────────────────────
   // Everything a reader can re-translate is built here, so switching language
   // just re-runs this function; the chrome above is written once. The sticker
   // RNG is re-seeded from a fixed sub-seed at the top of every run, so card
   // stickers and platform icons are identical in all four languages.
-  var tldrList = document.getElementById("d-tldr");
   var body = document.getElementById("d-body");
   var curLang = "en";   // read by renderArchive() to carry the language onto edition links
+  var curTeam = resolveTeam();
+
+  // "<em>Search</em> News" — the team word in the hero's italic-blue accent.
+  function headingNodes(team){
+    var em = document.createElement("em"); em.textContent = TEAM_LABEL[team] || "All";
+    return [em, document.createTextNode(" News")];
+  }
+  // The hero subtitle follows the news filter.
+  function setTeamView(team){
+    curTeam = team;
+    document.getElementById("d-subtitle").textContent = subtitleFor(curLang, team);
+  }
 
   function renderContent(lang){
   _rng = mulberry32(hashStr(SEED + "|body"));
   curLang = lang;
   document.documentElement.lang = lang;
-  tldrList.textContent = "";
   body.textContent = "";
 
   // Hero subtitle (the one line of hero copy that IS translated)
-  document.getElementById("d-subtitle").textContent = subtitleFor(lang);
+  setTeamView(curTeam);
 
-  // TL;DR
-  var bullets = tldrFor(lang);
-  if (bullets.length) {
-    document.getElementById("d-tldr-wrap").style.display = "";
-    bullets.forEach(function(text, i){
-      tldrList.appendChild(
-        el("li", { display:"flex", gap:"14px", alignItems:"flex-start", color:"var(--aid-ink)", fontSize:"16px", lineHeight:"1.5" },
-          el("span", { flex:"none", fontFamily:"'Playfair Display',serif", fontWeight:"800", fontSize:"22px", color:"var(--aid-blue)", lineHeight:"1.25" }, String(i + 1).padStart(2, "0")),
-          el("span", null, text)
-        )
-      );
-    });
-  } else {
-    document.getElementById("d-tldr-wrap").style.display = "none";
-  }
-
-  // Updates, grouped by platform
+  // Updates, grouped by team (a heading per team) and platform
   if (!platforms.length) {
     body.appendChild(el("p", { color:"var(--aid-mute)", fontStyle:"italic" }, "No qualifying updates in this period."));
   }
+  var lastTeam = null;
   platforms.forEach(function(pf){
+    var team = teamOf(pf);
+    if (team !== lastTeam) {
+      lastTeam = team;
+      var h3 = document.createElement("h3"); headingNodes(team).forEach(function(x){ h3.appendChild(x); });
+      var th = el("div", null, h3);
+      th.className = "team-head reveal"; th.setAttribute("data-team", team);
+      body.appendChild(th);
+    }
     var heading = el("div", { display:"flex", alignItems:"center", flexWrap:"wrap", gap:"14px", marginBottom:"24px" },
       (function(){var _pi=img(iconFor(pf.name),{width:"46px",flex:"none",filter:"drop-shadow(0 6px 10px rgba(0,0,0,.14))"});_pi.className="pf-icon";return _pi;})(),
       el("h2", { fontFamily:"'Playfair Display',Georgia,serif", fontWeight:"800", fontSize:"38px", lineHeight:"1", margin:"0", color:"var(--aid-ink)" }, pf.name),
@@ -552,7 +606,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       grid.appendChild(card);
     });
 
-    var _sec=el("section",{marginBottom:"56px"},heading,grid);_sec.className="reveal";_sec.setAttribute("data-team",teamOf(pf.name));body.appendChild(_sec);
+    var _sec=el("section",{marginBottom:"56px"},heading,grid);_sec.className="reveal";_sec.setAttribute("data-team",team);body.appendChild(_sec);
   });
 
   renderArchive();   // its links carry ?lang=, so they follow the switch
@@ -563,7 +617,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   var initialLang = resolveLang();
   renderContent(initialLang);
   // Handed to the chrome script below (which owns the header dropdowns).
-  window.__deck = { render: renderContent, langs: LANGS, lang: initialLang };
+  window.__deck = { render: renderContent, langs: LANGS, lang: initialLang, setTeam: setTeamView, teams: TEAMS, teamLabel: TEAM_LABEL, readMinutes: readMinutes };
 
   // ── Editions strip ────────────────────────────────────────────────────────
   // Lists every OTHER edition, newest first — so an older deck also links
@@ -653,7 +707,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   // Footer
   document.getElementById("d-footer").textContent =
-    total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "") + " · Made for Performance Team with 💜 by " + (data.author || "Ivan Potekhin");
+    total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "");
+  document.getElementById("d-credit").textContent =
+    "Made for MPO Team with 💜 by " + (data.author || "Ivan Potekhin");
   document.title = "Ad Platform News Digest — " + (data.period_label || "");
 })();
 </script>
@@ -732,10 +788,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function apply(team){
       var secs=[].slice.call(document.querySelectorAll('#d-body > section'));
       secs.forEach(function(s){ s.style.display=(team==="all"||s.getAttribute("data-team")===team)?"":"none"; });
+      // Team headings: every one in All news, only the selected team's otherwise.
+      [].forEach.call(document.querySelectorAll('#d-body > .team-head'), function(h){ h.style.display=(team==="all"||h.getAttribute("data-team")===team)?"":"none"; });
       var vis=secs.filter(function(s){return s.style.display!=="none";});
       var items=0; vis.forEach(function(s){ items+=s.querySelectorAll('article').length; });
       var su=document.getElementById('stat-updates'); if(su) su.textContent=items;
       var sp=document.getElementById('stat-platforms'); if(sp) sp.textContent=vis.length;
+      var sr=document.getElementById('stat-readmin'); if(sr && window.__deck && window.__deck.readMinutes) sr.textContent=window.__deck.readMinutes(items, team);
+      // A team with nothing this edition (e.g. an older deck opened with ?team=programmatic).
+      var empty=document.getElementById('d-team-empty');
+      if(empty){
+        var lbl=(window.__deck && window.__deck.teamLabel && window.__deck.teamLabel[team]) || team;
+        empty.textContent = (team!=="all" && secs.length && !vis.length) ? ("No " + lbl + " updates in this edition.") : "";
+        empty.style.display = empty.textContent ? "" : "none";
+      }
+      if(window.__deck && window.__deck.setTeam) window.__deck.setTeam(team);
     }
     function btnFor(team){ for(var i=0;i<btns.length;i++){ if(btns[i].getAttribute("data-team")===team) return btns[i]; } return null; }
     function select(team, updateURL){
@@ -746,18 +813,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if(updateURL) setParam("team", team, "all");
     }
     btns.forEach(function(b){ b.addEventListener("click", function(){ select(b.getAttribute("data-team"), true); closeDD(); }); });
-    // Deep link: ?team=search|social (|all) opens the deck with that filter pre-applied.
-    // Routine 2 uses this to send each team a link straight to its own view; readers
-    // can switch to All news in the header. Unknown/absent value falls back to "all".
+    // Deep link: ?team=search|social|programmatic (|all) opens the deck with that filter
+    // pre-applied. Routine 2 uses this to send each team a link straight to its own
+    // view; readers can switch to All news in the header. Unknown/absent value falls
+    // back to "all".
     var want="all";
-    try{ var q=new URLSearchParams(window.location.search).get("team"); if(q){ q=q.toLowerCase(); if(q==="search"||q==="social"||q==="all"){ want=q; } } }catch(e){}
+    try{ var q=new URLSearchParams(window.location.search).get("team"); if(q){ q=q.toLowerCase(); if(btnFor(q)){ want=q; } } }catch(e){}
     requestAnimationFrame(function(){ select(want, false); });
     // A language switch rebuilds #d-body, so re-apply the current filter to it.
     document.addEventListener("deck:rendered", function(){ apply(curTeam); });
     window.addEventListener("resize", function(){ closeDD(); var a=filter.querySelector(".flt.active"); if(a) moveInd(a); });
   }
 
-  // Language switcher — swaps card titles/summaries + TL;DR bullets (see the
+  // Language switcher — swaps card titles/summaries + the hero subtitle (see the
   // render script above); every other string on the page stays English.
   var langDD=document.getElementById("lang-dd");
   if(langDD && window.__deck){
