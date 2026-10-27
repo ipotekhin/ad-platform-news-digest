@@ -17,6 +17,9 @@ Entry format:
 
 ---
 
+## 2026-10-27
+- `mediapost_programmatic`: readable → blocked — HTTP 403 with `cf-mitigated: challenge` (Cloudflare "Just a moment…" page) on every retry.
+
 ## 2026-10-22
 Programmatic track added: new file `sources-programmatic.yaml`, read by Routine 1 —
 Collect — Programmatic. Every entry point validated via curl from the run environment;
