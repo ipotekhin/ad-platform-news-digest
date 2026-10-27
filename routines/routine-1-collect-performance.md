@@ -11,7 +11,9 @@ genuinely new items to `data/updates.json` with `"track": "performance"`.
 (`routines/routine-1-collect-programmatic.md`), reads `sources-programmatic.yaml`,
 filters by `criteria-programmatic.md` and writes `"track": "programmatic"` into the same
 `data/updates.json`. Programmatic products — DV360, The Trade Desk, Amazon DSP,
-Microsoft's programmatic stack, CTV buying — are **its** job: drop them here.
+Microsoft's programmatic stack, CTV bought through a DSP — are **its** job: drop them
+here. YouTube, Video and Demand Gen bought in Google Ads, and CTV placements of Microsoft
+Advertising account campaigns, stay in this track.
 
 The routine UI holds only a short pointer to this file. All logic lives here.
 
@@ -146,8 +148,11 @@ this order, so every run gets the same string:
 
 ### 5. Dedup — Layer 2 (semantic, LLM)
 Take the candidates that survived Layer 1 **plus** the titles+summaries already stored
-in `updates.json` within the current 2-week window (both tracks — a story the
-programmatic routine already stored is not new here either). For each new candidate ask:
+in `updates.json` within the current 2-week window **with `"track": "performance"`**.
+Compare within this track only: a change that lands in both a performance account and a
+DSP (e.g. Demand Gen in Google Ads *and* DV360) is a separate story for each team, so a
+programmatic record of it does not make it old news here. (Layer 1 still spans both
+tracks — one URL is one record.) For each new candidate ask:
 > "Is this the **same story** as any of these existing/other-candidate items?"
 
 - If yes and one is an **official** source and the other an **aggregator** → keep the
@@ -172,7 +177,7 @@ For each genuinely-new item, append a record to `data/updates.json`:
   "platform": "google_ads",
   "source": "Google Ads & Commerce Blog",
   "title": "clear title — the article's own headline, or one you write if it reads better",
-  "url": "https://...(canonical)",
+  "url": "https://...(the href, verbatim and verified — see the URL rule)",
   "published": "2026-07-14",
   "first_seen": "<now, ISO8601 UTC>",
   "summary": "1–3 sentences you wrote from the article body: what changed + why it matters.",
@@ -276,7 +281,8 @@ If the send fails, say so in the run's final report; don't retry in a loop.
   source must not abort the whole run or corrupt `state.json` (only advance a source's
   date if you actually read it).
 - `sources.yaml` holds the **current** state only; history goes to `docs/SOURCES_LOG.md`,
-  and only when something changed.
+  and only when something changed. Never edit `sources-programmatic.yaml` — it belongs to
+  the programmatic routine.
 - Write `"track": "performance"` on every record you add, and never edit a record of the
   programmatic track.
 - Keep summaries factual and specific (what changed, who it affects) — no fluff.

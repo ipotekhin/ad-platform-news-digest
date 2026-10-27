@@ -8,7 +8,7 @@
 > **`**double asterisks**`** for bold; a single `*word*` renders as *italic* (that's the
 > bug the first run hit — platform names came out italic). Emoji via `:shortcode:`.
 >
-> - **Search** team (Google Ads + Microsoft/Bing + ChatGPT Ads) → `search_channel_id` = **#paid-search-team**.
+> - **Search** team (Google Ads + Microsoft Advertising + ChatGPT Ads) → `search_channel_id` = **#paid-search-team**.
 > - **Social** team (Meta + TikTok + LinkedIn) → `social_channel_id` = **#paid-social-team**.
 > - **Programmatic** team (The Trade Desk + DV360 + Amazon DSP + Microsoft Programmatic +
 >   CTV) → `programmatic_channel_id` = **#media_performance**.
@@ -48,8 +48,8 @@ Rules:
   impact; break ties by recency). Do **not** list several updates from the same platform;
   the deck holds the full detail, the message is a teaser of the top change per platform.
   So the number of highlight lines = the number of this team's platforms with items
-  (e.g. Search with Google + Microsoft → 2 lines; a team with one platform → 1 line).
-- `[DIGEST SUMMARY]` counts **this team's** updates in the deck, not the other team's.
+  (e.g. Search with Google Ads + Microsoft Advertising → 2 lines; a team with one platform → 1 line).
+- `[DIGEST SUMMARY]` counts **this team's** updates in the deck, not the other teams'.
 - Date range: short month names, no year — e.g. `Jul 20 – Aug 3`.
 - **Deep-linked deck URL:** append `?team=search`, `?team=social` or `?team=programmatic`
   to the deck URL so the link opens on that team's filtered view — e.g.
@@ -67,7 +67,7 @@ Rules:
   - Markdown links (`[EN](url)`) — this connector renders standard markdown, so the URL
     itself never appears in the message text.
 - **Rotate** the wording each edition (options below) so it never reads canned, and keep
-  the Search and Social messages worded differently from each other.
+  the three teams' messages worded differently from each other.
 
 ## Wording options (rotate per edition)
 
@@ -121,7 +121,7 @@ _Team-named_ (Search and Social only — use the message's own team):
 - `We've included **[N] updates** in total across [PLATFORM NAMES].`
 - `This edition includes **[N] updates** across [PLATFORM NAMES].`
 - `In total, we've collected **[N] updates** from [PLATFORM NAMES].`
-- `[PLATFORM NAMES]` = e.g. `Google Ads and Microsoft`, or `across the major ad platforms` if many.
+- `[PLATFORM NAMES]` = e.g. `Google Ads and Microsoft Advertising`, or `across the major ad platforms` if many.
 
 **[LINK EMOJI]** `:point_right:` / `:link:`
 
@@ -134,7 +134,7 @@ _Team-named_ (Search and Social only — use the message's own team):
 
 ## Worked examples (edition Jul 20 – Aug 3, 2026) — one per team, one line per platform
 
-**Search channel** (Google Ads + Microsoft/Bing + ChatGPT Ads), link `?team=search`:
+**Search channel** (Google Ads + Microsoft Advertising + ChatGPT Ads), link `?team=search`:
 
 ```
 Happy Monday, Search team! Hope you're having a good one ✨
@@ -144,9 +144,9 @@ It's time for another round of **Ad Platform Updates**, covering **Jul 20 – Au
 A few updates worth keeping on your radar:
 
 :eyes: **Google Ads** — Local Services Ads fold into Performance Max as pay-per-lead from August
-:loudspeaker: **Microsoft** — Predictive Matching is retired and folded into AI Max search-term matching
+:loudspeaker: **Microsoft Advertising** — Predictive Matching is retired and folded into AI Max search-term matching
 
-This edition includes **8 updates** across Google Ads and Microsoft.
+This edition includes **8 updates** across Google Ads and Microsoft Advertising.
 
 :point_right: The full overview is available here: :us: [EN](<DECK_URL>?team=search), :ru: [RU](<DECK_URL>?team=search&lang=ru), :es: [ES](<DECK_URL>?team=search&lang=es) and :flag-rs: [SR](<DECK_URL>?team=search&lang=sr)
 ```
@@ -182,12 +182,15 @@ Here's what stood out this time:
 :dart: **The Trade Desk** — Netflix ads in Kokai get first- and third-party data targeting from November
 :handshake: **DV360** — Gemini-curated Marketplace bundles and LinkedIn CTV inventory land in DV360
 :bar_chart: **Amazon DSP** — Brand penetration maps in nine countries, no Amazon Marketing Cloud needed
-:tv: **CTV** — <the CTV platform's top change>
 
-This edition includes **14 updates** across The Trade Desk, DV360, Amazon DSP and CTV.
+This edition includes **12 updates** across The Trade Desk, DV360 and Amazon DSP.
 
 :point_right: The full overview is available here: :us: [EN](<DECK_URL>?team=programmatic), :ru: [RU](<DECK_URL>?team=programmatic&lang=ru), :es: [ES](<DECK_URL>?team=programmatic&lang=es) and :flag-rs: [SR](<DECK_URL>?team=programmatic&lang=sr)
 ```
 
-(If a team has no items this edition, that team's message is simply not sent. One line
+(No CTV or Microsoft Programmatic line above: the test data had no items for them, and a
+platform without items gets no line — never write one for it. A CTV line, when there is
+one, uses `:tv:` like any other platform.
+
+If a team has no items this edition, that team's message is simply not sent. One line
 per platform means a team with a single platform sends a single highlight line.)

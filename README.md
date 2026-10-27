@@ -9,7 +9,7 @@ Slack. Two tracks:
 - **Programmatic** — The Trade Desk, DV360, Amazon DSP, Microsoft programmatic, CTV
   (first edition 2026-10-28).
 
-Discovery and relevance filtering are done by an **LLM agent** (two Claude routines),
+Discovery and relevance filtering are done by an **LLM agent** (the Claude routines below),
 not a fixed scraper — article URLs are unknown in advance and "is this relevant" is a
 judgment call. The routines start from stable blog **index** pages and follow the fresh
 links. This GitHub repo is the system's **persistent memory**.
@@ -90,11 +90,13 @@ different sites with different URLs/wording. Heavy web-scale machinery (MinHash/
 embeddings, vector DBs) is overkill for ~a dozen items a week, so the LLM does
 the semantic dedup itself.
 
-- **Layer 1 — exact (no LLM):** canonicalize the URL (strip `utm_*`, `#fragment`,
-  trailing slash); ID = `sha1(canonical_url)[:12]`. Fallback ID when no per-item URL:
+- **Layer 1 — exact (no LLM), across both tracks:** canonicalize the URL (lowercase
+  scheme + host, strip tracking params, strip `#fragment` unless the source's items are
+  sections of one page, strip the trailing slash); ID = `sha1(canonical_url)[:12]`. The
+  record's `url` keeps the verified href as found. Fallback ID when no per-item URL:
   `sha1(source + published + title)[:12]`.
-- **Layer 2 — semantic (LLM):** ask the model whether a candidate is the same story as
-  anything already stored in the current window. Prefer the **official** source over an
+- **Layer 2 — semantic (LLM), within one track:** ask the model whether a candidate is
+  the same story as anything that track already stored in the current window. Prefer the **official** source over an
   **aggregator** (Search Engine Roundtable, PPC Land, Social Media Today, …) as the
   canonical record.
 
@@ -152,7 +154,8 @@ clicks. GitHub Pages serves all of it fine alongside the deck.
 ## Network requirement (important)
 
 A routine runs as a full cloud Claude Code session. **Outbound HTTPS to every source
-domain in `sources.yaml` must be allowed by the run environment's egress policy**, or
+domain in `sources.yaml` and `sources-programmatic.yaml` must be allowed by the run
+environment's egress policy**, or
 the fetch fails with a `403 CONNECT` policy denial (not a code bug).
 
 **Fetch with an in-session client (`curl` / `requests`), not the managed `WebFetch`

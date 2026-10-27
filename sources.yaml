@@ -1,4 +1,6 @@
-# sources.yaml — entry points for Routine 1 (Collect)
+# sources.yaml — entry points for Routine 1 — Collect — Performance
+# (The programmatic track has its own file, sources-programmatic.yaml. Keys must be
+# unique across BOTH files — they share data/state.json.)
 #
 # This file holds the CURRENT state only: which pages to read, how to read them today,
 # and whether each one works right now. History — when a source broke, how it was
@@ -20,7 +22,8 @@
 #   type           official   = the platform's own blog; preferred canonical record.
 #                  aggregator = third-party news site; often repeats official stories,
 #                               resolved by dedup Layer 2 (prefer official).
-#   validation     Current status — see STATUS below. Routine 1 keeps it current.
+#   validation     Current status — see STATUS below. The performance collect routine
+#                  keeps it current.
 #   blocked_since  Date the source stopped reading. Present only while blocked / broken.
 #   note           How to read this source today (structure, dates, pagination, filter).
 #

@@ -46,7 +46,7 @@ only; do not do the performance collection or Routine 2's work.
 
 > **Branch note:** `main` is the mainline. Routines can only push to `claude/`-prefixed
 > branches, so each run branches from `main`, pushes to its `claude/*` branch (the
-> session's assigned name, or `claude/collect-run`), merges into `main` via pull
+> session's assigned name, or `claude/collect-programmatic-run`), merges into `main` via pull
 > request; GitHub then deletes the branch automatically (step 8).
 
 ---
@@ -124,8 +124,9 @@ header, curl error — for the log and the alert.
   source with a fixed platform that is usually its own value; for `platform: mixed`
   sources (AdExchanger, Digiday, PPC Land, MediaPost, Adweek) decide per article — a CTV
   story that names one of our DSPs takes that DSP, Prime Video goes to `amazon_dsp` and
-  YouTube to `dv360`, and `ctv` is for a publisher's own change bought through several
-  DSPs (Netflix, Disney+, Roku, …).
+  YouTube bought in DV360 to `dv360`, and `ctv` is for a publisher's own change bought
+  through several DSPs (Netflix, Disney+, Roku, …). YouTube / Demand Gen bought in Google
+  Ads and CTV in the Microsoft Advertising account are performance — drop them here.
   Never write `mixed`. Drop everything that is not about our five platforms — other
   DSPs / SSPs / vendors, business news, performance-account news — filter hard. Dedup
   (Layers 1–2) still applies, and since the trade press repeats official posts, prefer
@@ -160,8 +161,11 @@ this order, so every run gets the same string:
 
 ### 5. Dedup — Layer 2 (semantic, LLM)
 Take the candidates that survived Layer 1 **plus** the titles+summaries already stored
-in `updates.json` within the current 2-week window (both tracks — a story the
-performance routine already stored is not new here either). For each new candidate ask:
+in `updates.json` within the current 2-week window **with `"track": "programmatic"`**.
+Compare within this track only: a change that lands in both a performance account and a
+DSP (e.g. Demand Gen in Google Ads *and* DV360) is a separate story for each team, so a
+performance record of it does not make it old news here. (Layer 1 still spans both
+tracks — one URL is one record.) For each new candidate ask:
 > "Is this the **same story** as any of these existing/other-candidate items?"
 
 - If yes and one is an **official** source and the other an **aggregator** → keep the
@@ -186,7 +190,7 @@ For each genuinely-new item, append a record to `data/updates.json`:
   "platform": "dv360",
   "source": "Display & Video 360 Help — Announcements",
   "title": "clear title — the article's own headline, or one you write if it reads better",
-  "url": "https://...(canonical)",
+  "url": "https://...(the href, verbatim and verified — see the URL rule)",
   "published": "2026-07-14",
   "first_seen": "<now, ISO8601 UTC>",
   "summary": "1–3 sentences you wrote from the article body: what changed + why it matters.",

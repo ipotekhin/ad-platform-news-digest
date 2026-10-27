@@ -59,7 +59,7 @@ language or step into a prompt, put it in the routine's `.md` instead.
   `routines/routine-2-presentation.md`. Routine 2 may correct a mis-filed record's
   `track` / `platform`; nothing else edits another routine's fields.
 - Dedup: Layer 1 = canonical-URL exact match (`sha1(canonical_url)[:12]`); Layer 2 =
-  LLM semantic match, preferring official sources over aggregators.
+  LLM semantic match within the same track, preferring official sources over aggregators.
 - **i18n:** Routine 2 pre-translates at build time (EN base → RU / ES / SR-**Latin**) and
   translates **only** the hero subtitles (one per filter: all / search / social /
   programmatic), card titles and card summaries — never the interface chrome, team
@@ -71,8 +71,8 @@ language or step into a prompt, put it in the routine's `.md` instead.
   nothing rewritten. Never edit an old deck to add a newer edition; appending to the
   registry is enough. The deck-data `archive` array is only the offline fallback.
 - Only advance a source's `last_collected` in `state.json` if you actually read it.
-- **Source status:** `sources.yaml` holds only the current state (`validation` +
-  `blocked_since`). A `blocked` / `broken` source gets one request per run and is
+- **Source status:** `sources.yaml` / `sources-programmatic.yaml` hold only the current
+  state (`validation` + `blocked_since`). A `blocked` / `broken` source gets one request per run and is
   skipped if it still fails — no workarounds. Status changes go to
   `docs/SOURCES_LOG.md` and trigger one DM to Ivan; "still broken" is never written
   anywhere.

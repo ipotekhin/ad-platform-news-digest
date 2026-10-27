@@ -604,4 +604,23 @@ messages, presented per team; backlog note grouped by team.
 Prime Video → Amazon DSP, YouTube → DV360; `ctv` only for a publisher's own change bought
 through several DSPs (Netflix, Disney+, Roku, …) — expect it empty in many editions.
 
+**Pre-merge review** (independent read of the whole branch diff; no blockers). Fixed:
+- **The account a campaign is bought in decides the track.** "YouTube → DV360" and "CTV
+  buying is programmatic" were unqualified, so Routine 2 could have moved Google Ads
+  YouTube items (Masthead, Reach Planner — both pending for edition 7) out of Search.
+  Now: YouTube / Video / Demand Gen / Masthead bought in Google Ads stay `google_ads`, CTV
+  placements of Microsoft Advertising campaigns stay `bing`; only the DSP side moves.
+- **Layer 2 (semantic dedup) is same-track only.** Comparing across tracks let one team's
+  record hide a change that lands in both (Demand Gen in Google Ads *and* DV360) from the
+  other team. Layer 1 stays cross-track (one URL, one record); Routine 2 drops a
+  mis-filed record instead of moving it when the target track already has the story.
+- Smaller: `url` is the verified href everywhere (the schema said "canonical"); Slack
+  template says "Microsoft Advertising" next to "Microsoft Programmatic"; the Programmatic
+  example lost a placeholder CTV line that invited a made-up one; the programmatic routine
+  has its own fallback branch (`claude/collect-programmatic-run`); stale two-routine
+  wording in README / CLAUDE.md / `sources.yaml`.
+- Known limit, left as is: the Microsoft Advertising monthly "What's new" post is one
+  performance record, so Invest / Curate news that appears *only* there can't reach the
+  programmatic track (they normally get their own posts).
+
 First programmatic edition: No. 7, 2026-10-28.

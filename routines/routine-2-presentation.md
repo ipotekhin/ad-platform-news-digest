@@ -97,20 +97,28 @@ survivors, confirm/adjust `category` and `impact` per the item's criteria file.
   collect routines set them; a mis-filed item looks right while it is not. Read each
   item's own title and summary and ask which product actually changes:
   - A **performance** item that is really about DV360, The Trade Desk, Amazon DSP,
-    Microsoft's programmatic stack or CTV buying is not a performance item. If it passes
-    `criteria-programmatic.md`, **move it**: set `"track": "programmatic"` and the right
-    programmatic `platform` in `data/updates.json`, then treat it as programmatic.
-    Otherwise drop it. (Campaign Manager 360, Search Ads 360 and Google Ad Manager are in
+    Microsoft's programmatic stack or CTV bought through those DSPs is not a performance
+    item. If it passes `criteria-programmatic.md`, **move it**: set `"track":
+    "programmatic"` and the right programmatic `platform` in `data/updates.json`, then
+    treat it as programmatic. Otherwise drop it. **The account a campaign is bought in
+    decides** — YouTube, Video, Demand Gen and Masthead bought in Google Ads (and Reach
+    Planner) stay `google_ads`, and CTV placements of Microsoft Advertising account
+    campaigns stay `bing`; a mention of YouTube, TV screens or CTV is not a reason to
+    move. (Campaign Manager 360, Search Ads 360 and Google Ad Manager are in
     neither track — drop.) Two DV360 items reached Google Ads readers in editions 3 and 4
     before this test existed.
   - A **programmatic** item that is really about a performance account (Google Ads, the
     Microsoft Advertising account, ChatGPT Ads, Meta, TikTok, LinkedIn) — move it the
     other way under `criteria.md`, or drop it.
+  - **Before moving, check the target track:** if it already holds the same story (the
+    same change, from any source), drop the mis-filed copy instead of moving it. A
+    change that lands in both a performance account and a DSP may legitimately sit in
+    both tracks — one record each — since each team reads its own view; leave those.
   - Within programmatic, check the platform by **where the change lands**
     (criteria-programmatic.md → product test): a CTV story that names one of our DSPs
-    belongs to that DSP; Prime Video belongs to Amazon DSP and YouTube to DV360; `ctv` is
-    only for a CTV publisher's own ad-product change that is bought through several DSPs.
-    Fix the `platform` if it is wrong.
+    belongs to that DSP; Prime Video belongs to Amazon DSP and YouTube bought in DV360 to
+    DV360; `ctv` is only for a CTV publisher's own ad-product change that is bought
+    through several DSPs. Fix the `platform` if it is wrong.
 
 ### 2a. Empty-edition guard (IMPORTANT — stop if nothing qualifies)
 If **no items** survive selection + filtering (i.e. there are zero un-presented,
@@ -216,7 +224,7 @@ failed, even if every word in it is "correct".
   `author` ("Ivan Potekhin" — the footer reads "Made for MPO Team with 💜 by …"),
   `subtitles` + `subtitles_i18n`, `archive`, and `platforms[]` — each platform as
   `{ "name": "<deck name from the table>", "team": "search|social|programmatic", "items": [ … ] }`.
-  Each item carries `title`, `url` (its **canonical** URL), `source`, `published`,
+  Each item carries `title`, `url` (the record's stored `url`, as is), `source`, `published`,
   `category`, `impact`, `summary` and `i18n`. `edition_no` = this run's number (see
   editions registry below). Do **not** write `tldr` / `tldr_i18n` / `subtitle`.
 - **`period_label` = the digest window, NOT the min/max of the items' `published`

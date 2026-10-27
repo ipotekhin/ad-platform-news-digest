@@ -51,11 +51,14 @@ its headline sounds.** The same applies elsewhere: Meta's publisher tools, Micro
 Monetize/PubCenter, LinkedIn's sales or hiring products.
 
 **DV360 and the rest of the programmatic stack** — DV360, The Trade Desk, Amazon DSP,
-Microsoft's programmatic stack (Invest, Curate) and CTV buying — are not dropped from the
-digest altogether: they belong to the **programmatic track**, collected by its own
-routine under [`criteria-programmatic.md`](criteria-programmatic.md). Here, in the
-performance track, they are out. CM360, SA360 and Ad Manager / AdSense / AdMob are in
-neither track.
+Microsoft's programmatic stack (Invest, Curate) and CTV bought through those DSPs — are
+not dropped from the digest altogether: they belong to the **programmatic track**,
+collected by its own routine under [`criteria-programmatic.md`](criteria-programmatic.md).
+Here, in the performance track, they are out. CM360, SA360 and Ad Manager / AdSense / AdMob are in
+neither track. **The account a campaign is bought in decides:** YouTube, Video, Demand Gen
+and Masthead campaigns bought in Google Ads — including YouTube on TV screens, and Reach
+Planner — stay here as `google_ads`; only YouTube bought in DV360 is programmatic. Likewise
+CTV placements of Microsoft Advertising account campaigns stay here as `bing`.
 
 **But judge by where the change lands, not by which product is named.** An item that
 mentions DV360 *and* delivers something in our stack stays in — e.g. "Data Manager lands
