@@ -525,8 +525,8 @@ the two tracks disagree on the product test (DV360 is "not ours" for performance
 core for programmatic), and one instruction holding both would invite exactly the
 mis-filing that let DV360 into editions 3 and 4. So:
 - **Routine 1 — Collect — Performance** (`routines/routine-1-collect-performance.md`,
-  renamed from `routine-1-collect.md`; a stub at the old path redirects until the
-  trigger prompt is re-pasted) and **Routine 1 — Collect — Programmatic**
+  renamed from `routine-1-collect.md`; a stub at the old path redirected until both
+  trigger prompts were re-pasted, then was removed on 2026-10-27) and **Routine 1 — Collect — Programmatic**
   (`routines/routine-1-collect-programmatic.md`), each with its own sources file
   (`sources.yaml` / `sources-programmatic.yaml`) and criteria (`criteria.md` /
   `criteria-programmatic.md`).
@@ -624,3 +624,14 @@ through several DSPs (Netflix, Disney+, Roku, …) — expect it empty in many e
   programmatic track (they normally get their own posts).
 
 First programmatic edition: No. 7, 2026-10-28.
+
+## 20. Launch prep (2026-10-27)
+
+- Both collect prompts re-pasted (the test routine became the permanent programmatic one,
+  Tuesdays two hours after performance); the redirect stub `routine-1-collect.md` removed.
+- **Routine 2 now DMs Ivan when something breaks.** It never had a failure alert — only
+  the backlog note, sent "after the digest is delivered", so a run that failed to post
+  or to merge its presented flags said nothing. Step 8 is now a status note sent on
+  every run past step 2a, problems first (failed team send, stop before posting,
+  unmerged PR, unverified link), then the backlog. Cadence-gate and empty-edition stops
+  stay silent. The `presented`-only-after-a-confirmed-post rule is unchanged.

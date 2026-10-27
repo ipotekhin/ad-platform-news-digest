@@ -325,18 +325,33 @@ param.
   then the presented flags), the branch is gone after the first merge: pushing the
   second commit to the same name recreates it, and the second PR opens from it as usual.
 
-### 8. Backlog status note to Ivan (internal — always to Ivan's DM)
-After the digest is delivered, send a **separate short** `slack_send_message` to
-**Ivan's DM (`channel_id = U065VBRHYV7`)** — this is an internal ops note and always goes
-to Ivan regardless of where the digest itself is sent. Summarize the backlog pressure so
-Ivan can decide whether to raise a platform's cap later — grouped by team (Search /
-Social / Programmatic):
+### 8. Status note to Ivan (internal — always to Ivan's DM)
+Send a **separate short** `slack_send_message` to **Ivan's DM (`channel_id =
+U065VBRHYV7`)** — this is an internal ops note and always goes to Ivan regardless of
+where the digest itself is sent. Send it on **every run that got past step 2a**, even
+when something below failed — that is when Ivan needs it most. (A stop at step 0 or 2a is
+silent, as before.)
+
+**Problems first.** If anything went wrong, open the note with one `:warning:` line per
+problem, saying what failed (with the error) and what Ivan has to do:
+- a team's Slack message failed to send → that team's items stay un-presented and go out
+  next edition; nothing to do unless it repeats;
+- the run stopped before posting (deck failed its sanity check, Pages never served it) →
+  no team got a message; say where it stopped;
+- a PR did not merge into `main` → say which one and link it. If it is the
+  presented-flags PR and messages already went out, Ivan must merge it by hand, or the
+  next run presents the same items again;
+- the deck link went out unverified (step 5).
+
+Then summarize the backlog pressure so Ivan can decide whether to raise a platform's cap
+later — grouped by team (Search / Social / Programmatic):
 - **Included:** total shipped this edition, per team.
 - **Deferred** (still `presented:false`, hit the per-platform cap): count **by platform**.
 - **Expired this run** (aged past 28 days, retired): count **by platform**.
 - **Moved between tracks** in step 2, if any: one line each.
-If nothing was deferred or expired, one line ("no backlog — everything relevant shipped")
-is enough. Keep it compact; this note is for Ivan only, not the teams.
+If nothing failed and nothing was deferred or expired, one line ("no backlog — everything
+relevant shipped") is enough. Keep it compact; this note is for Ivan only, not the teams.
+If the DM itself fails, say so in the run's final report; don't retry in a loop.
 
 ---
 
@@ -360,15 +375,17 @@ is enough. Keep it compact; this note is for Ivan only, not the teams.
   renders it as "Made for MPO Team with 💜 by Ivan Potekhin".
 - **Empty edition:** if nothing qualifies, no deck and no Slack post (step 2a).
 - **Cadence gate:** min **12 days** between editions (step 0). Set the trigger to fire
-  every Wednesday (`0 7 * * 3`); the gate makes the actual digest land bi-weekly.
+  every Wednesday (the time is set in the routine UI); the gate makes the actual digest
+  land bi-weekly.
   Change the 12-day threshold here to adjust cadence.
 - **Per-platform cap:** **6** items (up to **8** to fit all `high`-impact); **no overall
   cap** (step 3). Same for every team. Raise a platform's cap here if its backlog note
   shows steady pressure.
 - **Backlog expiry:** un-presented items older than **28 days** (`first_seen`) are retired
   (`expired:true`, step 1). Raise this if too much is aging out.
-- **Backlog status note:** step 8 always DMs Ivan (`U065VBRHYV7`) a short deferred/expired
-  summary by platform, even when the digest later goes to a team channel.
+- **Status note:** step 8 always DMs Ivan (`U065VBRHYV7`) — problems first (failed
+  send, unmerged PR, a stop before posting), then a short deferred/expired summary by
+  platform — on every run that got past step 2a.
 
 ---
 
