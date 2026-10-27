@@ -29,17 +29,19 @@ platforms and only these:
 | Platform (`platform` value) | What counts |
 |---|---|
 | **The Trade Desk** (`ttd`) | Kokai and its releases (e.g. Zuma), Koa / AI agents, OpenPath, UID2 / EUID, TTD data marketplace, retail and CTV inventory in TTD, TTD reporting and measurement |
-| **Display & Video 360** (`dv360`) | DV360 line items and insertion orders, YouTube & partners / Demand Gen inside DV360, deals and Marketplace, audiences, reporting, brand controls, the DV360 API when it exposes a new capability |
-| **Amazon DSP** (`amazon_dsp`) | Amazon DSP buying, Prime Video ads and Amazon CTV bought programmatically, Amazon audiences and signals in the DSP, Amazon Marketing Cloud as used for DSP campaigns |
+| **Display & Video 360** (`dv360`) | DV360 line items and insertion orders, YouTube & partners / Demand Gen inside DV360 — **including YouTube on TV screens** — deals and Marketplace, audiences, reporting, brand controls, the DV360 API when it exposes a new capability |
+| **Amazon DSP** (`amazon_dsp`) | Amazon DSP buying, **Prime Video ads** and other Amazon CTV (Fire TV, Twitch) bought programmatically, Amazon audiences and signals in the DSP, Amazon Marketing Cloud as used for DSP campaigns |
 | **Microsoft programmatic** (`microsoft_programmatic`) | Microsoft's programmatic stack (the former Xandr): Microsoft Invest (DSP), Microsoft Curate deals, programmatic CTV / Netflix deals via Microsoft, open-exchange display, native and DOOH bought on CPM |
-| **CTV** (`ctv`) | A CTV publisher's ad-product change that a buyer can use through our DSPs — Netflix, Disney+, Prime Video, Roku, YouTube on TV screens, etc.: new formats (e.g. pause ads), programmatic availability, measurement, targeting |
+| **CTV** (`ctv`) | A CTV publisher's own ad-product change that a buyer can use through several DSPs — Netflix, Disney+, Roku, Paramount+, Max, Peacock, Tubi, smart-TV home screens (LG, Samsung, Vizio), etc.: new formats (e.g. pause ads), programmatic availability, measurement, targeting. **Not** Prime Video (→ Amazon DSP) or YouTube (→ DV360): a publisher owned by one of our DSPs' companies goes under that DSP |
 
 **Judge by where the change lands, not by who announced it.** A partner announcing
 something that becomes usable *inside* one of our DSPs is in: "Gracenote's show-level
 CTV data is now available in The Trade Desk" → `ttd`. A story that names a DSP gets that
 DSP's platform, not `ctv`: "LinkedIn B2B audiences now available on CTV via DV360" →
-`dv360`. Use `ctv` only when the change is the publisher's own and not tied to one of
-our DSPs.
+`dv360`. Prime Video always goes to `amazon_dsp` and YouTube to `dv360`. Use `ctv` only
+when the change is a publisher's own and not tied to one of our DSPs — e.g. "Netflix
+opens a new measurement option to all programmatic buyers", "Disney+ makes pause ads
+buyable programmatically". Expect the CTV section to be empty in many editions.
 
 ### Microsoft: performance vs programmatic
 

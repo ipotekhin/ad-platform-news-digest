@@ -123,7 +123,9 @@ header, curl error — for the log and the alert.
   product test): `ttd`, `dv360`, `amazon_dsp`, `microsoft_programmatic` or `ctv`. For a
   source with a fixed platform that is usually its own value; for `platform: mixed`
   sources (AdExchanger, Digiday, PPC Land, MediaPost, Adweek) decide per article — a CTV
-  story that names one of our DSPs takes that DSP, `ctv` is for a publisher's own change.
+  story that names one of our DSPs takes that DSP, Prime Video goes to `amazon_dsp` and
+  YouTube to `dv360`, and `ctv` is for a publisher's own change bought through several
+  DSPs (Netflix, Disney+, Roku, …).
   Never write `mixed`. Drop everything that is not about our five platforms — other
   DSPs / SSPs / vendors, business news, performance-account news — filter hard. Dedup
   (Layers 1–2) still applies, and since the trade press repeats official posts, prefer

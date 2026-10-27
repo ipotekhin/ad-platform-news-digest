@@ -1,6 +1,7 @@
 # CLAUDE.md — operational context for this repo
 
-This repo automates an **ad-platform news digest**: two Claude routines + this repo as
+This repo automates an **ad-platform news digest**: three Claude routines (two collect
+routines — performance and programmatic — and one presentation routine) + this repo as
 memory. Read [`README.md`](README.md) for the full design. This file is the quick
 operational reference for a routine session.
 
@@ -27,12 +28,13 @@ the repo (via chat) — never by rewriting the routine prompts:
   Russian; sent only when a source breaks or recovers)
 - **Design** → `style/deck-template.html` (+ `assets/stickers/`)   ·   **UI strings in
   other languages** → also `style/deck-template.html` (interface chrome is pre-baked and
-  English-only; only the hero subtitle, card titles/summaries and TL;DR bullets are
-  translated, by Routine 2)
+  English-only; only the hero subtitles, card titles and card summaries are translated,
+  by Routine 2)
 - **Slack message** → `style/slack-summary.md` (one message **per team** — Search /
-  Social)   ·   **Slack destinations / config** → `routines/routine-2-presentation.md` →
-  Open config (`search_channel_id` / `social_channel_id`; each message deep-links the deck
-  with `?team=search|social` to open on that team's filtered view)
+  Social / Programmatic)   ·   **Slack destinations / config** →
+  `routines/routine-2-presentation.md` → Open config (`search_channel_id` /
+  `social_channel_id` / `programmatic_channel_id`; each message deep-links the deck with
+  `?team=search|social|programmatic` to open on that team's filtered view)
 - **Schedule** → set manually in the routine UI; it does not affect any logic here.
 Add a source, change the look, or redirect Slack by editing these files — the routines
 keep working unchanged.
@@ -51,13 +53,17 @@ language or step into a prompt, put it in the routine's `.md` instead.
 - Routine 1 (either track) **never** builds a deck; Routine 2 **never** collects.
 - Each collect routine writes only its own `track` and never edits the other track's
   records. One URL is one record (Layer 1), whichever track stored it first.
-- **Programmatic is not delivered yet:** Routine 2 skips `"track": "programmatic"` records
-  until the deck filter and Slack destination for it are built.
+- **One deck, three teams:** Routine 2 presents both tracks in one deck — Search and
+  Social from the performance track, Programmatic from the programmatic track — each
+  track filtered strictly by its own criteria file; team → platform table at the top of
+  `routines/routine-2-presentation.md`. Routine 2 may correct a mis-filed record's
+  `track` / `platform`; nothing else edits another routine's fields.
 - Dedup: Layer 1 = canonical-URL exact match (`sha1(canonical_url)[:12]`); Layer 2 =
   LLM semantic match, preferring official sources over aggregators.
 - **i18n:** Routine 2 pre-translates at build time (EN base → RU / ES / SR-**Latin**) and
-  translates **only** the hero subtitle, card titles, card summaries and TL;DR bullets —
-  never the interface chrome, platform names, chips, dates or footer. Length limits are set
+  translates **only** the hero subtitles (one per filter: all / search / social /
+  programmatic), card titles and card summaries — never the interface chrome, team
+  headings, platform names, chips, dates or footer. There is no TL;DR block. Length limits are set
   in English, and translations must read naturally, never as a calque (see Routine 2 step
   3a). Language comes from `?lang=` only — no param means English, nothing is stored.
 - **Editions strip:** the deck reads `data/editions.json` at view time and lists every

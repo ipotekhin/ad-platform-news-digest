@@ -130,17 +130,18 @@ as the file specifies. Stay inside this routine's job — do not do Routine 1's 
 1. **Manually run each collect routine once.** Then inspect `data/updates.json` — check items are
    real (last-2-weeks window), deduped, ad-account-relevant, with a clear title and a
    1–3 sentence summary written from the article body.
-2. **Manually run Routine 2 once.** It builds one deck and sends **up to two Slack
-   messages — one per team** (Search → **#paid-search-team**, Social → **#paid-social-team**;
-   IDs in `routine-2` Open config). Both are **private** channels, so Ivan must be a member
-   of each. Each message links the deck with `?team=search|social` so it opens on that
+2. **Manually run Routine 2 once.** It builds one deck and sends **up to three Slack
+   messages — one per team** (Search → **#paid-search-team**, Social →
+   **#paid-social-team**, Programmatic → **#media_performance**; IDs in `routine-2` Open
+   config). All three are **private** channels, so Ivan must be a member of each. Each
+   message links the deck with `?team=search|social|programmatic` so it opens on that
    team's filtered view. Confirm the deck renders, the Pages links resolve on the right
-   filter, and both messages look right. A team with no items sends no message. The step-8
+   filter, and the messages look right. A team with no items sends no message. The step-8
    backlog note goes to Ivan's DM (`U065VBRHYV7`). Items are marked `presented` per team,
    only after that team's delivery succeeds.
-3. Once both look right, leave them on the weekly / bi-weekly schedule. To redirect a team
-   later, change `search_channel_id` / `social_channel_id` in `routine-2`
-   Open config — no other edits needed.
+3. Once they look right, leave them on the weekly / bi-weekly schedule. To redirect a team
+   later, change `search_channel_id` / `social_channel_id` / `programmatic_channel_id` in
+   `routine-2` Open config — no other edits needed.
 
 ## 6. Branch / merge workflow (main is the mainline)
 

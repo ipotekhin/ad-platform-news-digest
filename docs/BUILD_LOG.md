@@ -565,3 +565,43 @@ and "already collected" also matches stored URLs canonicalised the same way, so 
 records hashed differently are still caught. Items that are anchors on one page (DV360
 API release notes) keep their `#fragment`. The 6 test IDs were recomputed; nothing had
 been presented, so nothing else referenced them.
+
+## 19. Programmatic delivery — deck, Slack, Routine 2 (2026-10-23 → 10-27)
+Built on the branch, reviewed by Ivan on a test page published at
+`decks/deck-test-programmatic.html` (edition 6 + the programmatic block; PRs #96–#99 put
+just that file on `main` so it could be seen on Pages; removed again with this merge).
+
+**Deck (`style/deck-template.html`).**
+- Header filter **All news / Search / Social / Programmatic** (`?team=programmatic`);
+  platforms carry an explicit `team` in the deck data (name-based fallback for old data).
+- **TL;DR block removed.** With three audiences one cross-team list either grows long or
+  shows two of three teams someone else's news. Its job moved to the **hero subtitle,
+  which follows the filter**: `subtitles.all` leads with one top story per team,
+  `subtitles.<team>` with that team's own; translated like card text.
+- **Team headings**: a blue banner per team — "*Search* / *Social* / *Programmatic*
+  **News**", team word in lime italic (the hero's "Bi-Weekly" accent), no counter. All
+  news shows all three; a filtered view shows only its own, so it names the section being
+  read. Chosen from four candidates (centred between rules, pill on a rule, banner,
+  editorial kicker) switchable on the test page; an "All News" heading above the feed was
+  tried and dropped.
+- Stats (updates, platforms, minutes) recompute per filter; icons for The Trade Desk
+  (brain-star), Amazon DSP (shooting-star), CTV (sleepy-dome), DV360 (globe).
+- Footer in three columns: "N updates · period" left, **"Made for MPO Team with 💜 by
+  Ivan Potekhin"** centred, brand right.
+- Mobile: platform sections align with the headings; platform names fit on one line.
+
+**Slack.** A third message per edition for the Programmatic team in
+**#media_performance** (`C065RGQMUKF`, private — Ivan is a member). Same structure as
+Search/Social; greetings never name the team ("Hi team!", "Hi guys!").
+
+**Routine 2.** One routine, both tracks: a team/track/platform table at the top; step 2
+filters each track by its own criteria and may **move a mis-filed record between tracks**
+(a DV360 story collected as performance becomes programmatic instead of being lost to
+Layer 1 dedup); caps unchanged per platform; subtitles instead of TL;DR; three Slack
+messages, presented per team; backlog note grouped by team.
+
+**Criteria.** CTV vs DSP made unambiguous: a story naming one of our DSPs goes to that DSP;
+Prime Video → Amazon DSP, YouTube → DV360; `ctv` only for a publisher's own change bought
+through several DSPs (Netflix, Disney+, Roku, …) — expect it empty in many editions.
+
+First programmatic edition: No. 7, 2026-10-28.

@@ -11,8 +11,7 @@
 > - **Search** team (Google Ads + Microsoft/Bing + ChatGPT Ads) → `search_channel_id` = **#paid-search-team**.
 > - **Social** team (Meta + TikTok + LinkedIn) → `social_channel_id` = **#paid-social-team**.
 > - **Programmatic** team (The Trade Desk + DV360 + Amazon DSP + Microsoft Programmatic +
->   CTV) → `programmatic_channel_id` (set in Open config before the first programmatic
->   edition).
+>   CTV) → `programmatic_channel_id` = **#media_performance**.
 > - Targets (channel IDs) live in `routines/routine-2-presentation.md` → Open config. The
 >   internal backlog/system note (step 8) still goes to **Ivan's DM `U065VBRHYV7`**, not the
 >   team channels.
