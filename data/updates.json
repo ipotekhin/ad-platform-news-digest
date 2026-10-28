@@ -1595,7 +1595,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "325333fe58bb",
@@ -1685,7 +1686,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "926fc025b163",
@@ -1730,7 +1732,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "0eddffa14236",
@@ -2418,7 +2421,7 @@
     "first_seen": "2026-10-21T18:07:18Z",
     "summary": "Advertisers running financial-services ads in the US and Canada will have to prove they are authorised by the relevant regulator before their ads can serve, under the programme Google already runs in other markets (built with the American and Canadian Bankers Associations). Rollout starts early 2027, with guidance promised well before enforcement.",
     "category": "policy",
-    "impact": "high",
+    "impact": "medium",
     "collected": true,
     "presented": false
   },
@@ -3453,7 +3456,7 @@
     "first_seen": "2026-10-21T18:07:18Z",
     "summary": "Meta has removed manual placement exclusions for engagement, leads, app-promotion and sales objectives (awareness and traffic keep them for now). Its new guidance says to use multi-media ads and per-placement media customisation, and to raise or lower bids by placement.",
     "category": "feature",
-    "impact": "medium",
+    "impact": "high",
     "collected": true,
     "presented": false
   },
@@ -3723,7 +3726,7 @@
     "first_seen": "2026-10-27T07:11:23Z",
     "summary": "Rolling out in October: New Customer High Value mode extends from Search and PMax to Shopping; retention goals (Re-engagement, Loyalty and Retention-only modes) become available across Performance Max, Search and Shopping; and new-customer/retention value adjustments can now be a percentage multiplier (1.1x–5x) instead of a flat amount, across Search, Shopping, PMax and Demand Gen. Retention-only mode limits a campaign to the customer lists you specify; value-based bidding with a Purchase goal is required.",
     "category": "feature",
-    "impact": "high",
+    "impact": "medium",
     "collected": true,
     "presented": false
   },
@@ -3918,7 +3921,7 @@
     "first_seen": "2026-10-27T07:11:23Z",
     "summary": "Advertisers on Target ROAS can now use Smart Bidding Exploration in PMax and Shopping, not just Search: accept a ROAS 5–30% below target in exchange for bidding on eligible queries the campaign was losing. Campaigns must not be budget-limited; portfolio strategies only work for Search, and it is unavailable in SA360 for Shopping and retail PMax.",
     "category": "feature",
-    "impact": "high",
+    "impact": "medium",
     "collected": true,
     "presented": false
   },
