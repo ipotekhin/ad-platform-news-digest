@@ -63,9 +63,11 @@
 #     `Mon D, YYYY at H:MM am/pm ET` (no datetime=, no JSON-LD on the index). The top
 #     links are a site-wide recent/popular block — pick platform-specific items. Fetch
 #     at a concurrency of 3 or lower (bursts return 504).
-#   www.seroundtable.com — category pages: `<h2 class="text-black-text font-bold
-#     text-xl"><a href=…>TITLE</a></h2>`, then the date as `Mon D, YYYY - H:MM am/pm`.
-#     Page 1 holds ~33 category cards (11 large + a compact list), followed by a
+#   www.seroundtable.com — category pages: the 11 large cards are `<h2
+#     class="text-black-text font-bold text-xl">` with the date as `Mon D, YYYY - H:MM
+#     am/pm`; the compact list after them is `<h2 class="text-black-text py-2">` with the
+#     date alone (`Oct 26, 2026`). In both the `<a href=…>TITLE</a>` sits on its own line
+#     inside the h2. Page 1 holds ~33 category cards (11 large + a compact list), then a
 #     site-wide "latest" block that repeats the newest posts of ALL categories — stop at
 #     the end of the category list. Older pages: `?page=N`. Articles carry JSON-LD
 #     datePublished. Host is `www.seroundtable.com`.
