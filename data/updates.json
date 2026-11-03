@@ -4554,5 +4554,50 @@
     "impact": "medium",
     "collected": true,
     "presented": false
+  },
+  {
+    "id": "d36018da87cc",
+    "track": "programmatic",
+    "platform": "ttd",
+    "source": "PPC Land — Pulse",
+    "title": "Digital Envoy ISP, mobile-carrier and organisation segments go live in The Trade Desk",
+    "url": "https://ppc.land/trade-desk-advertisers-gain-isp-and-carrier-targeting-from-digital-envoy/",
+    "published": "2026-10-28",
+    "first_seen": "2026-11-03T09:06:12Z",
+    "summary": "Digital Envoy's NetAcuity IP data is now available in The Trade Desk globally, adding audience segments built on a user's internet provider, mobile carrier or organisation network rather than location alone. The segments can be activated across the open internet and CTV and sit inside Audience Unlimited, so they combine with other providers' data; pricing, segment counts and coverage were not disclosed.",
+    "category": "feature",
+    "impact": "medium",
+    "collected": true,
+    "presented": false
+  },
+  {
+    "id": "5600c1b7f625",
+    "track": "programmatic",
+    "platform": "amazon_dsp",
+    "source": "PPC Land — Pulse",
+    "title": "Amazon DSP is now DVA+ inside Amazon Ads Agent — manual DSP controls limited to some US advertisers",
+    "url": "https://ppc.land/amazon-calls-its-ad-platform-an-agent-but-the-agent-is-still-closed-beta/",
+    "published": "2026-10-29",
+    "first_seen": "2026-11-03T09:06:12Z",
+    "summary": "Since unBoxed, Amazon DSP buying lives in DVA+ (display, video, audio) within the renamed Amazon Ads Agent platform, alongside Sponsored Display, Sponsored TV and a cross-format Full-Funnel campaign type; the conversational agent itself is still a closed beta. The automated DVA+ path is open with CPM billing and no minimum, but 'advanced settings' — where the old DSP controls now sit — are available only to a limited set of US advertisers, while DSP users in 21 countries keep the legacy Amazon DSP experience for now.",
+    "category": "feature",
+    "impact": "medium",
+    "collected": true,
+    "presented": false
+  },
+  {
+    "id": "ca330680cdca",
+    "track": "programmatic",
+    "platform": "ctv",
+    "source": "PPC Land — Pulse",
+    "title": "Netflix's ad tier joins Australia's VOZ TV currency from February 2027",
+    "url": "https://ppc.land/netflix-ad-tier-to-enter-australias-official-tv-ratings-in-february-2027/",
+    "published": "2026-11-02",
+    "first_seen": "2026-11-03T09:06:12Z",
+    "summary": "OzTAM and Netflix signed a multi-year deal to add census-level viewing from Netflix's ad-supported plan, built with Nielsen, to VOZ, Australia's official TV audience currency. From February 1, 2027, Netflix ad-tier audiences can be planned, traded and reported alongside broadcast TV and BVOD in one database (monthly data, a month in arrears).",
+    "category": "measurement",
+    "impact": "low",
+    "collected": true,
+    "presented": false
   }
 ]
