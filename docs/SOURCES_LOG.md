@@ -17,6 +17,9 @@ Entry format:
 
 ---
 
+## 2026-11-03
+- `seroundtable_google_ads` / `seroundtable_microsoft_ads` / `seroundtable_chatgpt_ads`: readable → readable — note corrected: the compact card list uses `<h2 class="text-black-text py-2">` with a date-only line (`Oct 26, 2026`), and the link sits on its own line inside every h2 (DOMAIN NOTES updated).
+
 ## 2026-10-27
 - `mediapost_programmatic`: readable → blocked — HTTP 403 with `cf-mitigated: challenge` (Cloudflare "Just a moment…" page) on every retry.
 
