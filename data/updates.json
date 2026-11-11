@@ -1883,7 +1883,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "a64e65e31c1a",
@@ -1928,7 +1929,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "f4cf75270eab",
@@ -1973,7 +1975,8 @@
     "category": "api",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "ed11d16e7595",
@@ -2018,7 +2021,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "95f32589e9ed",
@@ -2033,7 +2037,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "371d746f13da",
@@ -2063,7 +2068,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "31e739010e47",
@@ -2078,7 +2084,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "9e015a46f36f",
@@ -2346,7 +2353,7 @@
     "first_seen": "2026-10-20T07:14:11Z",
     "summary": "Meta published an engineering account of the 2026 generation of its Generative Ads Model (GEM), which replaces separate prediction systems for Facebook, Instagram and Reels with a single foundation model that feeds the hundreds of smaller models serving ads in real time. Meta claims an 18.9% conversion improvement and a 12% click-through rate improvement across its ad surfaces and objectives. The figures come only from Meta with no baseline or method published, so this is a delivery-side change advertisers cannot verify in their own accounts.",
     "category": "other",
-    "impact": "medium",
+    "impact": "low",
     "collected": true,
     "presented": false
   },
@@ -4281,7 +4288,7 @@
     "first_seen": "2026-11-03T09:00:00Z",
     "summary": "Google's help page on how PMax interacts with other campaigns now says Performance Max may filter out navigational and brand-specific queries so dedicated brand Search campaigns serve them. Advertisers should make sure brand Search campaigns have enough budget and strong ads to capture that traffic; Search themes in PMax can help align coverage.",
     "category": "feature",
-    "impact": "medium",
+    "impact": "high",
     "collected": true,
     "presented": false
   },
@@ -4746,7 +4753,7 @@
     "first_seen": "2026-11-10T07:10:32Z",
     "summary": "From the week of December 1, 2026 the API rejects the campaign-level setting that keeps Demand Gen off the Display Network; the choice lives only in each ad group. Existing campaigns are rewritten automatically so serving doesn't change, and Display-only ad groups inside campaigns that blocked Display get paused. Tools that set the old field must be updated.",
     "category": "api",
-    "impact": "high",
+    "impact": "medium",
     "collected": true,
     "presented": false
   },
