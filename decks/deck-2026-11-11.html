@@ -1,0 +1,1812 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" href="../assets/stickers/blob-face-pink.png">
+<link rel="apple-touch-icon" href="../assets/stickers/blob-face-pink.png">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-M2BTR42L');</script>
+<!-- End Google Tag Manager -->
+<title>Ad Platform News Digest</title>
+<!--
+  ZINE DECK TEMPLATE — used by Routine 2 (Presentation).
+
+  HOW ROUTINE 2 USES THIS FILE:
+    1. Copy this file to decks/deck-YYYY-MM-DD.html
+    2. Replace the single line  <script id="deck-data" ...> ... </script>
+       with a filled-in DECK_DATA object (schema documented in that block below).
+    3. Nothing else needs editing. All rendering is data-driven.
+
+  Not zero-request: this skin pulls Playfair Display + Courier Prime from Google
+  Fonts CDN and reads sticker PNGs from ../assets/stickers/ (repo-relative, works
+  identically from style/ and from decks/ since both sit one level below repo
+  root). It also loads Google Tag Manager (container GTM-M2BTR42L) for analytics,
+  and pushes a `link_click` event to the dataLayer on every <a> click (for GTM
+  triggers). Those are the only third-party requests — do not add other analytics
+  or third-party JS/CSS. Fine to serve from GitHub Pages and to print to PDF.
+
+  No dark-mode variant — this skin is a light/cream editorial look by design
+  (see the Claude Design "Zine" direction it implements); it does not adapt to
+  prefers-color-scheme like the previous template did.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --aid-blue:     rgb(0, 9, 220);
+    --aid-blue-50:  rgb(245, 245, 254);
+    --aid-ink:      rgb(11, 11, 11);
+    --aid-slate:    rgb(51, 52, 74);
+    --aid-mute:     rgb(128, 128, 142);
+    --aid-pink:     rgb(240, 52, 142);
+    --aid-lime:     rgb(174, 243, 62);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{margin:0;background:#f4f1ea;color:var(--aid-ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:var(--aid-blue);text-decoration:none}
+  a:hover{opacity:.78}
+  ::selection{background:var(--aid-lime)}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-8px) rotate(var(--r,0deg))}}
+  .card-hov{transition:transform .18s ease, box-shadow .18s ease}
+  .card-hov:hover{transform:translate(-2px,-2px)}
+  .lnk-underline{background-image:linear-gradient(var(--aid-blue),var(--aid-blue));background-size:0% 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .25s ease}
+  .lnk-underline:hover{background-size:100% 2px;opacity:1}
+  .empty{color:var(--aid-mute);font-style:italic}
+  @media print{
+    header[style*="sticky"]{position:static}
+    img[style*="floaty"]{animation:none}
+  }
+
+  /* ── Header controls: news filter + language (shared dropdown chrome) ──
+     Both controls are pills of the same family. The language pill is always a
+     dropdown; the news filter is the original segmented slider on desktop
+     (≥641px) and collapses to the same dropdown pill on phones, so the header
+     keeps a fixed, compact footprint however many filters we add later. */
+  .hdr-ctl{display:flex;align-items:center;gap:10px;flex:none}
+  .dd{position:relative;flex:none}
+  /* Height is set explicitly (not left to font metrics) so the pill matches the
+     desktop filter slider exactly whether or not the webfont has loaded. The 1px
+     of top-only padding optically centres the label: uppercase has no descenders,
+     so a strictly box-centred line reads as sitting high. */
+  .dd-toggle{display:inline-flex;align-items:center;gap:7px;height:36px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:1px 13px 0;line-height:1;white-space:nowrap;transition:background .18s}
+  .dd-toggle:hover{background:var(--aid-lime)}
+  .dd-car{font-size:9px;line-height:1;transition:transform .22s}
+  .dd.open .dd-car{transform:rotate(180deg)}
+  /* Frosted-glass popup. It is position:fixed and gets moved to <body> when it
+     opens — see openPanel() below. The header sets its own backdrop-filter, which
+     makes it a backdrop root, and a backdrop-filter nested inside one samples an
+     empty backdrop: the popup would render with no blur at all. Living on <body>
+     while open puts it back over the real page content. */
+  .opts{position:fixed;z-index:80;display:none;flex-direction:column;gap:2px;padding:6px;border:2px solid var(--aid-ink);border-radius:16px;background:rgba(255,255,255,.55);backdrop-filter:blur(16px) saturate(1.35);-webkit-backdrop-filter:blur(16px) saturate(1.35);box-shadow:4px 5px 0 rgba(26,26,26,.16)}
+  .opts.open{display:flex}
+  .opts button{display:flex;align-items:center;gap:8px;border:0;background:transparent;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:8px 12px;border-radius:999px;white-space:nowrap;text-align:left;transition:background .15s,color .15s}
+  .opts button:hover{background:rgba(43,90,224,.14)}
+  .opts button.active{background:var(--aid-blue);color:#fff}
+  .flt-ind{display:none}
+  /* "View all editions" toggle under the editions strip. */
+  #d-archive-more{margin-top:14px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;cursor:pointer;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--aid-ink);padding:9px 16px 8px;line-height:1;transition:background .18s}
+  #d-archive-more:hover{background:var(--aid-lime)}
+  /* Collapsed-away edition cards. A class, not an inline display, because the cards
+     carry an inline `display:flex` that stacks their two lines — clearing that to
+     un-hide them would drop them to `block` and put both lines on one row. */
+  .ed-hidden{display:none!important}
+  /* Desktop: the news filter goes back to being a segmented slider — its panel
+     stays in place (never portaled) because its toggle is hidden here. */
+  @media (min-width:641px){
+    #news-filter{display:inline-flex;height:36px;border:2px solid var(--aid-ink);border-radius:999px;background:#fff;padding:3px}
+    #news-filter>.dd-toggle{display:none}
+    #news-filter .opts{position:relative;z-index:auto;display:inline-flex;flex-direction:row;gap:0;padding:0;border:0;border-radius:0;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
+    #news-filter .opts button{position:relative;z-index:1;height:100%;padding:6px 14px;transition:color .2s}
+    #news-filter .opts button:hover{background:transparent}
+    #news-filter .opts button.active{background:transparent;color:#fff}
+    #news-filter .flt-ind{display:block;position:absolute;left:0;top:0;bottom:0;z-index:0;border-radius:999px;background:var(--aid-blue);transition:transform .3s cubic-bezier(.5,1.5,.4,1),width .3s cubic-bezier(.5,1.5,.4,1)}
+  }
+  /* ── Team headings ("Search News" …) ──
+     A blue banner block (the sign-off card's look, slimmer): white Playfair heading
+     with the team word in lime italic, the way "Bi-Weekly" is set in the hero. One
+     heads each team's block in All news; with a team selected only that team's
+     heading shows, so it always names the section being read. */
+  .team-head{display:flex;align-items:center;justify-content:center;margin:10px 0 40px;background:var(--aid-blue);border:2px solid var(--aid-ink);border-radius:20px;padding:26px 20px 28px;box-shadow:10px 11px 0 var(--aid-ink)}
+  .team-head h3{font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(34px,4.6vw,52px);line-height:1;letter-spacing:-.01em;margin:0;color:#fff;text-align:center}
+  .team-head em{font-style:italic;color:var(--aid-lime)}
+  /* ── Typewriter caret ── */
+  .tw-caret::after{content:"";display:inline-block;width:.055em;height:.92em;background:currentColor;margin-left:.05em;vertical-align:-.06em;animation:tw-blink .8s steps(1) infinite}
+  @keyframes tw-blink{50%{opacity:0}}
+  /* ── Sticker entrance (uses `scale` so it won't fight the floaty transform) ── */
+  img.stk-in{opacity:0;scale:.5;transition:opacity .5s ease,scale .6s cubic-bezier(.34,1.56,.64,1)}
+  img.stk-in.shown{opacity:1;scale:1}
+  /* ── Section reveal (smooth top-to-bottom) ── */
+  .reveal{opacity:0;translate:0 18px;transition:opacity .6s ease,translate .6s cubic-bezier(.22,1,.36,1)}
+  .reveal.shown{opacity:1;translate:0 0}
+  @media (prefers-reduced-motion: reduce){
+    img.stk-in,img.stk-in.shown{opacity:1;scale:1;transition:none}
+    .reveal,.reveal.shown{opacity:1;translate:0 0;transition:none}
+    .tw-caret::after{display:none}
+  }
+  /* ── Mobile polish (phones only; desktop ≥641px is untouched) ── */
+  @media (max-width:640px){
+    /* The large floating stickers are positioned for the wide layout and cover
+       text on narrow screens — hide them here. Inline heading/card stickers stay. */
+    #dec-hero-1,#dec-hero-2,#dec-signoff-1,#dec-signoff-2{display:none}
+    /* Footer: the three columns stack, each centred. */
+    footer>.foot-row{grid-template-columns:1fr!important;justify-items:center;text-align:center}
+    footer>.foot-row>span{justify-self:center!important;text-align:center!important}
+    /* Tighter side gutters + block padding so cards/headings don't hug the edge. */
+    body section,body main,body header>div,footer>div{padding-left:20px!important;padding-right:20px!important}
+    .signoff-card{padding:40px 26px!important}
+    /* Sign-off heading: smaller on phones and let both sentences flow together
+       (drop the forced break) so it fills ~2 lines instead of 4. */
+    .signoff-card h2{font-size:clamp(20px,5.2vw,25px)!important;line-height:1.2!important}
+    .signoff-card h2 br{display:none}
+    /* Header: keep the brand on the LEFT and the filter on the RIGHT in one row
+       (like desktop). Compact the filter and let the brand wrap to 2–3 lines so
+       both fit on narrow phones without running off the edge. */
+    header>div>div:first-child{min-width:0}
+    header>div>div:first-child span:last-child{font-size:11px;letter-spacing:.09em;line-height:1.25}
+    /* Both header controls are dropdown pills here — see the .dd rules above.
+       Shorter pill (30px), same explicit height + 1px top bias as desktop. */
+    .hdr-ctl{gap:7px}
+    .dd-toggle{height:30px;padding:1px 10px 0;gap:5px;letter-spacing:.02em}
+    .team-head{padding:20px 16px 22px;box-shadow:7px 8px 0 var(--aid-ink)}
+    .team-head h3{font-size:32px}
+    /* Platform sections sit inside <main>, which already has the gutter — don't add a
+       second one, so cards line up with the section headings. */
+    #d-body > section{padding-left:0!important;padding-right:0!important}
+    /* Platform names at 38px push the icon, name and counter onto three lines. */
+    #d-body > section h2{font-size:30px!important}
+  }
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M2BTR42L"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div style="min-height:100vh">
+
+<!-- ══ TOP BAR ══ -->
+<header style="position:sticky;top:0;z-index:40;background:rgba(244,241,234,.85);backdrop-filter:blur(10px);border-bottom:2px solid var(--aid-ink)">
+  <div style="max-width:1120px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+    <div style="display:flex;align-items:center;gap:11px">
+      <img class="stk-static" src="../assets/aidigital-icon-blue.svg" alt="AI Digital" style="height:22px;width:auto;flex:none;display:block">
+      <span style="font-family:'Courier Prime',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:700">Ad Platform Digest</span>
+    </div>
+    <div class="hdr-ctl">
+      <div id="news-filter" class="dd" role="group" aria-label="Filter news">
+        <button class="dd-toggle" type="button" aria-haspopup="true" aria-expanded="false"><span class="dd-cur">All news</span><span class="dd-car">▾</span></button>
+        <div class="opts" role="tablist">
+          <button class="flt active" data-team="all" role="tab">All news</button>
+          <button class="flt" data-team="search" role="tab">Search</button>
+          <button class="flt" data-team="social" role="tab">Social</button>
+          <button class="flt" data-team="programmatic" role="tab">Programmatic</button>
+        </div>
+      </div>
+      <div id="lang-dd" class="dd">
+        <button class="dd-toggle" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Language"><span class="dd-cur">🇺🇸 EN</span><span class="dd-car">▾</span></button>
+        <div class="opts">
+          <button class="lng active" data-lang="en">🇺🇸 EN</button>
+          <button class="lng" data-lang="ru">🇷🇺 RU</button>
+          <button class="lng" data-lang="es">🇪🇸 ES</button>
+          <button class="lng" data-lang="sr">🇷🇸 SR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ HERO ══ -->
+<section style="max-width:1120px;margin:0 auto;padding:66px 32px 26px;position:relative">
+  <div id="d-badge" style="display:inline-flex;align-items:center;gap:9px;font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--aid-ink);background:var(--aid-lime);border:2px solid var(--aid-ink);border-radius:999px;padding:6px 16px;box-shadow:3px 3px 0 var(--aid-ink)"></div>
+  <h1 style="font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(52px,8vw,104px);line-height:.95;letter-spacing:-.015em;margin:26px 0 14px;max-width:920px;text-wrap:balance" id="hero-title">The <span style="font-style:italic;color:var(--aid-blue)">Bi-Weekly</span> Brief</h1>
+  <p id="d-subtitle" style="font-size:19px;line-height:1.5;color:var(--aid-slate);margin:0;max-width:720px;text-wrap:pretty"></p>
+  <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:30px">
+    <div style="background:#fff;border:2px solid var(--aid-ink);border-radius:14px;padding:16px 22px;box-shadow:5px 5px 0 var(--aid-blue);min-width:118px">
+      <div id="stat-updates" style="font-family:'Playfair Display',serif;font-weight:800;font-size:44px;line-height:1;color:var(--aid-ink)"></div>
+      <div style="font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aid-mute);margin-top:6px">updates</div>
+    </div>
+    <div style="background:#fff;border:2px solid var(--aid-ink);border-radius:14px;padding:16px 22px;box-shadow:5px 5px 0 var(--aid-pink);min-width:118px">
+      <div id="stat-platforms" style="font-family:'Playfair Display',serif;font-weight:800;font-size:44px;line-height:1;color:var(--aid-ink)"></div>
+      <div style="font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aid-mute);margin-top:6px">platforms</div>
+    </div>
+    <div style="background:#fff;border:2px solid var(--aid-ink);border-radius:14px;padding:16px 22px;box-shadow:5px 5px 0 var(--aid-lime);min-width:118px">
+      <div id="stat-readmin" style="font-family:'Playfair Display',serif;font-weight:800;font-size:44px;line-height:1;color:var(--aid-ink)"></div>
+      <div style="font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aid-mute);margin-top:6px">min read</div>
+    </div>
+  </div>
+  <img id="dec-hero-1" class="stk-in" src="../assets/stickers/bandage-formula-pink.png" alt="" style="position:absolute;right:6px;top:84px;width:220px;--r:-8deg;animation:floaty 6.5s ease-in-out infinite;filter:drop-shadow(0 14px 20px rgba(0,0,0,.18))">
+  <img id="dec-hero-2" class="stk-in" src="../assets/stickers/thumbs-up-blue-pink.png" alt="" style="position:absolute;right:250px;top:246px;width:64px;--r:8deg;animation:floaty 5.5s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.16))">
+</section>
+
+<!-- ══ UPDATES ══ -->
+<main id="updates" style="max-width:1120px;margin:0 auto;padding:48px 32px 20px">
+  <p id="d-team-empty" class="empty" style="display:none;margin:0 0 40px"></p>
+  <div id="d-body"></div>
+</main>
+
+<!-- ══ EDITIONS STRIP (every other edition, newest first; hidden if there are none) ══ -->
+<section id="d-archive-section" style="max-width:1120px;margin:0 auto;padding:10px 32px 30px;display:none">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+    <img id="dec-archive" class="stk-static" src="../assets/stickers/folder-star-blue.png" alt="" style="width:40px">
+    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:26px;margin:0">Other editions</h2>
+  </div>
+  <div id="d-archive" style="display:flex;gap:12px;flex-wrap:wrap"></div>
+  <button id="d-archive-more" type="button" aria-expanded="false" style="display:none">View all editions</button>
+</section>
+
+<!-- ══ SIGN-OFF ══ -->
+<section class="reveal" style="max-width:1120px;margin:0 auto;padding:20px 32px 70px">
+  <div class="signoff-card" style="background:var(--aid-blue);border:2px solid var(--aid-ink);border-radius:22px;padding:56px 46px;box-shadow:12px 14px 0 var(--aid-ink);position:relative;overflow:hidden;text-align:center">
+    <div style="font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--aid-lime);margin-bottom:16px">That's a wrap</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(32px,4.4vw,44px);line-height:1.05;color:#fff;margin:0 auto 14px;max-width:720px" id="wrap-title">Spot something worth testing? <br>Share it in the channel!</h2>
+    <p style="color:rgba(255,255,255,.82);font-size:16px;line-height:1.55;margin:0 auto;max-width:520px">Hope this was useful.<br>See you in two weeks✨</p>
+    <img id="dec-signoff-1" class="stk-in" src="../assets/stickers/thumbs-up-green-blue.png" alt="" style="position:absolute;left:44px;bottom:15px;width:104px;--r:-9deg;animation:floaty 6s ease-in-out infinite;filter:drop-shadow(0 10px 16px rgba(0,0,0,.28))">
+    <img id="dec-signoff-2" class="stk-in" src="../assets/stickers/rainbow.png" alt="" style="position:absolute;right:38px;top:34px;width:120px;--r:7deg;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(0,0,0,.2))">
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer style="border-top:2px solid var(--aid-ink);background:#f4f1ea">
+  <!-- Three columns: edition facts left, credit centred, brand right. -->
+  <div class="foot-row" style="max-width:1120px;margin:0 auto;padding:28px 32px;display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;font-family:'Courier Prime',monospace;font-size:12px;color:var(--aid-mute)">
+    <span id="d-footer" style="justify-self:start"></span>
+    <span id="d-credit" style="justify-self:center;text-align:center"></span>
+    <span style="justify-self:end;text-align:right">AI Digital · Ad Platform News Digest</span>
+  </div>
+</footer>
+
+</div>
+
+<!-- ─────────────────────────────────────────────────────────────────────────
+     DECK_DATA — Routine 2 replaces the contents of this script block.
+     Required:
+     {
+       "period_label": "Jul 7 – Jul 21, 2026",   // window covered
+       "generated": "2026-07-21",                  // ISO date deck was built
+       "platforms": [                              // ordered; empty ones omitted
+         {
+           "name": "Google Ads",                   // display name (e.g. "Microsoft Programmatic")
+           "team": "search",                       // search | social | programmatic — which filter it sits under
+           "items": [
+             {
+               "title": "…",
+               "url": "https://…",
+               "source": "Google Ads & Commerce Blog",
+               "published": "2026-07-14",
+               "category": "feature",              // feature|beta|policy|deprecation|measurement|api|other
+               "impact": "high",                   // high|medium|low
+               "summary": "2–3 sentences."
+             }
+           ]
+         }
+       ]
+     }
+     The feed shows teams in the order Search → Social → Programmatic, each under its
+     own "<Team> News" heading in All news; within a team, platforms keep the order
+     given here. Items within a platform should be ordered high -> medium -> low.
+     A platform without `team` is placed by its name (Meta/TikTok/LinkedIn = social,
+     The Trade Desk/DV360/Amazon DSP/…Programmatic/CTV = programmatic, else search).
+
+     Optional (omit any/all, the deck degrades gracefully):
+       "edition_no":     14,                    // shown as "No. 14 · <period_label>"; omitted -> just period_label
+       "subtitles":      { "all":"…", "search":"…", "social":"…", "programmatic":"…" }
+                                                // hero subhead, follows the news filter. `all` = one top story per
+                                                //   team; `<team>` = that team's top stories. A missing key falls
+                                                //   back to `all`.
+       "subtitle":       "…",                   // older single subhead, used when `subtitles` is absent; falls back
+                                                //   to "Updates published <period_label>"
+       "read_minutes":   5,                     // falls back to an estimate from item count
+       "author":         "Ivan Potekhin",       // footer credit ("Made for MPO Team with 💜 by …"); falls back to "Ivan Potekhin"
+       "archive":        [{ "no":13,"label":"Jun 22 – Jul 5","url":"deck-2026-07-05.html" }]  // FALLBACK for the editions strip; BARE filename (no decks/ prefix). At view time the
+                                                //   strip prefers the live registry data/editions.json (same origin), which is what lets an
+                                                //   already-published deck link FORWARD to editions released after it. This array is only used
+                                                //   when that read fails (opened from disk, offline), so keep supplying it: prior editions only.
+     There is no TL;DR block any more (removed with the programmatic team, 2026-10);
+     a `tldr` field is ignored.
+
+     TRANSLATIONS (optional; the header language pill offers EN / RU / ES / SR).
+     English is the base language and is always what `subtitles`/`title`/`summary`
+     hold. Routine 2 pre-translates at build time — there is no runtime API — and
+     supplies EXACTLY THREE things per language: the hero subtitles, card titles
+     and card summaries. Everything else on the page is fixed English chrome.
+     Serbian is written in LATIN script (`sr`). A missing language, item or field
+     silently falls back to English, so pre-i18n decks still render.
+       "subtitles_i18n": { "ru":{ "all":"…","search":"…","social":"…","programmatic":"…" }, "es":{…}, "sr":{…} }
+       "subtitle_i18n":  { "ru":"…", "es":"…", "sr":"…" }   // only with the older single `subtitle`
+       …and on each item:
+       "i18n": { "ru":{"title":"…","summary":"…"}, "es":{…}, "sr":{…} }
+     Deep link with ?lang=ru|es|sr and ?team=search|social|programmatic (they compose).
+     The URL is the ONLY source of either: no param always opens English / All news,
+     and nothing is stored, so a shared link renders the same for everyone.
+  ────────────────────────────────────────────────────────────────────────── -->
+  <script id="deck-data" type="application/json">
+{
+  "period_label": "Oct 29 – Nov 11, 2026",
+  "generated": "2026-11-11",
+  "edition_no": 8,
+  "author": "Ivan Potekhin",
+  "subtitles": {
+    "all": "Google Ads drops campaign language targeting from Search, Meta can add discounts from your website to ads even when promotions are off, and Amazon will count Store display impressions only once the ad is on screen.",
+    "search": "Google Ads drops campaign language targeting from Search, AI-content disclosure labels become mandatory in California, South Korea and Vietnam, and ChatGPT Ads launches Target CPA and Target CPC bidding.",
+    "social": "Meta can add discounts from your website to ads even when promotions are off, Marketing API v27 switches on catalog products and cross-device delivery by default, and TikTok Symphony generates longer AI videos.",
+    "programmatic": "Amazon will count Store display impressions only once the ad is on screen, Attain purchase audiences go live in Amazon DVA+, and The Trade Desk's Ask Koa builds custom audiences mid-campaign with Dstillery."
+  },
+  "subtitles_i18n": {
+    "ru": {
+      "all": "Google Ads убирает таргетинг на язык из поисковых кампаний, Meta может добавлять в объявления скидки с вашего сайта даже при выключенных промоакциях, а Amazon будет засчитывать показы медийной рекламы в Amazon Store только после появления объявления на экране.",
+      "search": "Google Ads убирает таргетинг на язык из поисковых кампаний, пометки об AI-контенте становятся обязательными в Калифорнии, Южной Корее и Вьетнаме, а в ChatGPT Ads появились стратегии Target CPA и Target CPC.",
+      "social": "Meta может добавлять в объявления скидки с вашего сайта даже при выключенных промоакциях, Marketing API v27 по умолчанию включает товары из каталога и показ на других устройствах, а TikTok Symphony создаёт более длинные AI-видео.",
+      "programmatic": "Amazon будет засчитывать показы медийной рекламы в Amazon Store только после появления объявления на экране, в Amazon DVA+ стали доступны аудитории покупателей Attain, а Ask Koa от The Trade Desk вместе с Dstillery собирает аудитории прямо во время кампании."
+    },
+    "es": {
+      "all": "Google Ads elimina la segmentación por idioma de las campañas de búsqueda, Meta puede añadir a los anuncios descuentos de tu web aunque las promociones estén desactivadas, y Amazon solo contará las impresiones de display en Amazon Store cuando el anuncio aparezca en pantalla.",
+      "search": "Google Ads elimina la segmentación por idioma de las campañas de búsqueda, las etiquetas de contenido generado con IA pasan a ser obligatorias en California, Corea del Sur y Vietnam, y ChatGPT Ads lanza las pujas Target CPA y Target CPC.",
+      "social": "Meta puede añadir a los anuncios descuentos de tu web aunque las promociones estén desactivadas, Marketing API v27 activa por defecto los productos del catálogo y la entrega en otros dispositivos, y TikTok Symphony genera vídeos con IA más largos.",
+      "programmatic": "Amazon solo contará las impresiones de display en Amazon Store cuando el anuncio aparezca en pantalla, las audiencias de compradores de Attain ya están disponibles en Amazon DVA+ y Ask Koa de The Trade Desk crea audiencias con Dstillery en plena campaña."
+    },
+    "sr": {
+      "all": "Google Ads ukida ciljanje po jeziku u kampanjama za pretragu, Meta može da dodaje popuste sa vašeg sajta u oglase čak i kada su promocije isključene, a Amazon će prikaze displej oglasa u Amazon Store-u brojati tek kada se oglas pojavi na ekranu.",
+      "search": "Google Ads ukida ciljanje po jeziku u kampanjama za pretragu, oznake za AI sadržaj postaju obavezne u Kaliforniji, Južnoj Koreji i Vijetnamu, a ChatGPT Ads uvodi licitiranje Target CPA i Target CPC.",
+      "social": "Meta može da dodaje popuste sa vašeg sajta u oglase čak i kada su promocije isključene, Marketing API v27 podrazumevano uključuje proizvode iz kataloga i isporuku na drugim uređajima, a TikTok Symphony pravi duže AI video snimke.",
+      "programmatic": "Amazon će prikaze displej oglasa u Amazon Store-u brojati tek kada se oglas pojavi na ekranu, Attain publike kupaca su dostupne u Amazon DVA+, a Ask Koa iz The Trade Desk-a sa Dstillery-jem pravi publike usred kampanje."
+    }
+  },
+  "archive": [
+    {
+      "no": 1,
+      "label": "Jul 22 – Aug 5, 2026",
+      "url": "deck-2026-08-05.html"
+    },
+    {
+      "no": 2,
+      "label": "Aug 6 – Aug 19, 2026",
+      "url": "deck-2026-08-19.html"
+    },
+    {
+      "no": 3,
+      "label": "Aug 20 – Sep 2, 2026",
+      "url": "deck-2026-09-02.html"
+    },
+    {
+      "no": 4,
+      "label": "Sep 3 – Sep 16, 2026",
+      "url": "deck-2026-09-16.html"
+    },
+    {
+      "no": 5,
+      "label": "Sep 17 – Sep 30, 2026",
+      "url": "deck-2026-09-30.html"
+    },
+    {
+      "no": 6,
+      "label": "Oct 1 – Oct 14, 2026",
+      "url": "deck-2026-10-14.html"
+    },
+    {
+      "no": 7,
+      "label": "Oct 15 – Oct 28, 2026",
+      "url": "deck-2026-10-28.html"
+    }
+  ],
+  "platforms": [
+    {
+      "name": "Google Ads",
+      "team": "search",
+      "items": [
+        {
+          "title": "Google Ads removes campaign language targeting from Search campaigns",
+          "url": "https://ppc.land/google-ads-drops-language-targeting-from-search-campaigns/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-11-08",
+          "category": "deprecation",
+          "impact": "high",
+          "summary": "The campaign-level language setting has been disappearing from Search campaigns since early November (rollout not yet universal); Google now infers the user's language itself. In Performance Max the setting no longer controls Search inventory but still applies to YouTube, Display, Discover and Gmail. Multi-language accounts should review how their ad copy and keywords are split by language.",
+          "i18n": {
+            "ru": {
+              "title": "Google Ads убирает таргетинг на язык из поисковых кампаний",
+              "summary": "С начала ноября настройка языка на уровне кампании пропадает из поисковых кампаний (пока не во всех аккаунтах) — язык пользователя Google теперь определяет сам. В Performance Max эта настройка больше не влияет на показы в поиске, но по-прежнему действует для YouTube, Display, Discover и Gmail. В мультиязычных аккаунтах стоит проверить, как тексты объявлений и ключевые слова разделены по языкам."
+            },
+            "es": {
+              "title": "Google Ads elimina la segmentación por idioma de las campañas de búsqueda",
+              "summary": "Desde principios de noviembre, el ajuste de idioma a nivel de campaña está desapareciendo de las campañas de búsqueda (aún no en todas las cuentas); ahora Google deduce por sí mismo el idioma del usuario. En Performance Max el ajuste ya no controla el inventario de búsqueda, pero sigue aplicándose a YouTube, Display, Discover y Gmail. Las cuentas multilingües deberían revisar cómo tienen separados por idioma los textos de anuncio y las palabras clave."
+            },
+            "sr": {
+              "title": "Google Ads ukida ciljanje po jeziku u kampanjama za pretragu",
+              "summary": "Od početka novembra podešavanje jezika na nivou kampanje nestaje iz kampanja za pretragu (još ne u svim nalozima) — Google sada sam određuje jezik korisnika. U Performance Max kampanjama ovo podešavanje više ne utiče na prikazivanje u pretrazi, ali i dalje važi za YouTube, Display, Discover i Gmail. Višejezični nalozi treba da provere kako su tekstovi oglasa i ključne reči podeljeni po jezicima."
+            }
+          }
+        },
+        {
+          "title": "AI-content disclosure labels are now required in California, South Korea and Vietnam",
+          "url": "https://www.seroundtable.com/google-ads-expands-ai-content-label-disclosure-42461.html",
+          "source": "Search Engine Roundtable — Google Ads",
+          "published": "2026-11-05",
+          "category": "policy",
+          "impact": "high",
+          "summary": "Google added California, South Korea and Vietnam to the regions (alongside the EU, India and New York) where ads with assets marked as AI-created or AI-edited must carry a disclosure and show a visible AI overlay. The Google Ads and Merchant Center help pages are updated, so campaigns targeting these regions need their AI-asset settings checked.",
+          "i18n": {
+            "ru": {
+              "title": "Пометки об AI-контенте теперь обязательны в Калифорнии, Южной Корее и Вьетнаме",
+              "summary": "Google добавил Калифорнию, Южную Корею и Вьетнам к регионам (наряду с ЕС, Индией и Нью-Йорком), где объявления с объектами, отмеченными как созданные или отредактированные AI, должны содержать раскрытие и показывать заметную AI-пометку поверх объявления. Справка Google Ads и Merchant Center уже обновлена, поэтому в кампаниях с таргетингом на эти регионы нужно проверить настройки AI-объектов."
+            },
+            "es": {
+              "title": "Las etiquetas de contenido generado con IA ya son obligatorias en California, Corea del Sur y Vietnam",
+              "summary": "Google ha añadido California, Corea del Sur y Vietnam a las regiones (junto a la UE, India y Nueva York) donde los anuncios con recursos marcados como creados o editados con IA deben incluir un aviso y mostrar una etiqueta de IA visible sobre el anuncio. Las páginas de ayuda de Google Ads y Merchant Center ya están actualizadas, así que conviene revisar la configuración de recursos con IA en las campañas dirigidas a esas regiones."
+            },
+            "sr": {
+              "title": "Oznake za AI sadržaj su sada obavezne u Kaliforniji, Južnoj Koreji i Vijetnamu",
+              "summary": "Google je dodao Kaliforniju, Južnu Koreju i Vijetnam regionima (pored EU, Indije i Njujorka) u kojima oglasi sa elementima označenim kao napravljeni ili izmenjeni pomoću AI moraju da imaju obaveštenje i vidljivu AI oznaku preko oglasa. Stranice pomoći za Google Ads i Merchant Center su ažurirane, pa kampanje koje ciljaju ove regione treba da provere podešavanja AI elemenata."
+            }
+          }
+        },
+        {
+          "title": "Server-side GTM will pass full visitor IP addresses to Google Ads tags from January 11, 2027 unless you opt out",
+          "url": "https://ppc.land/google-ad-tags-gain-full-visitor-ip-addresses-in-server-side-gtm-in-2027/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-11-02",
+          "category": "measurement",
+          "impact": "high",
+          "summary": "Google is emailing advertisers that from January 11, 2027 server-side Google Tag Manager moves from container-wide IP redaction to tag-level processing: tags sending data to Google Ads (and DV360, SA360, CM360) will receive the full IP address, while Google Analytics tags keep redacting it. It is on unless you opt out, so sGTM owners should review consent (especially in the EU) and decide before the date.",
+          "i18n": {
+            "ru": {
+              "title": "С 11 января 2027 года серверный GTM будет передавать тегам Google Ads полный IP-адрес посетителя, если не отказаться",
+              "summary": "Google рассылает рекламодателям письма: с 11 января 2027 года серверный Google Tag Manager вместо скрытия IP-адресов на уровне всего контейнера перейдёт к обработке на уровне тегов — теги, отправляющие данные в Google Ads (а также DV360, SA360, CM360), будут получать полный IP-адрес, а теги Google Analytics продолжат его скрывать. Изменение включится автоматически, если от него не отказаться, поэтому владельцам sGTM стоит проверить согласия пользователей (особенно в ЕС) и принять решение до этой даты."
+            },
+            "es": {
+              "title": "Desde el 11 de enero de 2027, GTM del lado del servidor enviará la IP completa del visitante a las etiquetas de Google Ads, salvo que te excluyas",
+              "summary": "Google está avisando por email de que, a partir del 11 de enero de 2027, Google Tag Manager del lado del servidor dejará de ocultar las IP para todo el contenedor y pasará a gestionarlas por etiqueta: las etiquetas que envían datos a Google Ads (y a DV360, SA360 y CM360) recibirán la dirección IP completa, mientras que las de Google Analytics seguirán ocultándola. El cambio se aplica salvo que te excluyas, así que los responsables de sGTM deberían revisar el consentimiento (sobre todo en la UE) y decidir antes de esa fecha."
+            },
+            "sr": {
+              "title": "Od 11. januara 2027. server-side GTM će Google Ads tagovima prosleđivati punu IP adresu posetioca, osim ako se ne isključite",
+              "summary": "Google obaveštava oglašivače mejlom da će od 11. januara 2027. server-side Google Tag Manager umesto skrivanja IP adresa za ceo kontejner preći na obradu na nivou taga: tagovi koji šalju podatke u Google Ads (i u DV360, SA360, CM360) dobijaće punu IP adresu, dok će Google Analytics tagovi nastaviti da je skrivaju. Promena važi automatski ako se ne isključite, pa vlasnici sGTM-a treba da provere saglasnosti korisnika (naročito u EU) i odluče pre tog datuma."
+            }
+          }
+        },
+        {
+          "title": "Performance Max may now filter out brand and navigational searches in favour of brand Search campaigns",
+          "url": "https://ppcnewsfeed.com/ppc-news/2026-11/google-updates-how-performance-max-handles-brand-searches/",
+          "source": "PPC News Feed",
+          "published": "2026-11-02",
+          "category": "feature",
+          "impact": "high",
+          "summary": "Google's help page on how Performance Max interacts with other campaigns now says PMax may filter out navigational and brand-specific queries so that dedicated brand Search campaigns serve them. Make sure brand Search campaigns have enough budget and strong ads to pick up that traffic; Search themes in PMax can help align coverage.",
+          "i18n": {
+            "ru": {
+              "title": "Performance Max теперь может отсеивать брендовые и навигационные запросы в пользу брендовых поисковых кампаний",
+              "summary": "В справке Google о том, как Performance Max взаимодействует с другими кампаниями, теперь сказано, что PMax может отсеивать навигационные и брендовые запросы, чтобы по ним показывались отдельные брендовые поисковые кампании. Убедитесь, что у брендовых поисковых кампаний достаточно бюджета и сильные объявления, чтобы забрать этот трафик; согласовать охват помогут темы поиска (Search themes) в PMax."
+            },
+            "es": {
+              "title": "Performance Max ahora puede descartar búsquedas de marca y de navegación a favor de las campañas de búsqueda de marca",
+              "summary": "La página de ayuda de Google sobre cómo interactúa Performance Max con otras campañas indica ahora que PMax puede descartar consultas de navegación y de marca para que las sirvan las campañas de búsqueda de marca específicas. Asegúrate de que esas campañas de marca tengan presupuesto suficiente y buenos anuncios para captar ese tráfico; los temas de búsqueda (Search themes) de PMax ayudan a alinear la cobertura."
+            },
+            "sr": {
+              "title": "Performance Max sada može da izdvoji brend i navigacione pretrage u korist brend kampanja za pretragu",
+              "summary": "Googleova stranica pomoći o tome kako Performance Max sarađuje sa drugim kampanjama sada navodi da PMax može da izdvoji navigacione i brend upite kako bi ih opsluživale posebne brend kampanje za pretragu. Proverite da li brend kampanje za pretragu imaju dovoljno budžeta i jake oglase da preuzmu taj saobraćaj; Search themes u PMax-u mogu da pomognu da se pokrivenost uskladi."
+            }
+          }
+        },
+        {
+          "title": "Ads in AI Mode expand to 10 more countries, and multiturn ads launch in the US",
+          "url": "https://blog.google/products/ads-commerce/ads-in-ai-mode-global/",
+          "source": "Google Ads & Commerce Blog",
+          "published": "2026-10-28",
+          "category": "feature",
+          "impact": "high",
+          "summary": "Google is scaling ads in AI Mode to Australia, Canada, India, Kenya, Malaysia, New Zealand, Nigeria, Pakistan, the Philippines and Singapore, with Brazil, Mexico and the UK planned for Q4 2026. In the US, ads can now also serve on follow-up questions inside an AI Mode conversation. Existing Search, Shopping and PMax campaigns in those markets become eligible automatically — there is no separate AI Mode opt-out.",
+          "i18n": {
+            "ru": {
+              "title": "Реклама в AI Mode выходит ещё в 10 стран, а в США запускаются объявления в многоходовых диалогах",
+              "summary": "Google расширяет рекламу в AI Mode на Австралию, Канаду, Индию, Кению, Малайзию, Новую Зеландию, Нигерию, Пакистан, Филиппины и Сингапур, а Бразилия, Мексика и Великобритания запланированы на IV квартал 2026 года. В США объявления теперь могут показываться и в ответах на уточняющие вопросы внутри диалога в AI Mode. Существующие поисковые, торговые кампании и PMax в этих странах получают доступ автоматически — отдельно отключить показы в AI Mode нельзя."
+            },
+            "es": {
+              "title": "Los anuncios en AI Mode llegan a 10 países más y en EE. UU. se lanzan los anuncios en conversaciones de varios turnos",
+              "summary": "Google amplía los anuncios en AI Mode a Australia, Canadá, India, Kenia, Malasia, Nueva Zelanda, Nigeria, Pakistán, Filipinas y Singapur, y prevé Brasil, México y Reino Unido para el cuarto trimestre de 2026. En EE. UU. los anuncios ahora también pueden aparecer en las preguntas de seguimiento dentro de una conversación en AI Mode. Las campañas de búsqueda, Shopping y PMax existentes en esos mercados pasan a ser aptas automáticamente; no hay forma de excluirse solo de AI Mode."
+            },
+            "sr": {
+              "title": "Oglasi u AI Mode stižu u još 10 zemalja, a u SAD počinju oglasi u višekoračnim razgovorima",
+              "summary": "Google širi oglase u AI Mode na Australiju, Kanadu, Indiju, Keniju, Maleziju, Novi Zeland, Nigeriju, Pakistan, Filipine i Singapur, a Brazil, Meksiko i Velika Britanija planirani su za četvrti kvartal 2026. U SAD oglasi sada mogu da se prikazuju i na dodatna pitanja unutar razgovora u AI Mode. Postojeće kampanje za pretragu, Shopping i PMax kampanje u tim zemljama automatski postaju podobne — ne postoji posebno isključivanje samo za AI Mode."
+            }
+          }
+        },
+        {
+          "title": "Google Ads API: the Demand Gen Display opt-out moves from campaign to ad group from the week of December 1",
+          "url": "https://ppc.land/google-moves-demand-gen-display-opt-out-to-ad-groups-from-december-1/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-11-09",
+          "category": "api",
+          "impact": "medium",
+          "summary": "From the week of December 1, 2026 the API rejects the campaign-level setting that keeps Demand Gen off the Display Network; the choice lives only in each ad group. Existing campaigns are rewritten automatically so serving doesn't change, but Display-only ad groups inside campaigns that blocked Display get paused. Tools and scripts that set the old field must be updated.",
+          "i18n": {
+            "ru": {
+              "title": "Google Ads API: с недели 1 декабря отказ от Display в Demand Gen переносится с уровня кампании на уровень группы объявлений",
+              "summary": "С недели 1 декабря 2026 года API перестанет принимать настройку на уровне кампании, которая исключает показы Demand Gen в контекстно-медийной сети: этот выбор останется только в каждой группе объявлений. Существующие кампании будут переписаны автоматически, и показы не изменятся, но группы объявлений только для Display внутри кампаний, где Display был отключён, будут приостановлены. Инструменты и скрипты, которые задают старое поле, нужно обновить."
+            },
+            "es": {
+              "title": "Google Ads API: la exclusión de Display en Demand Gen pasa de la campaña al grupo de anuncios desde la semana del 1 de diciembre",
+              "summary": "Desde la semana del 1 de diciembre de 2026, la API rechazará el ajuste a nivel de campaña que mantiene Demand Gen fuera de la Red de Display; la elección quedará solo en cada grupo de anuncios. Las campañas existentes se reescriben automáticamente para que la publicación no cambie, pero los grupos de anuncios solo de Display dentro de campañas que bloqueaban Display se pausarán. Hay que actualizar las herramientas y scripts que usan el campo antiguo."
+            },
+            "sr": {
+              "title": "Google Ads API: od nedelje 1. decembra isključivanje Display mreže u Demand Gen prelazi sa kampanje na grupu oglasa",
+              "summary": "Od nedelje 1. decembra 2026. API će odbijati podešavanje na nivou kampanje koje Demand Gen drži van Display mreže; izbor će postojati samo u svakoj grupi oglasa. Postojeće kampanje biće automatski prepisane tako da se prikazivanje ne promeni, ali grupe oglasa samo za Display u kampanjama koje su blokirale Display biće pauzirane. Alate i skripte koji koriste staro polje treba ažurirati."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Microsoft Advertising",
+      "team": "search",
+      "items": [
+        {
+          "title": "Microsoft Advertising in October: Conversions API GA, PMax age and gender targeting, auction insights and messaging guidelines",
+          "url": "https://about.ads.microsoft.com/en/blog/post/october-2026/build-steer-and-measure-your-campaigns-with-ai-whats-new-in-microsoft-advertising-this-october",
+          "source": "Microsoft Advertising Blog",
+          "published": "2026-10-28",
+          "category": "feature",
+          "impact": "high",
+          "summary": "The October roundup makes the Conversions API generally available, along with age and gender targeting in Performance Max; PMax also gets search term and auction insights reports, with a search term landing page report from mid-November. Audience exclusions and text-ads-only brand exclusions open in pilot, and messaging guidelines (up to 40 rules for AI-written copy) move to open pilot for PMax and AI Max for Search.",
+          "i18n": {
+            "ru": {
+              "title": "Microsoft Advertising в октябре: Conversions API в общем доступе, таргетинг по возрасту и полу в PMax, аукционная статистика и правила для текстов",
+              "summary": "Октябрьская сводка открывает общий доступ к Conversions API, а также к таргетингу по возрасту и полу в Performance Max; в PMax появились отчёты по поисковым запросам и аукционной статистике, а с середины ноября — отчёт о целевых страницах по поисковым запросам. Исключения аудиторий и брендовые исключения только для текстовых объявлений доступны в пилоте, а messaging guidelines (до 40 правил для текстов, которые пишет AI) переходят в открытый пилот для PMax и AI Max for Search."
+            },
+            "es": {
+              "title": "Microsoft Advertising en octubre: Conversions API disponible para todos, segmentación por edad y sexo en PMax, información de subastas y pautas de mensajes",
+              "summary": "El resumen de octubre deja disponible para todos la Conversions API y la segmentación por edad y sexo en Performance Max; PMax también recibe informes de términos de búsqueda y de información de subastas, y desde mediados de noviembre uno de páginas de destino por término de búsqueda. Las exclusiones de audiencias y las exclusiones de marca solo para anuncios de texto se abren en piloto, y las messaging guidelines (hasta 40 reglas para los textos que redacta la IA) pasan a piloto abierto en PMax y AI Max for Search."
+            },
+            "sr": {
+              "title": "Microsoft Advertising u oktobru: Conversions API za sve, ciljanje po uzrastu i polu u PMax-u, uvid u aukcije i smernice za poruke",
+              "summary": "Oktobarski pregled čini Conversions API dostupnim svima, kao i ciljanje po uzrastu i polu u Performance Max kampanjama; PMax dobija i izveštaje o terminima pretrage i uvid u aukcije, a od sredine novembra i izveštaj o odredišnim stranicama po terminu pretrage. Isključivanje publika i isključivanje brenda samo za tekstualne oglase dostupni su u pilotu, a messaging guidelines (do 40 pravila za tekstove koje piše AI) prelaze u otvoreni pilot za PMax i AI Max for Search."
+            }
+          }
+        },
+        {
+          "title": "Microsoft Advertising starts a UI overhaul: new navigation, rebuilt reporting and bidding-target reports",
+          "url": "https://ppc.land/microsoft-advertising-overhauls-interface-after-advertiser-complaints/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-11-09",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "Microsoft's November product newsletter announces a redesign: task-based navigation (Optimize / Target / Manage), breadcrumbs, an Overview panel of issues that need attention, rebuilt reporting tables, filters, comparisons and exports, plus reports that check automated bidding against its targets. Rollout dates are not given; PMax device targeting is now described as 'in pilot'.",
+          "i18n": {
+            "ru": {
+              "title": "Microsoft Advertising обновляет интерфейс: новая навигация, переделанная отчётность и отчёты по целевым ставкам",
+              "summary": "Ноябрьская рассылка Microsoft анонсирует редизайн: навигацию по задачам (Optimize / Target / Manage), «хлебные крошки», панель проблем, требующих внимания, на странице Overview, переделанные таблицы отчётов, фильтры, сравнения и выгрузки, а также отчёты, которые сверяют автоматическое назначение ставок с заданными целями. Сроки запуска не названы; таргетинг по устройствам в PMax теперь описан как пилот."
+            },
+            "es": {
+              "title": "Microsoft Advertising renueva su interfaz: nueva navegación, informes rediseñados e informes de objetivos de puja",
+              "summary": "El boletín de producto de noviembre de Microsoft anuncia un rediseño: navegación por tareas (Optimize / Target / Manage), rutas de navegación, un panel en Overview con los problemas que requieren atención, tablas de informes, filtros, comparaciones y exportaciones rehechos, e informes que comparan las pujas automáticas con sus objetivos. No hay fechas de lanzamiento; la segmentación por dispositivo de PMax figura ahora como piloto."
+            },
+            "sr": {
+              "title": "Microsoft Advertising menja interfejs: nova navigacija, prerađeni izveštaji i izveštaji o ciljevima licitiranja",
+              "summary": "Novembarski bilten Microsofta najavljuje redizajn: navigaciju po zadacima (Optimize / Target / Manage), putanje za navigaciju, panel sa problemima koji traže pažnju na stranici Overview, prerađene tabele izveštaja, filtere, poređenja i izvoz, kao i izveštaje koji automatsko licitiranje porede sa zadatim ciljevima. Datumi uvođenja nisu navedeni; ciljanje po uređajima u PMax-u sada je opisano kao pilot."
+            }
+          }
+        },
+        {
+          "title": "Microsoft Advertising requires Financial Services verification in Australia and the EU",
+          "url": "https://ppcnewsfeed.com/ppc-news/2026-11/microsoft-advertising-updates-financial-services-policy/",
+          "source": "PPC News Feed",
+          "published": "2026-11-08",
+          "category": "policy",
+          "impact": "medium",
+          "summary": "Microsoft updated its Financial Services policy: advertisers running financial-services ads that target Australia or the European Union must now complete Financial Services verification. Check that affected accounts are verified so those ads keep serving.",
+          "i18n": {
+            "ru": {
+              "title": "Microsoft Advertising требует верификацию финансовых услуг в Австралии и ЕС",
+              "summary": "Microsoft обновил правила для финансовых услуг: рекламодатели, которые показывают рекламу финансовых услуг с таргетингом на Австралию или Европейский союз, теперь должны пройти верификацию Financial Services. Проверьте, что затронутые аккаунты верифицированы, чтобы эти объявления продолжали показываться."
+            },
+            "es": {
+              "title": "Microsoft Advertising exige la verificación de servicios financieros en Australia y la UE",
+              "summary": "Microsoft ha actualizado su política de servicios financieros: los anunciantes de servicios financieros que se dirigen a Australia o a la Unión Europea deben completar ahora la verificación Financial Services. Comprueba que las cuentas afectadas estén verificadas para que esos anuncios sigan publicándose."
+            },
+            "sr": {
+              "title": "Microsoft Advertising traži verifikaciju finansijskih usluga u Australiji i EU",
+              "summary": "Microsoft je ažurirao pravila za finansijske usluge: oglašivači koji prikazuju oglase za finansijske usluge sa ciljanjem Australije ili Evropske unije sada moraju da završe Financial Services verifikaciju. Proverite da li su pogođeni nalozi verifikovani kako bi se ti oglasi i dalje prikazivali."
+            }
+          }
+        },
+        {
+          "title": "Microsoft's UET Conversions API now accepts events up to 90 days old",
+          "url": "https://ppcnewsfeed.com/ppc-news/2026-11/microsoft-uet-conversions-api-now-accepts-events-up-to-90-days-old/",
+          "source": "PPC News Feed",
+          "published": "2026-11-01",
+          "category": "measurement",
+          "impact": "medium",
+          "summary": "The UET Conversions API submission window grows from 7 to 90 days, so server-side conversions — useful for long sales cycles and offline or CRM events — can be sent up to 90 days after they happen. The event must still fall within the conversion goal's own attribution window.",
+          "i18n": {
+            "ru": {
+              "title": "UET Conversions API от Microsoft теперь принимает события давностью до 90 дней",
+              "summary": "Окно отправки в UET Conversions API выросло с 7 до 90 дней, поэтому серверные конверсии — полезные при длинном цикле сделки и для офлайн-событий или событий из CRM — можно передавать в течение 90 дней после того, как они произошли. При этом событие всё равно должно попадать в окно атрибуции самой цели-конверсии."
+            },
+            "es": {
+              "title": "La UET Conversions API de Microsoft ya acepta eventos de hasta 90 días de antigüedad",
+              "summary": "El plazo para enviar eventos a la UET Conversions API pasa de 7 a 90 días, así que las conversiones del lado del servidor —útiles en ciclos de venta largos y para eventos offline o del CRM— pueden enviarse hasta 90 días después de producirse. Aun así, el evento debe caer dentro de la ventana de atribución del propio objetivo de conversión."
+            },
+            "sr": {
+              "title": "Microsoftov UET Conversions API sada prima događaje stare do 90 dana",
+              "summary": "Rok za slanje u UET Conversions API produžen je sa 7 na 90 dana, pa se server-side konverzije — korisne kod dugog ciklusa prodaje i za offline događaje ili događaje iz CRM-a — mogu poslati do 90 dana nakon što su se desile. Događaj i dalje mora da upadne u prozor atribucije samog cilja konverzije."
+            }
+          }
+        },
+        {
+          "title": "Bing starts showing Sponsored results inside Copilot-powered AI Overviews",
+          "url": "https://www.seroundtable.com/bing-ads-copilot-ai-overviews-42416.html",
+          "source": "Search Engine Roundtable — Microsoft Advertising",
+          "published": "2026-10-30",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "Ads are being seen within Bing's AI Overviews (the renamed Copilot Search box), labelled as Sponsored results inside the AI answer. It is a new placement for Microsoft Advertising search ads, with limited availability so far.",
+          "i18n": {
+            "ru": {
+              "title": "Bing начал показывать Sponsored results внутри AI Overviews на базе Copilot",
+              "summary": "Объявления замечены внутри AI Overviews в Bing (так теперь называется блок Copilot Search) — с пометкой Sponsored results прямо в ответе AI. Это новое место размещения для поисковой рекламы Microsoft Advertising, пока доступное ограниченно."
+            },
+            "es": {
+              "title": "Bing empieza a mostrar Sponsored results dentro de los AI Overviews impulsados por Copilot",
+              "summary": "Se están viendo anuncios dentro de los AI Overviews de Bing (el nuevo nombre del bloque Copilot Search), marcados como Sponsored results dentro de la respuesta de la IA. Es una nueva ubicación para los anuncios de búsqueda de Microsoft Advertising, por ahora con disponibilidad limitada."
+            },
+            "sr": {
+              "title": "Bing počinje da prikazuje Sponsored results unutar AI Overviews koje pokreće Copilot",
+              "summary": "Oglasi su primećeni unutar Bingovih AI Overviews (novi naziv za Copilot Search blok), označeni kao Sponsored results u samom AI odgovoru. To je novo mesto za prikazivanje oglasa za pretragu u Microsoft Advertising-u, za sada ograničeno dostupno."
+            }
+          }
+        },
+        {
+          "title": "Bing shows search and Shopping ads at the top of its AI Mode answers",
+          "url": "https://www.seroundtable.com/bing-ads-top-ai-mode-results-42479.html",
+          "source": "Search Engine Roundtable — Microsoft Advertising",
+          "published": "2026-11-09",
+          "category": "other",
+          "impact": "low",
+          "summary": "Bing's AI Mode (formerly Copilot Search) now shows text and Shopping ads at the top of results, and ads also appear on follow-up queries. The 'Sponsored' labels are muted.",
+          "i18n": {
+            "ru": {
+              "title": "Bing показывает поисковые и торговые объявления над ответами в AI Mode",
+              "summary": "В AI Mode в Bing (бывший Copilot Search) текстовые и торговые объявления теперь показываются над результатами, а также в ответах на уточняющие запросы. Пометки Sponsored при этом малозаметны."
+            },
+            "es": {
+              "title": "Bing muestra anuncios de búsqueda y de Shopping en la parte superior de las respuestas de AI Mode",
+              "summary": "El AI Mode de Bing (antes Copilot Search) muestra ahora anuncios de texto y de Shopping en la parte superior de los resultados, y también aparecen anuncios en las consultas de seguimiento. Las etiquetas Sponsored son poco visibles."
+            },
+            "sr": {
+              "title": "Bing prikazuje oglase za pretragu i Shopping oglase na vrhu odgovora u AI Mode",
+              "summary": "Bingov AI Mode (ranije Copilot Search) sada prikazuje tekstualne i Shopping oglase na vrhu rezultata, a oglasi se pojavljuju i na dodatnim upitima. Oznake Sponsored su jedva vidljive."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ChatGPT Ads",
+      "team": "search",
+      "items": [
+        {
+          "title": "ChatGPT Ads launches Target CPA and Target CPC, replacing Max Bid and Max CPC for new campaigns",
+          "url": "https://www.seroundtable.com/openai-updates-chatgpt-ads-bidding-options-42470.html",
+          "source": "Search Engine Roundtable — ChatGPT Ads",
+          "published": "2026-11-05",
+          "category": "feature",
+          "impact": "high",
+          "summary": "From November 9 advertisers can set a cost target in Ads Manager: Target CPA replaces Max Bid for new conversion campaigns and Target CPC replaces Max CPC for new click campaigns, with the system adjusting bids toward the average target. Existing campaigns keep their Max bidding unless you switch them.",
+          "i18n": {
+            "ru": {
+              "title": "В ChatGPT Ads появились Target CPA и Target CPC — они заменяют Max Bid и Max CPC в новых кампаниях",
+              "summary": "С 9 ноября в Ads Manager можно задать целевую стоимость: в новых кампаниях на конверсии Target CPA заменяет Max Bid, а в новых кампаниях на клики Target CPC заменяет Max CPC — система сама подстраивает ставки под среднее целевое значение. Существующие кампании сохраняют стратегии Max, пока вы их не переключите."
+            },
+            "es": {
+              "title": "ChatGPT Ads lanza Target CPA y Target CPC, que sustituyen a Max Bid y Max CPC en las campañas nuevas",
+              "summary": "Desde el 9 de noviembre se puede fijar un coste objetivo en Ads Manager: Target CPA sustituye a Max Bid en las nuevas campañas de conversión y Target CPC a Max CPC en las nuevas campañas de clics, y el sistema ajusta las pujas hacia ese objetivo medio. Las campañas existentes mantienen las pujas Max salvo que las cambies."
+            },
+            "sr": {
+              "title": "ChatGPT Ads uvodi Target CPA i Target CPC umesto Max Bid i Max CPC u novim kampanjama",
+              "summary": "Od 9. novembra u Ads Manager-u može da se zada ciljni trošak: Target CPA zamenjuje Max Bid u novim kampanjama za konverzije, a Target CPC zamenjuje Max CPC u novim kampanjama za klikove, pri čemu sistem prilagođava ponude prosečnom cilju. Postojeće kampanje zadržavaju Max licitiranje dok ih ne prebacite."
+            }
+          }
+        },
+        {
+          "title": "ChatGPT Ads rolls out a wider ad card, opens multi-image ads to all and takes the Shopify integration international",
+          "url": "https://www.seroundtable.com/chatgpt-ads-update-42427.html",
+          "source": "Search Engine Roundtable — ChatGPT Ads",
+          "published": "2026-10-30",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "OpenAI's weekly advertiser email says a wider standard ad card that uses more of the desktop conversation width is rolling out on existing campaigns and creative, with no action needed. Multi-image ads are now in open beta for all advertisers, and the Shopify integration is available internationally.",
+          "i18n": {
+            "ru": {
+              "title": "ChatGPT Ads вводит более широкую карточку объявления, открывает объявления с несколькими изображениями для всех и выводит интеграцию с Shopify за пределы США",
+              "summary": "В еженедельной рассылке OpenAI для рекламодателей сказано, что на существующие кампании и креативы раскатывается более широкая стандартная карточка объявления, занимающая большую часть ширины диалога на десктопе, — делать ничего не нужно. Объявления с несколькими изображениями теперь в открытой бете для всех рекламодателей, а интеграция с Shopify доступна в других странах."
+            },
+            "es": {
+              "title": "ChatGPT Ads estrena una tarjeta de anuncio más ancha, abre los anuncios multiimagen a todos e internacionaliza la integración con Shopify",
+              "summary": "El email semanal de OpenAI a los anunciantes indica que se está implantando, en campañas y creatividades existentes, una tarjeta de anuncio estándar más ancha que aprovecha más el ancho de la conversación en escritorio; no hay que hacer nada. Los anuncios con varias imágenes están ya en beta abierta para todos los anunciantes y la integración con Shopify está disponible a nivel internacional."
+            },
+            "sr": {
+              "title": "ChatGPT Ads uvodi širu karticu oglasa, otvara oglase sa više slika za sve i širi Shopify integraciju van SAD",
+              "summary": "U nedeljnom mejlu OpenAI-a oglašivačima piše da se na postojeće kampanje i kreative uvodi šira standardna kartica oglasa koja zauzima veći deo širine razgovora na desktopu, bez potrebe za bilo kakvom akcijom. Oglasi sa više slika su sada u otvorenoj beta verziji za sve oglašivače, a Shopify integracija je dostupna i u drugim zemljama."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Meta",
+      "team": "social",
+      "items": [
+        {
+          "title": "Meta can add discounts detected on your website to ads — even copies with promotions turned off",
+          "url": "https://ppc.land/meta-can-add-website-offers-to-copied-ads-even-with-promotions-turned-off/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-11-06",
+          "category": "policy",
+          "impact": "high",
+          "summary": "A 'Detected offers' checkbox in Commerce Manager → Settings → Offer merchandising lets Meta pull discounts from the advertiser's site into Facebook and Instagram ads account-wide, overriding a promotions-off setting on an individual (copied) ad. Advertisers with campaign-specific offers should check this setting; Meta has not announced it.",
+          "i18n": {
+            "ru": {
+              "title": "Meta может добавлять в объявления скидки, найденные на вашем сайте, — даже в копии с выключенными промоакциями",
+              "summary": "Флажок Detected offers в Commerce Manager → Settings → Offer merchandising позволяет Meta подтягивать скидки с сайта рекламодателя в объявления Facebook и Instagram на уровне всего аккаунта — в обход выключенных промоакций в отдельном (скопированном) объявлении. Рекламодателям с предложениями под конкретные кампании стоит проверить эту настройку; Meta её официально не анонсировала."
+            },
+            "es": {
+              "title": "Meta puede añadir a los anuncios descuentos detectados en tu web, incluso en copias con las promociones desactivadas",
+              "summary": "Una casilla Detected offers en Commerce Manager → Settings → Offer merchandising permite a Meta llevar los descuentos de la web del anunciante a los anuncios de Facebook e Instagram en toda la cuenta, por encima de las promociones desactivadas en un anuncio concreto (copiado). Los anunciantes con ofertas específicas por campaña deberían revisar este ajuste; Meta no lo ha anunciado."
+            },
+            "sr": {
+              "title": "Meta može da dodaje u oglase popuste pronađene na vašem sajtu — čak i u kopije sa isključenim promocijama",
+              "summary": "Polje Detected offers u Commerce Manager → Settings → Offer merchandising omogućava Meti da popuste sa sajta oglašivača ubaci u Facebook i Instagram oglase na nivou celog naloga, mimo isključenih promocija u pojedinačnom (kopiranom) oglasu. Oglašivači sa ponudama vezanim za konkretne kampanje treba da provere ovo podešavanje; Meta ga nije najavila."
+            }
+          }
+        },
+        {
+          "title": "Meta Marketing API v27: Product showcase and cross-device delivery are on by default for new ads",
+          "url": "https://ppc.land/metas-api-v27-may-add-catalog-products-to-new-ads-by-default/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-11-04",
+          "category": "api",
+          "impact": "high",
+          "summary": "Graph/Marketing API v27.0 (November 4) may enable Product showcase (catalog products) on new ads without explicit settings and turns on 'Reach more people across other mobile devices' for new Sales ad sets with device targeting unless set; it also rejects lookalike requests with location fields and retires the catalog batch endpoint. The new defaults reach older API versions in about 90 days, and v21 is removed on January 21, 2027.",
+          "i18n": {
+            "ru": {
+              "title": "Meta Marketing API v27: Product showcase и показ на других устройствах включены по умолчанию для новых объявлений",
+              "summary": "Graph/Marketing API v27.0 (4 ноября) может включать Product showcase (товары из каталога) в новых объявлениях без явной настройки, а для новых групп объявлений с целью «Продажи» и таргетингом по устройствам включает опцию Reach more people across other mobile devices, если она не задана; кроме того, запросы на похожие аудитории с полями местоположения отклоняются, а пакетный эндпоинт каталога выводится из работы. Новые значения по умолчанию примерно через 90 дней распространятся на старые версии API, а v21 отключат 21 января 2027 года."
+            },
+            "es": {
+              "title": "Meta Marketing API v27: Product showcase y la entrega en otros dispositivos, activados por defecto en los anuncios nuevos",
+              "summary": "Graph/Marketing API v27.0 (4 de noviembre) puede activar Product showcase (productos del catálogo) en anuncios nuevos sin configurarlo de forma explícita y activa Reach more people across other mobile devices en los nuevos conjuntos de anuncios de Ventas con segmentación por dispositivo si no se ha definido; además, rechaza las solicitudes de audiencias similares con campos de ubicación y retira el endpoint de lotes de catálogo. Los nuevos valores por defecto llegarán a las versiones antiguas en unos 90 días, y v21 se elimina el 21 de enero de 2027."
+            },
+            "sr": {
+              "title": "Meta Marketing API v27: Product showcase i isporuka na drugim uređajima podrazumevano uključeni za nove oglase",
+              "summary": "Graph/Marketing API v27.0 (4. novembar) može da uključi Product showcase (proizvode iz kataloga) u novim oglasima bez izričitog podešavanja, a za nove skupove oglasa sa ciljem Prodaja i ciljanjem po uređajima uključuje Reach more people across other mobile devices ako nije podešeno; takođe odbija zahteve za slične publike sa poljima lokacije i gasi batch endpoint za kataloge. Nove podrazumevane vrednosti stižu i do starijih verzija API-ja za oko 90 dana, a v21 se ukida 21. januara 2027."
+            }
+          }
+        },
+        {
+          "title": "Meta may delay its new commercial terms indefinitely as the UK CMA opens a probe",
+          "url": "https://www.socialmediatoday.com/news/meta-delays-commercial-terms-update-indefinitely/873528/",
+          "source": "Social Media Today — Facebook",
+          "published": "2026-11-02",
+          "category": "policy",
+          "impact": "medium",
+          "summary": "After moving the effective date from October 30 to November 20, Meta told Reuters it could delay its updated commercial terms — including the clause letting it crawl advertisers' websites — indefinitely while it answers regulators. The UK Competition and Markets Authority has opened an investigation, so advertisers should not treat November 20 as a firm date.",
+          "i18n": {
+            "ru": {
+              "title": "Meta может бессрочно отложить новые коммерческие условия — британский CMA начал расследование",
+              "summary": "Перенеся дату вступления в силу с 30 октября на 20 ноября, Meta сообщила Reuters, что может отложить обновлённые коммерческие условия — включая пункт, позволяющий ей сканировать сайты рекламодателей, — на неопределённый срок, пока отвечает регуляторам. Британское Управление по конкуренции и рынкам (CMA) начало расследование, поэтому 20 ноября не стоит считать окончательной датой."
+            },
+            "es": {
+              "title": "Meta podría aplazar indefinidamente sus nuevas condiciones comerciales mientras la CMA británica abre una investigación",
+              "summary": "Tras mover la fecha de entrada en vigor del 30 de octubre al 20 de noviembre, Meta dijo a Reuters que podría aplazar indefinidamente sus condiciones comerciales actualizadas —incluida la cláusula que le permite rastrear las webs de los anunciantes— mientras responde a los reguladores. La Competition and Markets Authority del Reino Unido ha abierto una investigación, así que el 20 de noviembre no debe tomarse como fecha firme."
+            },
+            "sr": {
+              "title": "Meta bi mogla na neodređeno da odloži nove komercijalne uslove dok britanski CMA pokreće istragu",
+              "summary": "Pošto je datum stupanja na snagu pomerila sa 30. oktobra na 20. novembar, Meta je rekla Rojtersu da bi ažurirane komercijalne uslove — uključujući odredbu koja joj dozvoljava da skenira sajtove oglašivača — mogla da odloži na neodređeno vreme dok odgovara regulatorima. Britanska Uprava za konkurenciju i tržišta (CMA) pokrenula je istragu, pa 20. novembar ne treba smatrati konačnim datumom."
+            }
+          }
+        },
+        {
+          "title": "Meta Ads Manager adds a per-creative breakdown of media and text performance",
+          "url": "https://www.socialmediatoday.com/news/meta-adds-individual-performance-data-for-ad-creative/872981/",
+          "source": "Social Media Today — Facebook",
+          "published": "2026-10-27",
+          "category": "measurement",
+          "impact": "medium",
+          "summary": "A new Breakdown option in Ads Manager shows how each image or video and each text variation in an ad performed on its own. Ads using multi-post formats (collection or carousel) are excluded, and some conversion types such as Donate and Subscribe are not covered.",
+          "i18n": {
+            "ru": {
+              "title": "В Meta Ads Manager появилась разбивка эффективности по отдельным медиа и текстам объявления",
+              "summary": "Новая опция Breakdown в Ads Manager показывает, как сработало каждое изображение или видео и каждый вариант текста в объявлении по отдельности. Объявления в форматах с несколькими публикациями (подборка или кольцевая галерея) не поддерживаются, как и некоторые типы конверсий, например Donate и Subscribe."
+            },
+            "es": {
+              "title": "Meta Ads Manager añade un desglose del rendimiento de cada elemento multimedia y cada texto",
+              "summary": "Una nueva opción de Breakdown en Ads Manager muestra el rendimiento por separado de cada imagen o vídeo y de cada variante de texto de un anuncio. Quedan fuera los anuncios con formatos de varias publicaciones (colección o carrusel) y algunos tipos de conversión, como Donate y Subscribe."
+            },
+            "sr": {
+              "title": "Meta Ads Manager dodaje raščlanjavanje učinka po pojedinačnim medijima i tekstovima oglasa",
+              "summary": "Nova opcija Breakdown u Ads Manager-u pokazuje kako je svaka slika ili video i svaka varijanta teksta u oglasu radila zasebno. Oglasi u formatima sa više objava (kolekcija ili karusel) nisu obuhvaćeni, kao ni neki tipovi konverzija, na primer Donate i Subscribe."
+            }
+          }
+        },
+        {
+          "title": "Meta's business AI can now edit budgets and targeting by prompt; Ads Creative Studio and the Ads MCP server widen",
+          "url": "https://www.socialmediatoday.com/news/meta-introduces-new-ai-powered-tools-at-advertising-week/832288/",
+          "source": "Social Media Today — Facebook",
+          "published": "2026-10-06",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "At Advertising Week Meta said its business assistant gains campaign memory, brand-guideline import and agentic actions — generating creative, updating targeting and changing budgets — plus scheduled reports. Ads Creative Studio expands to more brands, the Ads MCP server adds use cases, and video generated from static assets in Advantage+ creative is now generally available.",
+          "i18n": {
+            "ru": {
+              "title": "Бизнес-ассистент Meta теперь меняет бюджеты и таргетинг по запросу; Ads Creative Studio и Ads MCP-сервер расширяются",
+              "summary": "На Advertising Week Meta рассказала, что её бизнес-ассистент получает память о кампаниях, импорт брендбука и возможность самостоятельно выполнять действия — создавать креативы, менять таргетинг и бюджеты, — а также отчёты по расписанию. Ads Creative Studio становится доступна большему числу брендов, у Ads MCP-сервера появляются новые сценарии, а создание видео из статичных объектов в креативах Advantage+ открыто для всех."
+            },
+            "es": {
+              "title": "La IA para empresas de Meta ya puede cambiar presupuestos y segmentación con un prompt; Ads Creative Studio y el servidor Ads MCP se amplían",
+              "summary": "En Advertising Week, Meta anunció que su asistente para empresas gana memoria de campañas, importación de guías de marca y acciones autónomas —generar creatividades, actualizar la segmentación y cambiar presupuestos—, además de informes programados. Ads Creative Studio llega a más marcas, el servidor Ads MCP suma casos de uso y la creación de vídeo a partir de recursos estáticos en las creatividades de Advantage+ ya está disponible para todos."
+            },
+            "sr": {
+              "title": "Metin poslovni AI asistent sada menja budžete i ciljanje na zahtev; Ads Creative Studio i Ads MCP server se šire",
+              "summary": "Na Advertising Week-u Meta je najavila da njen poslovni asistent dobija memoriju kampanja, uvoz smernica brenda i samostalne akcije — pravljenje kreativa, izmenu ciljanja i budžeta — kao i zakazane izveštaje. Ads Creative Studio postaje dostupan većem broju brendova, Ads MCP server dobija nove scenarije upotrebe, a pravljenje videa od statičnih elemenata u Advantage+ kreativama sada je dostupno svima."
+            }
+          }
+        },
+        {
+          "title": "Meta folds ad prediction for all its surfaces into one GEM model, claiming +18.9% conversions",
+          "url": "https://ppc.land/meta-says-its-gem-ads-model-lifted-conversions-18-9-across-its-apps",
+          "source": "PPC Land — Social",
+          "published": "2026-10-14",
+          "category": "other",
+          "impact": "low",
+          "summary": "Meta's 2026 Generative Ads Model (GEM) replaces separate prediction systems for Facebook, Instagram and Reels with a single foundation model that feeds the smaller models serving ads in real time. Meta claims an 18.9% conversion and 12% click-through improvement, but publishes no baseline or method, so advertisers cannot verify it in their own accounts.",
+          "i18n": {
+            "ru": {
+              "title": "Meta объединила прогнозирование рекламы на всех площадках в одну модель GEM и заявляет +18,9% конверсий",
+              "summary": "Генеративная рекламная модель Meta 2026 года (GEM) заменяет отдельные системы прогнозирования для Facebook, Instagram и Reels одной базовой моделью, на которую опираются меньшие модели, показывающие рекламу в реальном времени. Meta заявляет рост конверсий на 18,9% и CTR на 12%, но не раскрывает ни базу сравнения, ни методику, так что проверить это в своих аккаунтах рекламодатели не могут."
+            },
+            "es": {
+              "title": "Meta unifica la predicción de anuncios de todas sus superficies en un único modelo GEM y habla de un +18,9 % de conversiones",
+              "summary": "El Generative Ads Model (GEM) de 2026 de Meta sustituye los sistemas de predicción separados de Facebook, Instagram y Reels por un único modelo fundacional que alimenta a los modelos más pequeños que sirven anuncios en tiempo real. Meta afirma una mejora del 18,9 % en conversiones y del 12 % en CTR, pero no publica la base de comparación ni el método, así que los anunciantes no pueden verificarlo en sus cuentas."
+            },
+            "sr": {
+              "title": "Meta objedinjuje predviđanje oglasa za sve svoje površine u jedan GEM model i tvrdi +18,9% konverzija",
+              "summary": "Metin Generative Ads Model (GEM) iz 2026. zamenjuje odvojene sisteme predviđanja za Facebook, Instagram i Reels jednim osnovnim modelom na koji se oslanjaju manji modeli koji prikazuju oglase u realnom vremenu. Meta tvrdi da su konverzije porasle za 18,9%, a CTR za 12%, ali ne objavljuje osnovu poređenja ni metodologiju, pa oglašivači to ne mogu da provere u svojim nalozima."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "TikTok",
+      "team": "social",
+      "items": [
+        {
+          "title": "TikTok Symphony gets newer Seedance video models, 50 references, 30-second clips and an updated API",
+          "url": "https://www.socialmediatoday.com/news/tiktok-updates-its-ai-video-ad-tools/874209/",
+          "source": "Social Media Today — TikTok",
+          "published": "2026-11-09",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "Symphony Agent now uses the latest Dreamina Seedance models, accepts up to 50 multimodal references (up from 9) and generates up to 30 seconds of video per prompt (up from 15). An updated Symphony API brings generation into advertisers' own tools.",
+          "i18n": {
+            "ru": {
+              "title": "TikTok Symphony получает новые видеомодели Seedance, до 50 референсов, ролики до 30 секунд и обновлённый API",
+              "summary": "Symphony Agent теперь работает на последних моделях Dreamina Seedance, принимает до 50 мультимодальных референсов (было 9) и генерирует до 30 секунд видео за один запрос (было 15). Обновлённый Symphony API позволяет встроить генерацию в собственные инструменты рекламодателей."
+            },
+            "es": {
+              "title": "TikTok Symphony incorpora modelos de vídeo Seedance más recientes, 50 referencias, clips de 30 segundos y una API actualizada",
+              "summary": "Symphony Agent usa ahora los últimos modelos Dreamina Seedance, admite hasta 50 referencias multimodales (antes 9) y genera hasta 30 segundos de vídeo por prompt (antes 15). Una Symphony API actualizada lleva la generación a las propias herramientas de los anunciantes."
+            },
+            "sr": {
+              "title": "TikTok Symphony dobija novije Seedance video modele, 50 referenci, klipove od 30 sekundi i ažuriran API",
+              "summary": "Symphony Agent sada koristi najnovije Dreamina Seedance modele, prihvata do 50 multimodalnih referenci (ranije 9) i pravi do 30 sekundi videa po upitu (ranije 15). Ažurirani Symphony API omogućava da se generisanje ugradi u sopstvene alate oglašivača."
+            }
+          }
+        },
+        {
+          "title": "TikTok Search Ads adds Impression Share metrics and Keyword Packs",
+          "url": "https://www.searchenginejournal.com/tiktok-search-ads-brand-category-keyword-packs/595682/",
+          "source": "Search Engine Journal — PPC",
+          "published": "2026-11-02",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "Per TikTok's Q4 2026 Product Preview, Search Ads campaigns get Impression Share and Top 1 Impression Share at campaign, advertiser and keyword level in Ads Manager. The Keyword Suggestion Tool also adds curated brand and category Keyword Packs.",
+          "i18n": {
+            "ru": {
+              "title": "В TikTok Search Ads появились метрики доли показов и наборы ключевых слов",
+              "summary": "Согласно Q4 2026 Product Preview от TikTok, кампании Search Ads получают в Ads Manager метрики Impression Share и Top 1 Impression Share на уровне кампании, рекламодателя и ключевого слова. В Keyword Suggestion Tool также добавлены подобранные наборы ключевых слов (Keyword Packs) по брендам и категориям."
+            },
+            "es": {
+              "title": "TikTok Search Ads añade métricas de cuota de impresiones y Keyword Packs",
+              "summary": "Según el Q4 2026 Product Preview de TikTok, las campañas de Search Ads obtienen en Ads Manager las métricas Impression Share y Top 1 Impression Share a nivel de campaña, anunciante y palabra clave. La Keyword Suggestion Tool también añade Keyword Packs seleccionados de marca y de categoría."
+            },
+            "sr": {
+              "title": "TikTok Search Ads dodaje metrike udela prikaza i Keyword Packs",
+              "summary": "Prema TikTokovom Q4 2026 Product Preview, kampanje Search Ads u Ads Manager-u dobijaju metrike Impression Share i Top 1 Impression Share na nivou kampanje, oglašivača i ključne reči. Keyword Suggestion Tool dobija i odabrane pakete ključnih reči (Keyword Packs) po brendu i kategoriji."
+            }
+          }
+        },
+        {
+          "title": "TikTok adds a brand perception insights tool and brand protection reporting",
+          "url": "https://www.socialmediatoday.com/news/tiktok-adds-new-brand-safety-resources/873529/",
+          "source": "Social Media Today — TikTok",
+          "published": "2026-11-02",
+          "category": "feature",
+          "impact": "low",
+          "summary": "TikTok launched a brand safety center site plus new brand protection tools: a brand perception insights tool in Business Center, copyright and trademark infringement reporting, and counterfeit protections for sellers.",
+          "i18n": {
+            "ru": {
+              "title": "TikTok добавил инструмент аналитики восприятия бренда и жалобы для защиты бренда",
+              "summary": "TikTok запустил сайт центра безопасности бренда и новые инструменты защиты: аналитику восприятия бренда в Business Center, жалобы на нарушение авторских прав и товарных знаков, а также защиту от подделок для продавцов."
+            },
+            "es": {
+              "title": "TikTok añade una herramienta de percepción de marca y denuncias para proteger la marca",
+              "summary": "TikTok ha lanzado un sitio de centro de seguridad de marca y nuevas herramientas de protección: una herramienta de análisis de percepción de marca en Business Center, denuncias por infracción de derechos de autor y de marca, y protección contra falsificaciones para vendedores."
+            },
+            "sr": {
+              "title": "TikTok dodaje alat za uvid u percepciju brenda i prijave za zaštitu brenda",
+              "summary": "TikTok je pokrenuo sajt centra za bezbednost brenda i nove alate za zaštitu: alat za uvid u percepciju brenda u Business Center-u, prijavljivanje kršenja autorskih prava i žigova, kao i zaštitu od falsifikata za prodavce."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "The Trade Desk",
+      "team": "programmatic",
+      "items": [
+        {
+          "title": "Ask Koa now talks to Dstillery's DS-1 agent to build custom audiences mid-campaign",
+          "url": "https://www.thetradedesk.com/press-room/the-trade-desk-and-dstillery-link-ai-agents-to-build-custom-audiences-mid-campaign",
+          "source": "The Trade Desk — Press Room",
+          "published": "2026-11-04",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "The Trade Desk has connected its Ask Koa agentic platform with Dstillery's DS-1, so the two AI agents can exchange signals during a live campaign and build custom audiences in minutes rather than days. Audience building moves from a pre-launch step to something Kokai campaigns can adjust in flight.",
+          "i18n": {
+            "ru": {
+              "title": "Ask Koa теперь взаимодействует с агентом DS-1 от Dstillery и собирает аудитории прямо во время кампании",
+              "summary": "The Trade Desk связал свою агентную платформу Ask Koa с DS-1 от Dstillery: два AI-агента обмениваются сигналами во время активной кампании и собирают кастомные аудитории за минуты, а не дни. Построение аудиторий перестаёт быть этапом перед запуском — кампании в Kokai могут менять их на ходу."
+            },
+            "es": {
+              "title": "Ask Koa ya se comunica con el agente DS-1 de Dstillery para crear audiencias personalizadas en plena campaña",
+              "summary": "The Trade Desk ha conectado su plataforma de agentes Ask Koa con DS-1 de Dstillery, de modo que ambos agentes de IA intercambian señales durante una campaña activa y crean audiencias personalizadas en minutos en lugar de días. La creación de audiencias deja de ser un paso previo al lanzamiento y las campañas de Kokai pueden ajustarla sobre la marcha."
+            },
+            "sr": {
+              "title": "Ask Koa sada sarađuje sa Dstillery agentom DS-1 i pravi prilagođene publike usred kampanje",
+              "summary": "The Trade Desk je povezao svoju agentsku platformu Ask Koa sa Dstillery-jevim DS-1, pa dva AI agenta razmenjuju signale tokom aktivne kampanje i prave prilagođene publike za nekoliko minuta umesto za nekoliko dana. Pravljenje publika više nije korak pre pokretanja — Kokai kampanje mogu da ga menjaju u toku rada."
+            }
+          }
+        },
+        {
+          "title": "Digital Envoy ISP, mobile-carrier and organisation segments go live in The Trade Desk",
+          "url": "https://ppc.land/trade-desk-advertisers-gain-isp-and-carrier-targeting-from-digital-envoy/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-10-28",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "Digital Envoy's NetAcuity IP data is now available in The Trade Desk globally, adding audience segments built on a user's internet provider, mobile carrier or organisation network rather than location alone. The segments work across the open internet and CTV and sit inside Audience Unlimited; pricing and coverage were not disclosed.",
+          "i18n": {
+            "ru": {
+              "title": "В The Trade Desk появились сегменты Digital Envoy по интернет-провайдеру, мобильному оператору и организации",
+              "summary": "IP-данные NetAcuity от Digital Envoy теперь доступны в The Trade Desk по всему миру: это сегменты аудиторий по интернет-провайдеру, мобильному оператору или сети организации, а не только по местоположению. Сегменты работают в открытом интернете и CTV и входят в Audience Unlimited; цены и охват не раскрываются."
+            },
+            "es": {
+              "title": "Los segmentos de Digital Envoy por proveedor de internet, operador móvil y organización llegan a The Trade Desk",
+              "summary": "Los datos IP de NetAcuity de Digital Envoy ya están disponibles en The Trade Desk en todo el mundo, con segmentos de audiencia basados en el proveedor de internet, el operador móvil o la red de la organización del usuario, no solo en su ubicación. Funcionan en el internet abierto y en CTV y están dentro de Audience Unlimited; no se han revelado precios ni cobertura."
+            },
+            "sr": {
+              "title": "Digital Envoy segmenti po internet provajderu, mobilnom operateru i organizaciji dostupni su u The Trade Desk-u",
+              "summary": "NetAcuity IP podaci kompanije Digital Envoy sada su dostupni u The Trade Desk-u širom sveta, sa segmentima publike zasnovanim na internet provajderu, mobilnom operateru ili mreži organizacije korisnika, a ne samo na lokaciji. Segmenti rade na otvorenom internetu i CTV-u i deo su Audience Unlimited; cene i pokrivenost nisu objavljeni."
+            }
+          }
+        },
+        {
+          "title": "Safari blocks The Trade Desk's ad domain; IAB Tech Lab points publishers to server-side Trusted Server",
+          "url": "https://ppc.land/iab-tech-lab-pushes-trusted-server-after-safari-blocks-the-trade-desk/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-10-10",
+          "category": "other",
+          "impact": "medium",
+          "summary": "Safari on new iPhones and iPads has stopped loading The Trade Desk's ad domain, cutting TTD ads out of Safari pages. The IAB Tech Lab is promoting its open-source Trusted Server as a workaround, though it has no formal release yet and publisher adoption is unproven.",
+          "i18n": {
+            "ru": {
+              "title": "Safari блокирует рекламный домен The Trade Desk; IAB Tech Lab предлагает издателям серверный Trusted Server",
+              "summary": "Safari на новых iPhone и iPad перестал загружать рекламный домен The Trade Desk, и объявления TTD больше не показываются на страницах в Safari. В качестве обходного пути IAB Tech Lab продвигает свой open-source Trusted Server, но официального релиза у него пока нет, а внедрение издателями не подтверждено."
+            },
+            "es": {
+              "title": "Safari bloquea el dominio publicitario de The Trade Desk; IAB Tech Lab remite a los editores al Trusted Server del lado del servidor",
+              "summary": "Safari en los nuevos iPhone y iPad ha dejado de cargar el dominio publicitario de The Trade Desk, con lo que los anuncios de TTD desaparecen de las páginas abiertas en Safari. IAB Tech Lab promueve su Trusted Server de código abierto como solución, aunque aún no tiene versión oficial y su adopción por los editores no está demostrada."
+            },
+            "sr": {
+              "title": "Safari blokira oglasni domen The Trade Desk-a; IAB Tech Lab upućuje izdavače na server-side Trusted Server",
+              "summary": "Safari na novim iPhone i iPad uređajima prestao je da učitava oglasni domen The Trade Desk-a, pa se TTD oglasi više ne prikazuju na stranicama u Safariju. IAB Tech Lab kao zaobilazno rešenje promoviše svoj open-source Trusted Server, ali on još nema zvanično izdanje, a usvajanje kod izdavača nije potvrđeno."
+            }
+          }
+        },
+        {
+          "title": "Kokai omnichannel optimization steers conversion Campaign Groups toward the best channel combinations",
+          "url": "https://www.thetradedesk.com/resources/unlock-more-value-from-your-media-mix-with-omnichannel-optimization",
+          "source": "The Trade Desk — Resource Desk",
+          "published": "2026-11-05",
+          "category": "feature",
+          "impact": "low",
+          "summary": "When campaigns sit in a conversion-based Campaign Group with omnichannel optimization on, Kokai uses path-to-conversion data to shift delivery toward the channel combinations (CTV, video, audio, display) linked to stronger conversion rates. It is the conversion counterpart to the new Awareness group type, which manages household frequency across channels.",
+          "i18n": {
+            "ru": {
+              "title": "Омниканальная оптимизация в Kokai направляет Campaign Groups на конверсии к лучшим сочетаниям каналов",
+              "summary": "Если кампании входят в Campaign Group на конверсии с включённой омниканальной оптимизацией, Kokai по данным о пути к конверсии смещает показы к тем сочетаниям каналов (CTV, видео, аудио, медийная реклама), которые связаны с более высокой конверсией. Это аналог для конверсий нового типа групп Awareness, который управляет частотой показов на домохозяйство во всех каналах."
+            },
+            "es": {
+              "title": "La optimización omnicanal de Kokai orienta los Campaign Groups de conversión hacia las mejores combinaciones de canales",
+              "summary": "Cuando las campañas están en un Campaign Group de conversión con la optimización omnicanal activada, Kokai usa los datos del camino hacia la conversión para desplazar la entrega hacia las combinaciones de canales (CTV, vídeo, audio, display) asociadas a mejores tasas de conversión. Es el equivalente para conversiones del nuevo tipo de grupo Awareness, que gestiona la frecuencia por hogar entre canales."
+            },
+            "sr": {
+              "title": "Kokai omnichannel optimizacija usmerava Campaign Groups za konverzije ka najboljim kombinacijama kanala",
+              "summary": "Kada su kampanje u Campaign Group za konverzije sa uključenom omnichannel optimizacijom, Kokai na osnovu podataka o putu do konverzije pomera isporuku ka kombinacijama kanala (CTV, video, audio, displej) koje su povezane sa boljom stopom konverzije. To je pandan za konverzije novom tipu grupe Awareness, koji upravlja učestalošću prikaza po domaćinstvu kroz sve kanale."
+            }
+          }
+        },
+        {
+          "title": "Ströer's OS Data Solutions audiences carry the Utiq telco ID in The Trade Desk",
+          "url": "https://ppc.land/stroers-os-data-solutions-adds-utiq-telco-id-to-audiences-on-3-platforms/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-10-26",
+          "category": "feature",
+          "impact": "low",
+          "summary": "OS Data Solutions, Ströer's data subsidiary, has added the consent-based Utiq ID (derived from telecom-operator networks) to its audience segments, available now to buyers in The Trade Desk. It gives German-market TTD campaigns a cookieless identifier option; no match-rate uplift was disclosed.",
+          "i18n": {
+            "ru": {
+              "title": "Аудитории OS Data Solutions от Ströer в The Trade Desk получили телеком-идентификатор Utiq",
+              "summary": "OS Data Solutions, дочерняя компания Ströer по работе с данными, добавила в свои сегменты аудиторий основанный на согласии идентификатор Utiq (его формируют сети операторов связи) — они уже доступны покупателям в The Trade Desk. Это даёт кампаниям TTD на немецком рынке вариант идентификации без cookie; данных о росте доли совпадений нет."
+            },
+            "es": {
+              "title": "Las audiencias de OS Data Solutions de Ströer incorporan el ID de operadora Utiq en The Trade Desk",
+              "summary": "OS Data Solutions, la filial de datos de Ströer, ha añadido a sus segmentos de audiencia el Utiq ID, basado en consentimiento y procedente de las redes de los operadores de telecomunicaciones, ya disponible para los compradores en The Trade Desk. Ofrece a las campañas de TTD en el mercado alemán un identificador sin cookies; no se ha publicado la mejora de la tasa de coincidencia."
+            },
+            "sr": {
+              "title": "Ströer-ove OS Data Solutions publike u The Trade Desk-u dobijaju telekom identifikator Utiq",
+              "summary": "OS Data Solutions, Ströer-ova kompanija za podatke, dodala je svojim segmentima publike Utiq ID zasnovan na saglasnosti (izveden iz mreža telekom operatera), koji je odmah dostupan kupcima u The Trade Desk-u. To TTD kampanjama na nemačkom tržištu daje identifikator bez kolačića; podatak o povećanju stope podudaranja nije objavljen."
+            }
+          }
+        },
+        {
+          "title": "OptimizeRx healthcare-provider audiences become buyable in The Trade Desk",
+          "url": "https://www.thetradedesk.com/press-room/optimizerx-brings-healthcare-provider-reach-to-programmatic-through-the-trade-desk",
+          "source": "The Trade Desk — Press Room",
+          "published": "2026-10-26",
+          "category": "feature",
+          "impact": "low",
+          "summary": "Pharma advertisers in The Trade Desk can now target OptimizeRx's identifier-based audience of prescribing doctors reached inside their electronic health record systems. The tie-up also opens HCP campaigns to categories beyond prescription drugs and lets them be compared with streaming TV and other channels bought via OpenPath.",
+          "i18n": {
+            "ru": {
+              "title": "Аудитории медицинских специалистов OptimizeRx стали доступны для закупки в The Trade Desk",
+              "summary": "Фармрекламодатели в The Trade Desk теперь могут таргетироваться на аудиторию OptimizeRx — врачей, выписывающих рецепты, которых она охватывает внутри их систем электронных медкарт, по идентификаторам. Партнёрство также открывает HCP-кампании для категорий помимо рецептурных препаратов и позволяет сравнивать их со стриминговым ТВ и другими каналами, закупаемыми через OpenPath."
+            },
+            "es": {
+              "title": "Las audiencias de profesionales sanitarios de OptimizeRx ya se pueden comprar en The Trade Desk",
+              "summary": "Los anunciantes farmacéuticos en The Trade Desk pueden segmentar ahora la audiencia de OptimizeRx, basada en identificadores, de médicos prescriptores a los que llega dentro de sus sistemas de historia clínica electrónica. El acuerdo también abre las campañas HCP a categorías más allá de los medicamentos con receta y permite compararlas con la TV en streaming y otros canales comprados a través de OpenPath."
+            },
+            "sr": {
+              "title": "Publike zdravstvenih radnika OptimizeRx-a mogu se kupiti u The Trade Desk-u",
+              "summary": "Farmaceutski oglašivači u The Trade Desk-u sada mogu da ciljaju OptimizeRx publiku lekara koji propisuju terapiju, zasnovanu na identifikatorima i dosegnutu unutar njihovih sistema elektronskih kartona. Partnerstvo otvara HCP kampanje i za kategorije van lekova na recept i omogućava njihovo poređenje sa striming TV-om i drugim kanalima kupljenim preko OpenPath-a."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "DV360",
+      "team": "programmatic",
+      "items": [
+        {
+          "title": "DV360 API v5 beta: DOOH insertion orders, advertiser-level YouTube exclusions, Data Manager for Customer Match",
+          "url": "https://developers.google.com/display-video/api/release-notes#october_22_2026",
+          "source": "Display & Video 360 API — Release Notes",
+          "published": "2026-10-22",
+          "category": "api",
+          "impact": "medium",
+          "summary": "The v5 beta lets API users manage Digital Out of Home insertion orders and YouTube video and channel exclusions at advertiser level, and refactors audience targeting for YouTube and Demand Gen. Customer Match management moves to the Data Manager API.",
+          "i18n": {
+            "ru": {
+              "title": "DV360 API v5 beta: заказы на размещение DOOH, исключения YouTube на уровне рекламодателя и Data Manager для Customer Match",
+              "summary": "Бета-версия v5 позволяет через API управлять заказами на размещение (insertion orders) в Digital Out of Home и исключениями видео и каналов YouTube на уровне рекламодателя, а также перерабатывает таргетинг на аудитории для YouTube и Demand Gen. Управление Customer Match переносится в Data Manager API."
+            },
+            "es": {
+              "title": "DV360 API v5 beta: insertion orders de DOOH, exclusiones de YouTube a nivel de anunciante y Data Manager para Customer Match",
+              "summary": "La beta de v5 permite gestionar por API los insertion orders de Digital Out of Home y las exclusiones de vídeos y canales de YouTube a nivel de anunciante, y rehace la segmentación por audiencias de YouTube y Demand Gen. La gestión de Customer Match pasa a la Data Manager API."
+            },
+            "sr": {
+              "title": "DV360 API v5 beta: DOOH insertion orders, isključivanja za YouTube na nivou oglašivača i Data Manager za Customer Match",
+              "summary": "Beta verzija v5 omogućava da se preko API-ja upravlja insertion orders za Digital Out of Home i isključivanjem YouTube videa i kanala na nivou oglašivača, a ciljanje publika za YouTube i Demand Gen je prerađeno. Upravljanje Customer Match-om prelazi u Data Manager API."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Amazon DSP",
+      "team": "programmatic",
+      "items": [
+        {
+          "title": "Amazon display ads on the Amazon Store count impressions only once on screen from January 1, 2027",
+          "url": "https://ppc.land/amazon-drops-off-screen-ads-from-impression-counts-expects-63-fewer/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-11-03",
+          "category": "measurement",
+          "impact": "high",
+          "summary": "From January 1, 2027, Amazon will count an impression for DVA (formerly Amazon DSP) display ads on Amazon Store placements — homepage, product detail, search results and order pages — only once the ad appears on screen, not when it starts downloading. Amazon expects impression counts there to fall by about 63% on average and has not said how CPMs or billing change, so pacing, frequency and CPM benchmarks need re-baselining.",
+          "i18n": {
+            "ru": {
+              "title": "С 1 января 2027 года Amazon будет засчитывать показы медийной рекламы в Amazon Store только после появления на экране",
+              "summary": "С 1 января 2027 года Amazon будет засчитывать показ медийных объявлений DVA (бывший Amazon DSP) на площадках Amazon Store — главной странице, карточках товаров, в результатах поиска и на страницах заказов — только когда объявление появилось на экране, а не когда началась его загрузка. Amazon ожидает, что число показов там упадёт в среднем примерно на 63%, и не уточняет, как изменятся CPM и биллинг, поэтому ориентиры по темпу открутки, частоте и CPM придётся пересчитать."
+            },
+            "es": {
+              "title": "Desde el 1 de enero de 2027, Amazon solo contará las impresiones de display en Amazon Store cuando el anuncio aparezca en pantalla",
+              "summary": "A partir del 1 de enero de 2027, Amazon solo contará una impresión de los anuncios de display de DVA (antes Amazon DSP) en las ubicaciones de Amazon Store —página de inicio, ficha de producto, resultados de búsqueda y páginas de pedidos— cuando el anuncio aparezca en pantalla, no cuando empiece a descargarse. Amazon prevé que las impresiones en esas ubicaciones caigan de media un 63 % y no aclara cómo cambian los CPM ni la facturación, así que habrá que recalibrar las referencias de ritmo de entrega, frecuencia y CPM."
+            },
+            "sr": {
+              "title": "Od 1. januara 2027. Amazon će prikaze displej oglasa u Amazon Store-u brojati tek kada se oglas pojavi na ekranu",
+              "summary": "Od 1. januara 2027. Amazon će prikaz displej oglasa DVA (ranije Amazon DSP) na pozicijama u Amazon Store-u — početnoj stranici, stranicama proizvoda, rezultatima pretrage i stranicama porudžbina — računati tek kada se oglas pojavi na ekranu, a ne kada počne da se učitava. Amazon očekuje da će broj prikaza tamo pasti u proseku za oko 63% i ne navodi kako se menjaju CPM i naplata, pa referentne vrednosti za tempo isporuke, učestalost i CPM treba ponovo postaviti."
+            }
+          }
+        },
+        {
+          "title": "Attain purchase audiences from 14 million US shoppers are live in Amazon DVA+",
+          "url": "https://ppc.land/amazon-advertisers-gain-purchase-audiences-from-attains-14-million-consumers/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-11-05",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "Advertisers can now build and activate Attain's purchase-based audiences — segmented by retailer, category and in-store or online channel, refreshed daily — directly inside Amazon Ads DVA+ (formerly Amazon DSP), across its full inventory including Prime Video. It brings off-Amazon purchase signals to QSR, travel and auto brands; pricing was not disclosed.",
+          "i18n": {
+            "ru": {
+              "title": "Аудитории покупателей Attain на 14 млн американцев доступны в Amazon DVA+",
+              "summary": "Рекламодатели теперь могут создавать и активировать аудитории Attain на основе покупок — с разбивкой по ритейлеру, категории и каналу (в магазине или онлайн) и ежедневным обновлением — прямо в Amazon Ads DVA+ (бывший Amazon DSP), на всём инвентаре, включая Prime Video. Это даёт брендам фастфуда, туризма и автопрома сигналы о покупках за пределами Amazon; цены не раскрываются."
+            },
+            "es": {
+              "title": "Las audiencias de compra de Attain, con 14 millones de compradores en EE. UU., ya están en Amazon DVA+",
+              "summary": "Los anunciantes ya pueden crear y activar las audiencias de Attain basadas en compras —segmentadas por minorista, categoría y canal, en tienda u online, y actualizadas a diario— directamente en Amazon Ads DVA+ (antes Amazon DSP), en todo su inventario, incluido Prime Video. Aporta señales de compra fuera de Amazon a marcas de restauración rápida, viajes y automoción; no se han revelado precios."
+            },
+            "sr": {
+              "title": "Attain publike kupaca sa 14 miliona kupaca u SAD dostupne su u Amazon DVA+",
+              "summary": "Oglašivači sada mogu da prave i aktiviraju Attain publike zasnovane na kupovinama — podeljene po prodavcu, kategoriji i kanalu (u prodavnici ili onlajn) i ažurirane svakog dana — direktno u Amazon Ads DVA+ (ranije Amazon DSP), na celom inventaru, uključujući Prime Video. To brendovima brze hrane, turizma i automobilske industrije donosi signale o kupovinama van Amazona; cene nisu objavljene."
+            }
+          }
+        },
+        {
+          "title": "Amazon DSP is now DVA+ inside Amazon Ads Agent — manual DSP controls limited to some US advertisers",
+          "url": "https://ppc.land/amazon-calls-its-ad-platform-an-agent-but-the-agent-is-still-closed-beta/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-10-29",
+          "category": "feature",
+          "impact": "medium",
+          "summary": "Amazon DSP buying now lives in DVA+ (display, video, audio) inside the renamed Amazon Ads Agent platform, alongside Sponsored Display, Sponsored TV and a cross-format Full-Funnel campaign type; the conversational agent itself is still a closed beta. The automated DVA+ path is open with CPM billing and no minimum, but the 'advanced settings' that hold the old DSP controls are limited to some US advertisers, while DSP users in 21 countries keep the legacy experience for now.",
+          "i18n": {
+            "ru": {
+              "title": "Amazon DSP стал DVA+ внутри Amazon Ads Agent — ручные настройки DSP доступны лишь части рекламодателей в США",
+              "summary": "Закупка в Amazon DSP теперь происходит в DVA+ (медийная реклама, видео, аудио) внутри переименованной платформы Amazon Ads Agent — вместе с Sponsored Display, Sponsored TV и кросс-форматным типом кампаний Full-Funnel; сам диалоговый агент пока в закрытой бете. Автоматический путь в DVA+ открыт с оплатой за CPM и без минимального бюджета, но «расширенные настройки», где теперь находятся прежние инструменты DSP, доступны лишь части рекламодателей в США, а пользователи DSP в 21 стране пока остаются в старом интерфейсе."
+            },
+            "es": {
+              "title": "Amazon DSP pasa a ser DVA+ dentro de Amazon Ads Agent y los controles manuales del DSP quedan limitados a algunos anunciantes de EE. UU.",
+              "summary": "La compra en Amazon DSP se hace ahora en DVA+ (display, vídeo, audio) dentro de la plataforma renombrada Amazon Ads Agent, junto a Sponsored Display, Sponsored TV y un tipo de campaña multiformato Full-Funnel; el agente conversacional sigue en beta cerrada. La vía automatizada de DVA+ está abierta con facturación por CPM y sin mínimo, pero la «configuración avanzada», donde están ahora los antiguos controles del DSP, solo la tienen algunos anunciantes de EE. UU., y los usuarios del DSP en 21 países conservan por ahora la experiencia anterior."
+            },
+            "sr": {
+              "title": "Amazon DSP je sada DVA+ unutar Amazon Ads Agent-a — ručna DSP podešavanja samo za deo oglašivača u SAD",
+              "summary": "Kupovina u Amazon DSP-u sada se obavlja u DVA+ (displej, video, audio) unutar preimenovane platforme Amazon Ads Agent, uz Sponsored Display, Sponsored TV i višeformatni tip kampanje Full-Funnel; sam konverzacioni agent je još u zatvorenoj beta verziji. Automatizovani put kroz DVA+ je otvoren uz naplatu po CPM-u i bez minimalnog budžeta, ali „napredna podešavanja”, gde su sada stare DSP kontrole, dostupna su samo delu oglašivača u SAD, dok korisnici DSP-a u 21 zemlji za sada zadržavaju stari interfejs."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CTV",
+      "team": "programmatic",
+      "items": [
+        {
+          "title": "Netflix's ad tier joins Australia's VOZ TV currency from February 2027",
+          "url": "https://ppc.land/netflix-ad-tier-to-enter-australias-official-tv-ratings-in-february-2027/",
+          "source": "PPC Land — Pulse",
+          "published": "2026-11-02",
+          "category": "measurement",
+          "impact": "low",
+          "summary": "OzTAM and Netflix signed a multi-year deal to add census-level viewing from Netflix's ad-supported plan, built with Nielsen, to VOZ, Australia's official TV audience currency. From February 1, 2027, Netflix ad-tier audiences can be planned, traded and reported alongside broadcast TV and BVOD in one database.",
+          "i18n": {
+            "ru": {
+              "title": "С февраля 2027 года тариф Netflix с рекламой войдёт в австралийскую ТВ-валюту VOZ",
+              "summary": "OzTAM и Netflix подписали многолетнее соглашение: сплошные данные о просмотрах тарифа Netflix с рекламой, подготовленные вместе с Nielsen, войдут в VOZ — официальную валюту ТВ-аудитории в Австралии. С 1 февраля 2027 года аудиторию Netflix с рекламой можно будет планировать, закупать и включать в отчёты вместе с эфирным ТВ и BVOD в одной базе."
+            },
+            "es": {
+              "title": "El plan con anuncios de Netflix se suma a VOZ, la moneda de audiencia de TV de Australia, en febrero de 2027",
+              "summary": "OzTAM y Netflix han firmado un acuerdo plurianual para incorporar a VOZ, la moneda oficial de audiencia televisiva de Australia, los datos censales de visionado del plan con anuncios de Netflix, elaborados con Nielsen. Desde el 1 de febrero de 2027, las audiencias de ese plan podrán planificarse, comprarse y reportarse junto a la TV en abierto y el BVOD en una sola base de datos."
+            },
+            "sr": {
+              "title": "Netflix paket sa oglasima ulazi u australijsku TV valutu VOZ od februara 2027.",
+              "summary": "OzTAM i Netflix potpisali su višegodišnji ugovor po kojem podaci o gledanosti Netflix paketa sa oglasima na nivou cele populacije, napravljeni sa Nielsenom, ulaze u VOZ, zvaničnu valutu TV gledanosti u Australiji. Od 1. februara 2027. publika Netflix paketa sa oglasima moći će da se planira, kupuje i izveštava zajedno sa linearnom televizijom i BVOD-om u jednoj bazi."
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+
+<script>
+(function(){
+  var data;
+  try { data = JSON.parse(document.getElementById('deck-data').textContent); }
+  catch(e){ data = {period_label:'(invalid deck data)', platforms:[]}; }
+
+  var CAT = { feature:"Feature", beta:"Beta", policy:"Policy", deprecation:"Deprecation", measurement:"Measurement", api:"API", other:"Update" };
+  var IMP = {
+    high:   { label:"High",   bg:"var(--aid-pink)", fg:"#fff",            shadow:"var(--aid-blue)" },
+    medium: { label:"Medium", bg:"var(--aid-blue)", fg:"#fff",            shadow:"var(--aid-pink)" },
+    low:    { label:"Low",    bg:"#ffffff",         fg:"var(--aid-slate)", shadow:"var(--aid-lime)" }
+  };
+  // ── Stickers: randomized per edition, deterministic (same deck → same layout) ──
+  // Positions & sizes of every sticker slot are fixed; only WHICH png lands in each
+  // slot is shuffled, seeded off the edition date, so nothing shifts. Pools below
+  // control which stickers may appear where (some families clash or are reserved).
+  //   - arrows-grid / flag: not used anywhere (removed).
+  //   - folder-star: only in the "THAT'S A WRAP" block (dark-blue bg).
+  //   - paperclip: only in the HERO (section:nth-child(2)) and the WRAP block; never in cards.
+  var STK = "../assets/stickers/";
+  // General pool — no arrows-grid / flag / folder-star / paperclip.
+  var POOL_GENERAL = ["bandage-formula-pink.png","blob-face-blue.png","blob-face-green.png","blob-face-pink.png","brain-star-blue.png","brain-star-green.png","brain-star-pink.png","document-sparkle-blue.png","document-sparkle-green.png","document-sparkle-pink.png","globe-blue-pink.png","globe-green-blue.png","globe-pink-blue.png","hand-raised-blue-green.png","hand-raised-pink-blue.png","hand-raised-pink-green.png","rainbow.png","shooting-star-blue.png","shooting-star-green.png","shooting-star-pink.png","sleepy-dome-blue.png","sleepy-dome-green.png","sleepy-dome-pink.png","thumbs-up-blue-pink.png","thumbs-up-green-blue.png","thumbs-up-green-pink.png","todo-notepad-blue.png","todo-notepad-green.png","todo-notepad-pink.png"];
+  var PAPERCLIP = ["paperclip-blue-pink.png","paperclip-green-blue.png","paperclip-green-pink.png"];
+  var POOL_HERO  = POOL_GENERAL.concat(PAPERCLIP);   // hero may use paperclip
+  var POOL_CARDS = POOL_GENERAL;                      // cards: no paperclip
+  // Only these read well on the dark-blue "THAT'S A WRAP" background.
+  var POOL_WRAP = ["bandage-formula-pink.png","blob-face-green.png","blob-face-pink.png","brain-star-green.png","brain-star-pink.png","document-sparkle-green.png","document-sparkle-pink.png","folder-star-green.png","folder-star-pink.png","globe-green-blue.png","globe-pink-blue.png","hand-raised-blue-green.png","hand-raised-pink-green.png","paperclip-green-pink.png","rainbow.png","shooting-star-green.png","shooting-star-pink.png","sleepy-dome-green.png","sleepy-dome-pink.png","thumbs-up-green-blue.png","thumbs-up-green-pink.png"];
+  // Platform-heading icons stay meaningful (a shape per platform), but the colour varies.
+  var FAM = {
+    globe:  ["globe-blue-pink.png","globe-green-blue.png","globe-pink-blue.png"],
+    notepad:["todo-notepad-blue.png","todo-notepad-green.png","todo-notepad-pink.png"],
+    doc:    ["document-sparkle-blue.png","document-sparkle-green.png","document-sparkle-pink.png"],
+    brain:  ["brain-star-blue.png","brain-star-green.png","brain-star-pink.png"],
+    star:   ["shooting-star-blue.png","shooting-star-green.png","shooting-star-pink.png"],
+    dome:   ["sleepy-dome-blue.png","sleepy-dome-green.png","sleepy-dome-pink.png"]
+  };
+  // First match wins, so the longer programmatic names come before "microsoft" / "google".
+  var PF_FAM = [{k:"trade desk",f:"brain"},{k:"dv360",f:"globe"},{k:"display & video",f:"globe"},{k:"amazon",f:"star"},{k:"ctv",f:"dome"},{k:"linkedin",f:"notepad"},{k:"tiktok",f:"doc"},{k:"meta",f:"globe"},{k:"facebook",f:"globe"},{k:"microsoft",f:"globe"},{k:"bing",f:"globe"},{k:"google",f:"globe"},{k:"chatgpt",f:"doc"},{k:"openai",f:"doc"}];
+  function hashStr(s){var h=2166136261>>>0;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h>>>0;}
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  var SEED = String((typeof data!=="undefined" && (data.generated||data.period_label)) || "seed");
+  var _rng = mulberry32(hashStr(SEED));
+  function pickFrom(pool){ return STK + pool[Math.floor(_rng()*pool.length)]; }
+  // Teams, in the order the feed shows them. Each platform says which team it
+  // belongs to (`team` in the deck data); decks built before that field existed
+  // fall back to the name: Meta / TikTok / LinkedIn = Social, the programmatic
+  // platforms = Programmatic, everything else (Google Ads, Microsoft, ChatGPT Ads) =
+  // Search.
+  var TEAMS = ["search","social","programmatic"];
+  var TEAM_LABEL = { all:"All", search:"Search", social:"Social", programmatic:"Programmatic" };
+  function teamOf(pf){
+    if(pf && TEAMS.indexOf(pf.team) >= 0) return pf.team;
+    var n=((pf && pf.name)||"").toLowerCase();
+    if(/meta|tiktok|linkedin|facebook/.test(n)) return "social";
+    if(/trade desk|dv360|display & video|amazon dsp|programmatic|ctv/.test(n)) return "programmatic";
+    return "search";
+  }
+  function iconFor(name){
+    var n=(name||"").toLowerCase(), fam="globe";
+    for(var i=0;i<PF_FAM.length;i++){ if(n.indexOf(PF_FAM[i].k)>=0){ fam=PF_FAM[i].f; break; } }
+    return pickFrom(FAM[fam]);
+  }
+  // Assign the fixed decorative slots from their allowed pools (image swaps; position/size untouched).
+  var SLOT_POOL = { "dec-archive":POOL_GENERAL };
+  // Base "type" of a sticker = filename minus trailing colour tokens
+  // (blob-face-green -> blob-face, paperclip-green-pink -> paperclip, globe-blue-pink -> globe).
+  function stkType(file){ return file.replace(/\.png$/,"").replace(/(-(?:green|pink|blue))+$/,""); }
+  function pickFile(pool){ return pool[Math.floor(_rng()*pool.length)]; }
+  // Pick a file whose type differs from avoidType (fall back to any after a few tries).
+  function pickFileDistinct(pool, avoidType){
+    for(var k=0;k<16;k++){ var f=pickFile(pool); if(stkType(f)!==avoidType){ return f; } }
+    return pickFile(pool);
+  }
+  // Paired decorative slots (two stickers shown together) must be DIFFERENT types — never
+  // e.g. two smileys or two to-do lists, even in different colours. Still random per edition.
+  function assignPair(id1, id2, pool){
+    var f1=pickFile(pool), n1=document.getElementById(id1); if(n1){ n1.src=STK+f1; }
+    var f2=pickFileDistinct(pool, stkType(f1)), n2=document.getElementById(id2); if(n2){ n2.src=STK+f2; }
+  }
+  assignPair("dec-hero-1","dec-hero-2",POOL_HERO);         // hero (section:nth-child(2))
+  assignPair("dec-signoff-1","dec-signoff-2",POOL_WRAP);   // sign-off (section:nth-child(6))
+  // Single decorative slots — any sticker from their pool.
+  Object.keys(SLOT_POOL).forEach(function(id){
+    var n=document.getElementById(id); if(n){ n.src = pickFrom(SLOT_POOL[id]); }
+  });
+
+  function el(tag, style){
+    var node = document.createElement(tag);
+    if (style) for (var k in style) node.style[k] = style[k];
+    for (var i = 2; i < arguments.length; i++) {
+      var child = arguments[i];
+      if (child == null || child === false) continue;
+      node.appendChild(typeof child === "string" ? document.createTextNode(child) : child);
+    }
+    return node;
+  }
+  function img(src, style){
+    var i = document.createElement("img");
+    i.src = src; i.alt = "";
+    if (style) for (var k in style) i.style[k] = style[k];
+    return i;
+  }
+
+  // ── Language (i18n) ──────────────────────────────────────────────────────
+  // Only THREE things are translated: the hero subtitles, card titles and card
+  // summaries. Everything else — brand, filters, hero headline, section headings,
+  // dates, counters, platform names, category/impact chips, card meta, archive,
+  // sign-off, footer — is pre-baked English chrome and is never regenerated.
+  //   item.i18n          = { ru:{title,summary}, es:{…}, sr:{…} }
+  //   data.subtitles_i18n = { ru:{all,search,social,programmatic}, es:{…}, sr:{…} }
+  //   data.subtitle_i18n  = { ru:"…", es:"…", sr:"…" }   (single-subtitle decks)
+  // All optional: a missing language (or field) falls back to the English
+  // base, so decks built before i18n keep rendering unchanged.
+  var LANGS = ["en","ru","es","sr"];
+  function txt(it, field, lang){
+    if(lang !== "en" && it.i18n && it.i18n[lang] && it.i18n[lang][field]) return it.i18n[lang][field];
+    return it[field] || "";
+  }
+  // The hero subtitle follows the news filter: `subtitles.all` leads with one top
+  // story per team, `subtitles.<team>` with that team's own. Decks with a single
+  // `subtitle` show it for every filter.
+  function subtitleFor(lang, team){
+    var S = data.subtitles, SI = data.subtitles_i18n;
+    if(S){
+      var keys = [team, "all"];
+      for(var i=0;i<keys.length;i++){
+        var k = keys[i];
+        if(lang !== "en" && SI && SI[lang] && SI[lang][k]) return SI[lang][k];
+        if(S[k]) return S[k];
+      }
+    }
+    if(lang !== "en" && data.subtitle_i18n && data.subtitle_i18n[lang]) return data.subtitle_i18n[lang];
+    return data.subtitle || (data.period_label ? ("Updates published " + data.period_label) : "");
+  }
+  // Language comes from ?lang= ONLY — exactly like ?team=. No stored preference:
+  // a plain link (no param) always opens in English, so the URL alone decides
+  // what a reader sees and a shared link never renders differently for them.
+  function resolveLang(){
+    try { var q = new URLSearchParams(window.location.search).get("lang");
+          if(q && LANGS.indexOf(q.toLowerCase()) >= 0) return q.toLowerCase(); } catch(e){}
+    return "en";
+  }
+  // Same rule for the team: read here too, so the first paint already shows the
+  // right subtitle and heading (the chrome script below owns the filter control).
+  function resolveTeam(){
+    try { var q = new URLSearchParams(window.location.search).get("team");
+          if(q && (q.toLowerCase() === "all" || TEAMS.indexOf(q.toLowerCase()) >= 0)) return q.toLowerCase(); } catch(e){}
+    return "all";
+  }
+
+  // Platforms with items, grouped by team in TEAMS order; within a team the deck
+  // data's own order is kept.
+  var platforms = (data.platforms || []).filter(function(p){ return p.items && p.items.length; });
+  platforms = TEAMS.reduce(function(acc, t){ return acc.concat(platforms.filter(function(p){ return teamOf(p) === t; })); }, []);
+  var total = platforms.reduce(function(a, p){ return a + p.items.length; }, 0);
+
+  // Hero
+  var badge = data.edition_no
+    ? "● No. " + data.edition_no + " · " + (data.period_label || "")
+    : "● " + (data.period_label || "");
+  document.getElementById("d-badge").textContent = badge;
+
+  // Reading time for what the filter shows: the deck's own `read_minutes` for All
+  // news, an estimate (~30 s a card) for a single team.
+  function readMinutes(items, team){
+    return (team === "all" && data.read_minutes) || Math.max(2, Math.round(items * 0.5));
+  }
+  document.getElementById("stat-updates").textContent = total;
+  document.getElementById("stat-platforms").textContent = platforms.length;
+  document.getElementById("stat-readmin").textContent = readMinutes(total, "all");
+
+  // ── Content render (language-aware) ──────────────────────────────────────
+  // Everything a reader can re-translate is built here, so switching language
+  // just re-runs this function; the chrome above is written once. The sticker
+  // RNG is re-seeded from a fixed sub-seed at the top of every run, so card
+  // stickers and platform icons are identical in all four languages.
+  var body = document.getElementById("d-body");
+  var curLang = "en";   // read by renderArchive() to carry the language onto edition links
+  var curTeam = resolveTeam();
+
+  // "<em>Search</em> News" — the team word in the hero's italic-blue accent.
+  function headingNodes(team){
+    var em = document.createElement("em"); em.textContent = TEAM_LABEL[team] || "All";
+    return [em, document.createTextNode(" News")];
+  }
+  // The hero subtitle follows the news filter.
+  function setTeamView(team){
+    curTeam = team;
+    document.getElementById("d-subtitle").textContent = subtitleFor(curLang, team);
+  }
+
+  function renderContent(lang){
+  _rng = mulberry32(hashStr(SEED + "|body"));
+  curLang = lang;
+  document.documentElement.lang = lang;
+  body.textContent = "";
+
+  // Hero subtitle (the one line of hero copy that IS translated)
+  setTeamView(curTeam);
+
+  // Updates, grouped by team (a heading per team) and platform
+  if (!platforms.length) {
+    body.appendChild(el("p", { color:"var(--aid-mute)", fontStyle:"italic" }, "No qualifying updates in this period."));
+  }
+  var lastTeam = null;
+  platforms.forEach(function(pf){
+    var team = teamOf(pf);
+    if (team !== lastTeam) {
+      lastTeam = team;
+      var h3 = document.createElement("h3"); headingNodes(team).forEach(function(x){ h3.appendChild(x); });
+      var th = el("div", null, h3);
+      th.className = "team-head reveal"; th.setAttribute("data-team", team);
+      body.appendChild(th);
+    }
+    var heading = el("div", { display:"flex", alignItems:"center", flexWrap:"wrap", gap:"14px", marginBottom:"24px" },
+      (function(){var _pi=img(iconFor(pf.name),{width:"46px",flex:"none",filter:"drop-shadow(0 6px 10px rgba(0,0,0,.14))"});_pi.className="pf-icon";return _pi;})(),
+      el("h2", { fontFamily:"'Playfair Display',Georgia,serif", fontWeight:"800", fontSize:"38px", lineHeight:"1", margin:"0", color:"var(--aid-ink)" }, pf.name),
+      el("span", { fontFamily:"'Courier Prime',monospace", fontSize:"13px", color:"var(--aid-ink)", background:"#fff", border:"2px solid var(--aid-ink)", borderRadius:"999px", padding:"3px 12px", fontWeight:"700", whiteSpace:"nowrap", flex:"none" }, pf.items.length + (pf.items.length === 1 ? " update" : " updates")),
+      el("span", { flex:"1", height:"2px", background:"var(--aid-ink)", opacity:".14" })
+    );
+
+    var grid = el("div", { display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(min(340px,100%),1fr))", gap:"22px" });
+
+    pf.items.forEach(function(it, i){
+      var imp = IMP[(it.impact || "low").toLowerCase()] || IMP.low;
+      // Sticker on every 3rd card (fixed rhythm, not impact-driven). Which PNG lands
+      // there is still seeded-random per edition via pickFrom.
+      var wantSticker = (i % 3 === 1);
+      var stickerSrc = wantSticker ? pickFrom(POOL_CARDS) : null;
+      var bg = (i % 2 === 1) ? "var(--aid-blue-50)" : "#ffffff";
+
+      var link = el("a", { color:"inherit" }, txt(it, "title", lang));
+      link.href = it.url || "#";
+      link.target = "_blank";
+      link.rel = "noopener";
+
+      var card = el("article", { background:bg, border:"2px solid var(--aid-ink)", borderRadius:"18px", padding:"26px 26px 22px", boxShadow:"7px 8px 0 " + imp.shadow, position:"relative" },
+        stickerSrc ? img(stickerSrc, { position:"absolute", right:"18px", top:"-26px", width:"66px", "--r":"7deg", animation:"floaty 5s ease-in-out infinite", filter:"drop-shadow(0 6px 9px rgba(0,0,0,.18))" }) : null,
+        el("div", { display:"flex", gap:"8px", marginBottom:"14px", flexWrap:"wrap" },
+          el("span", { fontFamily:"'Courier Prime',monospace", fontSize:"10.5px", letterSpacing:".06em", textTransform:"uppercase", color:"var(--aid-ink)", background:"#fff", border:"1.5px solid var(--aid-ink)", borderRadius:"7px", padding:"3px 10px" }, CAT[it.category] || CAT.other),
+          el("span", { fontFamily:"'Courier Prime',monospace", fontSize:"10.5px", letterSpacing:".06em", textTransform:"uppercase", color:imp.fg, background:imp.bg, border:"1.5px solid var(--aid-ink)", borderRadius:"7px", padding:"3px 10px" }, imp.label)
+        ),
+        el("h3", { fontFamily:"'Playfair Display',Georgia,serif", fontWeight:"700", fontSize:"23px", lineHeight:"1.14", margin:"0 0 12px", color:"var(--aid-ink)" }, link),
+        el("p", { margin:"0", fontSize:"14.5px", lineHeight:"1.56", color:"var(--aid-slate)" }, txt(it, "summary", lang)),
+        el("div", { fontFamily:"'Courier Prime',monospace", fontSize:"11px", color:"var(--aid-mute)", marginTop:"16px", display:"flex", gap:"8px", alignItems:"center" },
+          el("span", { color:"var(--aid-blue)" }, "↳"), el("span", null, it.published || ""), el("span", null, "·"), el("span", null, it.source || "")
+        )
+      );
+      card.className = "card-hov";
+      grid.appendChild(card);
+    });
+
+    var _sec=el("section",{marginBottom:"56px"},heading,grid);_sec.className="reveal";_sec.setAttribute("data-team",team);body.appendChild(_sec);
+  });
+
+  renderArchive();   // its links carry ?lang=, so they follow the switch
+  // Lets the chrome script re-apply the team filter and show the new nodes.
+  document.dispatchEvent(new CustomEvent("deck:rendered", { detail:{ lang:lang } }));
+  }
+
+  var initialLang = resolveLang();
+  renderContent(initialLang);
+  // Handed to the chrome script below (which owns the header dropdowns).
+  window.__deck = { render: renderContent, langs: LANGS, lang: initialLang, setTeam: setTeamView, teams: TEAMS, teamLabel: TEAM_LABEL, readMinutes: readMinutes };
+
+  // ── Editions strip ────────────────────────────────────────────────────────
+  // Lists every OTHER edition, newest first — so an older deck also links
+  // *forward* to the editions published after it, not just back.
+  //
+  // That can't come from the deck data: a deck is a frozen file, and the edition
+  // that supersedes it does not exist yet when it is built. So the strip reads
+  // the live registry (`data/editions.json`, same origin on Pages) at view time,
+  // which means every already-published deck picks up new editions on its own,
+  // with nothing rewritten. If that read can't happen (opened from disk, offline,
+  // registry missing) it falls back to the `archive` array baked in at build
+  // time — the old behaviour, older editions only.
+  var archiveEntries = null;
+  function normalizeEdition(e){
+    return { no:e.no, label:e.period_label || e.label || "", url:e.url || "#" };
+  }
+  function isCurrentEdition(e){
+    if (data.edition_no) return e.no === data.edition_no;
+    // No edition_no in the deck data — fall back to matching the file we're on.
+    var here = (location.pathname.split("/").pop() || "");
+    return here && e.url === here;
+  }
+  function renderArchive(){
+    var sec = document.getElementById("d-archive-section");
+    var host = document.getElementById("d-archive");
+    if (!sec || !host || !archiveEntries) return;
+    var list = archiveEntries.filter(function(e){ return !isCurrentEdition(e); })
+                             .sort(function(a,b){ return (b.no||0) - (a.no||0); });
+    if (!list.length) { sec.style.display = "none"; return; }
+    host.textContent = "";
+    list.forEach(function(a){
+      var link = el("a", { fontFamily:"'Courier Prime',monospace", fontSize:"12.5px", color:"var(--aid-ink)", background:"#fff", border:"2px solid var(--aid-ink)", borderRadius:"12px", padding:"12px 18px", boxShadow:"3px 3px 0 var(--aid-ink)", display:"flex", flexDirection:"column", gap:"3px" },
+        el("span", { fontWeight:"700" }, "No. " + a.no),
+        el("span", { color:"var(--aid-mute)" }, a.label)
+      );
+      // Carry the reader's language onto the edition they're opening. This is NOT a
+      // stored preference: the link spells the language out in its own URL, so the
+      // destination still reads it from ?lang= like any other visit. A bare link —
+      // from Slack, a bookmark, anywhere outside this page — still opens in English.
+      link.href = a.url + (curLang !== "en" ? "?lang=" + curLang : "");
+      host.appendChild(link);
+    });
+    sec.style.display = "";
+    collapseArchive();
+  }
+  // Keep the strip to a single row until the reader asks for the rest — with a
+  // dozen editions it would otherwise become a wall of cards. Which cards fit is
+  // measured, not a fixed count, because the row holds ~4–6 on a desktop and only
+  // one on a phone; anything whose top edge sits below the first card's is a
+  // second row and gets hidden. Re-measured on resize.
+  // ARCHIVE_MIN is the floor: a phone fits one card per row, and collapsing to a
+  // single lonely card reads as broken rather than tidy, so the three most recent
+  // editions always stay visible even when that spills onto extra rows.
+  var ARCHIVE_MIN = 3;
+  var archiveExpanded = false;
+  function collapseArchive(){
+    var host = document.getElementById("d-archive");
+    var btn = document.getElementById("d-archive-more");
+    if (!host || !btn) return;
+    var cards = [].slice.call(host.children);
+    cards.forEach(function(c){ c.classList.remove("ed-hidden"); });   // measure them all laid out
+    var firstTop = cards.length ? cards[0].offsetTop : 0;
+    var overflow = cards.filter(function(c, i){ return i >= ARCHIVE_MIN && c.offsetTop > firstTop; });
+    if (!archiveExpanded) overflow.forEach(function(c){ c.classList.add("ed-hidden"); });
+    if (!overflow.length) { btn.style.display = "none"; return; }   // one row already
+    btn.style.display = "";
+    btn.textContent = archiveExpanded ? "Show fewer editions" : ("View all " + cards.length + " editions");
+    btn.setAttribute("aria-expanded", archiveExpanded ? "true" : "false");
+  }
+  (function(){
+    var btn = document.getElementById("d-archive-more");
+    if (btn) btn.addEventListener("click", function(){ archiveExpanded = !archiveExpanded; collapseArchive(); });
+    var t; window.addEventListener("resize", function(){ clearTimeout(t); t = setTimeout(collapseArchive, 120); });
+  })();
+  // Baked fallback first, so the strip is populated even with no network…
+  if (data.archive && data.archive.length) {
+    archiveEntries = data.archive.map(normalizeEdition);
+    renderArchive();
+  }
+  // …then upgrade to the live registry when it's reachable.
+  try {
+    fetch("../data/editions.json", { cache:"no-cache" })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(j){ if (j && j.length) { archiveEntries = j.map(normalizeEdition); renderArchive(); } })
+      .catch(function(){});
+  } catch(e){}
+
+  // Footer
+  document.getElementById("d-footer").textContent =
+    total + " update" + (total === 1 ? "" : "s") + " · " + (data.period_label || "");
+  document.getElementById("d-credit").textContent =
+    "Made for MPO Team with 💜 by " + (data.author || "Ivan Potekhin");
+  document.title = "Ad Platform News Digest — " + (data.period_label || "");
+})();
+</script>
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ── Header dropdowns ──
+  // One open at a time; click outside or Esc closes. On desktop the news filter
+  // renders as a segmented slider and its toggle is hidden, so this only drives
+  // the language pill there; on phones it drives both.
+  var openDD=null;
+  function panelFor(dd){ if(!dd.__panel) dd.__panel=dd.querySelector(".opts"); return dd.__panel; }
+  function closeDD(){
+    if(!openDD) return;
+    var dd=openDD, panel=panelFor(dd);
+    panel.classList.remove("open");
+    panel.style.cssText="";                       // drop the fixed-position placement
+    if(panel.parentNode!==dd) dd.appendChild(panel);   // return it to its control
+    dd.classList.remove("open");
+    var t=dd.querySelector(".dd-toggle"); if(t) t.setAttribute("aria-expanded","false");
+    openDD=null;
+  }
+  function openPanel(dd){
+    var panel=panelFor(dd), tog=dd.querySelector(".dd-toggle");
+    // Move the panel onto <body> before showing it. The sticky header has its own
+    // backdrop-filter, and a backdrop-filter nested inside another one sees an empty
+    // backdrop — the popup would show zero blur. On <body> it frosts the real page.
+    if(panel.parentNode!==document.body) document.body.appendChild(panel);
+    var r=tog.getBoundingClientRect();
+    panel.style.position="fixed";
+    panel.style.top=(r.bottom+9)+"px";
+    panel.style.right=(window.innerWidth-r.right)+"px";
+    panel.style.minWidth=r.width+"px";
+    panel.classList.add("open");
+    dd.classList.add("open");
+    tog.setAttribute("aria-expanded","true");
+    openDD=dd;
+  }
+  document.addEventListener("click", function(e){
+    if(!e.target.closest) return;
+    var tog=e.target.closest(".dd-toggle");
+    if(tog){
+      var dd=tog.closest(".dd"), wasOpen=(openDD===dd);
+      closeDD();
+      if(!wasOpen) openPanel(dd);
+      return;
+    }
+    // An open panel lives on <body>, so "inside" means inside .opts, not inside .dd.
+    if(!e.target.closest(".opts")) closeDD();
+  });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeDD(); });
+  // The placement is a one-shot measurement, so anything that moves the toggle
+  // closes the panel rather than leaving it stranded.
+  window.addEventListener("scroll", closeDD, true);
+
+  // ?team= / ?lang= stay in the address bar so a reader can copy the link they see.
+  function setParam(key, val, dflt){
+    if(!(window.history && history.replaceState)) return;
+    try{
+      var u=new URL(window.location.href);
+      if(val===dflt){ u.searchParams.delete(key); } else { u.searchParams.set(key, val); }
+      history.replaceState(null,"",u.toString());
+    }catch(e){}
+  }
+
+  // News filter
+  var filter=document.getElementById("news-filter");
+  var curTeam="all";
+  if(filter){
+    var opts=filter.querySelector(".opts");
+    var btns=[].slice.call(filter.querySelectorAll(".flt"));
+    var fcur=filter.querySelector(".dd-cur");
+    var ind=document.createElement("div"); ind.className="flt-ind"; opts.insertBefore(ind, opts.firstChild);
+    function moveInd(btn){ ind.style.width=btn.offsetWidth+"px"; ind.style.transform="translateX("+btn.offsetLeft+"px)"; }
+    function apply(team){
+      var secs=[].slice.call(document.querySelectorAll('#d-body > section'));
+      secs.forEach(function(s){ s.style.display=(team==="all"||s.getAttribute("data-team")===team)?"":"none"; });
+      // Team headings: every one in All news, only the selected team's otherwise.
+      [].forEach.call(document.querySelectorAll('#d-body > .team-head'), function(h){ h.style.display=(team==="all"||h.getAttribute("data-team")===team)?"":"none"; });
+      var vis=secs.filter(function(s){return s.style.display!=="none";});
+      var items=0; vis.forEach(function(s){ items+=s.querySelectorAll('article').length; });
+      var su=document.getElementById('stat-updates'); if(su) su.textContent=items;
+      var sp=document.getElementById('stat-platforms'); if(sp) sp.textContent=vis.length;
+      var sr=document.getElementById('stat-readmin'); if(sr && window.__deck && window.__deck.readMinutes) sr.textContent=window.__deck.readMinutes(items, team);
+      // A team with nothing this edition (e.g. an older deck opened with ?team=programmatic).
+      var empty=document.getElementById('d-team-empty');
+      if(empty){
+        var lbl=(window.__deck && window.__deck.teamLabel && window.__deck.teamLabel[team]) || team;
+        empty.textContent = (team!=="all" && secs.length && !vis.length) ? ("No " + lbl + " updates in this edition.") : "";
+        empty.style.display = empty.textContent ? "" : "none";
+      }
+      if(window.__deck && window.__deck.setTeam) window.__deck.setTeam(team);
+    }
+    function btnFor(team){ for(var i=0;i<btns.length;i++){ if(btns[i].getAttribute("data-team")===team) return btns[i]; } return null; }
+    function select(team, updateURL){
+      var b=btnFor(team); if(!b) return;
+      curTeam=team;
+      btns.forEach(function(x){x.classList.remove("active");}); b.classList.add("active");
+      moveInd(b); if(fcur) fcur.textContent=b.textContent; apply(team);
+      if(updateURL) setParam("team", team, "all");
+    }
+    btns.forEach(function(b){ b.addEventListener("click", function(){ select(b.getAttribute("data-team"), true); closeDD(); }); });
+    // Deep link: ?team=search|social|programmatic (|all) opens the deck with that filter
+    // pre-applied. Routine 2 uses this to send each team a link straight to its own
+    // view; readers can switch to All news in the header. Unknown/absent value falls
+    // back to "all".
+    var want="all";
+    try{ var q=new URLSearchParams(window.location.search).get("team"); if(q){ q=q.toLowerCase(); if(btnFor(q)){ want=q; } } }catch(e){}
+    requestAnimationFrame(function(){ select(want, false); });
+    // A language switch rebuilds #d-body, so re-apply the current filter to it.
+    document.addEventListener("deck:rendered", function(){ apply(curTeam); });
+    window.addEventListener("resize", function(){ closeDD(); var a=filter.querySelector(".flt.active"); if(a) moveInd(a); });
+  }
+
+  // Language switcher — swaps card titles/summaries + the hero subtitle (see the
+  // render script above); every other string on the page stays English.
+  var langDD=document.getElementById("lang-dd");
+  if(langDD && window.__deck){
+    var lbtns=[].slice.call(langDD.querySelectorAll(".lng"));
+    var lcur=langDD.querySelector(".dd-cur");
+    function selectLang(lang, rerender){
+      var b=null;
+      lbtns.forEach(function(x){ var on=x.getAttribute("data-lang")===lang; x.classList.toggle("active",on); if(on) b=x; });
+      if(!b) return;
+      if(lcur) lcur.textContent=b.textContent;
+      if(rerender){
+        window.__deck.render(lang);
+        setParam("lang", lang, "en");   // URL only — the choice is not stored
+      }
+    }
+    lbtns.forEach(function(b){ b.addEventListener("click", function(){ selectLang(b.getAttribute("data-lang"), true); closeDD(); }); });
+    selectLang(window.__deck.lang, false);   // first render already used this language
+  }
+
+  // Sticker entrance (exclude platform icons and always-static stickers like Past editions)
+  var stickers=[].slice.call(document.querySelectorAll("img")).filter(function(i){ return !i.classList.contains("pf-icon") && !i.classList.contains("stk-static"); });
+  if(reduce || !("IntersectionObserver" in window)){ stickers.forEach(function(i){ i.classList.add("stk-in","shown"); }); }
+  else {
+    stickers.forEach(function(i){ i.classList.add("stk-in"); });
+    // Wide, randomized delay so stickers in view pop in one-by-one (chaotic), not all at once.
+    var so=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ var t=e.target; setTimeout(function(){t.classList.add("shown");}, 120 + Math.random()*1000); so.unobserve(t);} }); },{threshold:.15});
+    stickers.forEach(function(i){ so.observe(i); });
+  }
+
+  // Section reveal
+  var reveals=[].slice.call(document.querySelectorAll(".reveal"));
+  if(reduce || !("IntersectionObserver" in window)){ reveals.forEach(function(r){ r.classList.add("shown"); }); }
+  else { var ro=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("shown"); ro.unobserve(e.target);} }); },{threshold:.08}); reveals.forEach(function(r){ ro.observe(r); }); }
+
+  // On a language switch the whole body is replaced. Show the new nodes at once
+  // instead of replaying the scroll entrance — the reader is mid-page and would
+  // otherwise watch the deck blank out and fade back in.
+  document.addEventListener("deck:rendered", function(){
+    [].forEach.call(document.querySelectorAll("#d-body img"), function(i){ if(!i.classList.contains("pf-icon")) i.classList.add("stk-in","shown"); });
+    [].forEach.call(document.querySelectorAll("#d-body .reveal"), function(r){ r.classList.add("shown"); });
+  });
+
+  // Typewriter (preserves inline-styled segments like the italic "Bi-Weekly")
+  function typewrite(node){
+    if(!node) return;
+    var segs=[]; [].forEach.call(node.childNodes, function(n){
+      if(n.nodeType===3) segs.push({t:n.nodeValue,s:null,tag:null});
+      else if(n.nodeType===1){
+        if(n.tagName==="BR") segs.push({br:true});
+        else segs.push({t:n.textContent,s:n.getAttribute("style"),tag:n.tagName});
+      }
+    });
+    // Reserve the fully-laid-out height BEFORE clearing so the block doesn't grow
+    // line-by-line while typing (the phrase wraps to 2 lines).
+    node.style.minHeight = node.offsetHeight + "px";
+    node.textContent=""; node.classList.add("tw-caret");
+    var si=0,ci=0,cur=null;
+    (function step(){
+      if(si>=segs.length){ node.classList.remove("tw-caret"); return; }
+      var seg=segs[si];
+      if(seg.br){ node.appendChild(document.createElement("br")); si++; ci=0; cur=null; return step(); }
+      if(ci===0){ if(seg.s!==null){ cur=document.createElement(seg.tag||"span"); if(seg.s) cur.setAttribute("style",seg.s); node.appendChild(cur);} else cur=null; }
+      var ch=seg.t.charAt(ci); if(cur) cur.textContent+=ch; else node.appendChild(document.createTextNode(ch));
+      ci++; if(ci>=seg.t.length){ si++; ci=0; }
+      setTimeout(step, 34);
+    })();
+  }
+  if(!reduce){
+    // Typewriter runs only on the bottom sign-off heading (the hero shows immediately).
+    var wrap=document.getElementById("wrap-title");
+    if(wrap && "IntersectionObserver" in window){ var did=false; var wo=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting && !did){ did=true; typewrite(wrap); wo.unobserve(e.target);} }); },{threshold:.4}); wo.observe(wrap); }
+  }
+})();
+</script>
+
+<!-- Link-click tracking -> dataLayer (for GTM triggers) -->
+<script>
+(function(){
+  window.dataLayer = window.dataLayer || [];
+  document.addEventListener("click", function(e){
+    var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+    if(!a) return;
+    var host=""; try{ host=new URL(a.href).hostname; }catch(_){}
+    var sec = a.closest("#d-body > section[data-team]");
+    var h2 = sec ? sec.querySelector("h2") : null;
+    var loc = a.closest("article") ? "card" : (a.closest("#d-archive") ? "archive" : "other");
+    var af = document.querySelector("#news-filter .flt.active");
+    window.dataLayer.push({
+      event: "link_click",
+      link_url: a.href,
+      link_text: (a.textContent||"").trim().slice(0,140),
+      link_domain: host,
+      link_team: sec ? sec.getAttribute("data-team") : "",
+      link_platform: h2 ? h2.textContent.trim() : "",
+      link_location: loc,
+      active_filter: af ? af.getAttribute("data-team") : ""
+    });
+  }, true);
+})();
+</script>
+</body>
+</html>
