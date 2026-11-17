@@ -5806,5 +5806,50 @@
     "impact": "medium",
     "collected": true,
     "presented": false
+  },
+  {
+    "id": "af6314e5fc16",
+    "track": "programmatic",
+    "platform": "dv360",
+    "source": "Display & Video 360 Help — Announcements",
+    "title": "DV360 will let advertisers link YouTube creator videos with a creator-shared code",
+    "url": "https://support.google.com/displayvideo/answer/18944165",
+    "published": "2026-11-13",
+    "first_seen": "2026-11-17T09:05:29Z",
+    "summary": "Display & Video 360 will soon support shared codes for brand partner access: a creator generates a unique link that automatically links their YouTube videos to the advertiser account, replacing manual channel searches and approval workflows. It speeds up setting up Creator partnerships boost campaigns in DV360.",
+    "category": "feature",
+    "impact": "medium",
+    "collected": true,
+    "presented": false
+  },
+  {
+    "id": "50625cb9532a",
+    "track": "programmatic",
+    "platform": "ttd",
+    "source": "The Trade Desk — Resource Desk",
+    "title": "Koa can optimise pharma campaigns toward Audience Quality and cost per in-target reach",
+    "url": "https://www.thetradedesk.com/resources/3-tools-for-pharma-and-healthcare-brands",
+    "published": "2026-11-13",
+    "first_seen": "2026-11-17T09:05:29Z",
+    "summary": "The Trade Desk outlines quality tools for pharma and healthcare buyers: Koa can optimise toward Audience Quality (AQ) and cost per in-target reach (CPITR) as defined by Veeva Crossix and IQVIA Digital, the Quality Reach Index report scores targeting relevance against a seed audience, and Sincera-powered signals (ads-to-content ratio, ads in view, ad refresh) on the Inventory Controls page can take bid factors. Mostly a round-up of existing tools.",
+    "category": "feature",
+    "impact": "low",
+    "collected": true,
+    "presented": false
+  },
+  {
+    "id": "65a3d4e223e7",
+    "track": "programmatic",
+    "platform": "microsoft_programmatic",
+    "source": "Microsoft Advertising Blog",
+    "title": "Microsoft launches XBOX Video for Brands: pre-roll video before ad-supported cloud gaming",
+    "url": "https://about.ads.microsoft.com/en/blog/post/november-2026/xbox-video-for-brands-a-new-way-to-get-closer-to-play",
+    "published": "2026-11-12",
+    "first_seen": "2026-11-17T09:05:29Z",
+    "summary": "XBOX Video for Brands is new premium video inventory: eligible players watch a non-skippable three-minute 16:9 pre-roll pod during cloud loading to unlock a 30-minute ad-supported cloud-gaming session without Game Pass. Microsoft pitches it as an extension of premium video and CTV buys; the post does not say through which buying channel it is sold.",
+    "category": "feature",
+    "impact": "low",
+    "collected": true,
+    "presented": false
   }
 ]
