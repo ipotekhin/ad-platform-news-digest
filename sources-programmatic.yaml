@@ -43,7 +43,8 @@
 # FETCHING (all sources)
 #   - Use an in-session client (curl / requests), NOT the managed WebFetch tool — its
 #     fetcher is blocked by these sites' anti-bot even when egress is open.
-#   - Send a desktop-browser User-Agent and `Accept-Language: en-US`. Allow a 60 s
+#   - Send a desktop-browser User-Agent and `Accept-Language: en-US` — unless the
+#     source's note says otherwise (ppc.land: no browser headers). Allow a 60 s
 #     timeout.
 #   - Transient failure on a readable/pending source (timeout, 5xx): retry up to 2 more
 #     times with a short pause before treating the source as failed for this run.
@@ -211,9 +212,11 @@ sources:
     title: PPC Land — Pulse
     url: https://ppc.land/tag/pulse/
     type: aggregator
-    validation: blocked
-    blocked_since: 2026-11-17
+    validation: readable
     note: >-
+      Fetch WITHOUT the desktop-browser User-Agent / Accept-Language headers (plain
+      curl): Cloudflare answers the browser UA with a 403 `cf-mitigated: challenge`,
+      while plain curl gets 200 for the tag pages and articles.
       The same page the performance track reads (key `ppcland_pulse` in sources.yaml):
       cards `<article class="card card-post …">`, title in the `aria-label` and link in
       the `href` of `<a class="card-post-image-link">`, date in `<time
