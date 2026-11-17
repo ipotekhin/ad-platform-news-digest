@@ -211,7 +211,8 @@ sources:
     title: PPC Land — Pulse
     url: https://ppc.land/tag/pulse/
     type: aggregator
-    validation: readable
+    validation: blocked
+    blocked_since: 2026-11-17
     note: >-
       The same page the performance track reads (key `ppcland_pulse` in sources.yaml):
       cards `<article class="card card-post …">`, title in the `aria-label` and link in
