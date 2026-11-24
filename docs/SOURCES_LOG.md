@@ -17,6 +17,9 @@ Entry format:
 
 ---
 
+## 2026-11-24
+- `ppcland_pulse`: readable → readable — note corrected: with the desktop-browser User-Agent the tag page returns HTTP 403 `cf-mitigated: challenge`; plain curl without browser headers gets 200 (same as `ppcland_pulse_programmatic` on 2026-11-17). Note and FETCHING updated (ppc.land: no browser headers).
+
 ## 2026-11-17
 - `ppcland_pulse_programmatic`: readable → blocked — HTTP 403 with `cf-mitigated: challenge` (Cloudflare "Just a moment…" page) on every retry.
 - `ppcland_pulse_programmatic`: blocked → readable — the 403 challenge is triggered by the desktop-browser User-Agent required by FETCHING; plain curl without browser headers gets 200 for the tag pages and articles. Note and FETCHING updated (ppc.land: no browser headers).
