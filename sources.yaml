@@ -46,7 +46,8 @@
 # FETCHING (all sources)
 #   - Use an in-session client (curl / requests), NOT the managed WebFetch tool — its
 #     fetcher is blocked by these sites' anti-bot even when egress is open.
-#   - Send a desktop-browser User-Agent and `Accept-Language: en-US`. Allow a 60 s
+#   - Send a desktop-browser User-Agent and `Accept-Language: en-US` — unless the
+#     source's note says otherwise (ppc.land: no browser headers). Allow a 60 s
 #     timeout (ads.tiktok.com pages are ~1.3 MB and occasionally stall).
 #   - Transient failure on a readable/pending source (timeout, 5xx): retry up to 2 more
 #     times with a short pause before treating the source as failed for this run.
@@ -313,7 +314,9 @@ sources:
     type: aggregator
     validation: readable
     note: >-
-      PPC Land's news section. Cards are `<article class="card card-post …">`: title in
+      PPC Land's news section. Fetch with plain curl, NO browser headers: the
+      desktop-browser User-Agent triggers a Cloudflare challenge (HTTP 403,
+      `cf-mitigated: challenge`); plain curl gets 200 for tag pages and articles. Cards are `<article class="card card-post …">`: title in
       the `aria-label` and link in the `href` of `<a class="card-post-image-link">`, date
       in `<time class="card-post-date" datetime="YYYY-MM-DD">`. 12 cards per page, ~2
       pages per day — page back through `/tag/pulse/page/N/` (~30–35 pages for the
