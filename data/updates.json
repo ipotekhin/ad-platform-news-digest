@@ -2130,7 +2130,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "b792a990c3cc",
@@ -2145,7 +2146,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "b45faad561c8",
@@ -2175,7 +2177,8 @@
     "category": "api",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "782117a274db",
@@ -2190,7 +2193,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "d8622edfbfd0",
@@ -2205,7 +2209,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "345a81ec8560",
@@ -2220,7 +2225,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "5a6a07d3d0bb",
@@ -2235,7 +2241,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "f0014504ad7c",
@@ -2250,7 +2257,8 @@
     "category": "api",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "f085d1556d4f",
@@ -2280,7 +2288,8 @@
     "category": "other",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "02d7cc1db90e",
@@ -2310,7 +2319,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "8ecb1e88ebf0",
@@ -2385,7 +2395,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "877c95210f42",
@@ -2400,7 +2411,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "a6dc371ec676",
@@ -2415,7 +2427,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "597f49d1132c",
@@ -2430,7 +2443,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "340f8e69d28c",
@@ -2445,7 +2459,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "3b57f0441939",
@@ -2460,7 +2475,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "a085b6aac45a",
@@ -2475,7 +2491,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "56d66dd1130a",
@@ -2490,7 +2507,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "c147000d57f8",
@@ -2505,7 +2523,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "4cfcad1318c5",
@@ -2520,7 +2539,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "64330abbcfc6",
@@ -2535,7 +2555,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "88a80436fe7d",
@@ -2550,7 +2571,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "918fd67bb7de",
@@ -2565,7 +2587,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "d191006af7ab",
@@ -2580,7 +2603,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "a211c12a2d83",
@@ -2595,7 +2619,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "60a503737268",
@@ -2610,7 +2635,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "134c7bedd189",
@@ -2625,7 +2651,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "cd4a8c64e9e3",
@@ -2640,7 +2667,8 @@
     "category": "other",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "e0575bb1d8ba",
@@ -2655,7 +2683,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "a6cc1f37f1f3",
@@ -2670,7 +2699,8 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "9cd2a6a29b58",
@@ -2700,7 +2730,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "befd9a7d31fd",
@@ -2715,7 +2746,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "46285e160dbb",
@@ -2730,7 +2762,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "ed29fe7f9035",
@@ -2745,7 +2778,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "157021734e57",
@@ -2760,7 +2794,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "be2cc07417cd",
@@ -2775,7 +2810,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "fd5b6a4c504e",
@@ -2790,7 +2826,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "7644f82ffa3b",
@@ -2805,7 +2842,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "3c77a883f87e",
@@ -2820,7 +2858,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "e11f70bbae5d",
@@ -2835,7 +2874,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "90901e067537",
@@ -2850,7 +2890,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "11ad47ea58b0",
@@ -2865,7 +2906,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "66f5b39d49bf",
@@ -2880,7 +2922,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "cc5da8eff2eb",
@@ -2895,7 +2938,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "835215bf0c1a",
@@ -2910,7 +2954,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "15f5fd35d572",
@@ -2925,7 +2970,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "8006d57e6419",
@@ -2940,7 +2986,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "a59109b2af82",
@@ -2955,7 +3002,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "c35354278a7b",
@@ -2970,7 +3018,8 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "28975a6161b9",
@@ -3000,7 +3049,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "3efc6c37a158",
@@ -3015,7 +3065,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "73e57de71798",
@@ -3030,7 +3081,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "1be7044e06fe",
@@ -3045,7 +3097,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "2d8250c09872",
@@ -3060,7 +3113,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "07723ece3e57",
@@ -3075,7 +3129,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "7486e0889fd7",
@@ -3090,7 +3145,8 @@
     "category": "measurement",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "bb3d70e14e69",
@@ -3105,7 +3161,8 @@
     "category": "beta",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "05178ce96973",
@@ -3120,7 +3177,8 @@
     "category": "deprecation",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "f00982d701a4",
@@ -3135,7 +3193,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "7a40319d3e92",
@@ -3150,7 +3209,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "7ad7fb4120a3",
@@ -3165,7 +3225,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "1179df25aaca",
@@ -3180,7 +3241,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "89b0f94c78d8",
@@ -3195,7 +3257,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "e3276c96a9b6",
@@ -3210,7 +3273,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "b50b2470b0c2",
@@ -3225,7 +3289,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "f72325a56ee2",
@@ -3240,7 +3305,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "f59761b96e39",
@@ -3255,7 +3321,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "185d7b35fc1e",
@@ -3270,7 +3337,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "502b11e447f7",
@@ -3285,7 +3353,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "939aa6b0954e",
@@ -3300,7 +3369,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "bce99f8096c5",
@@ -3330,7 +3400,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "ede18df47a96",
@@ -3360,7 +3431,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "a5b750ab3188",
@@ -3405,7 +3477,8 @@
     "category": "beta",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "d2e1b48146af",
@@ -3495,7 +3568,8 @@
     "category": "api",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "514d5d65c11e",
@@ -3510,7 +3584,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "c9d0d7385d16",
@@ -3705,7 +3780,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "bcf020f6d119",
@@ -3720,7 +3796,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "3a4847733389",
@@ -3750,7 +3827,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "c86366e4394e",
@@ -3795,7 +3873,8 @@
     "category": "api",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "c5d0eb6489f0",
@@ -3810,7 +3889,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "e8fc737e4b16",
@@ -3825,7 +3905,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "f4009cebc71c",
@@ -3840,7 +3921,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "8208ae1307bd",
@@ -3855,7 +3937,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "2d623fc1cb73",
@@ -3870,7 +3953,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "92e145517f86",
@@ -3885,7 +3969,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "3483548ca22d",
@@ -3900,7 +3985,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "c1f67b005b6f",
@@ -3915,7 +4001,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "3c17fc598c5d",
@@ -3930,7 +4017,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "ea7aef107d28",
@@ -3945,7 +4033,8 @@
     "category": "feature",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "03c6ad520420",
@@ -3960,7 +4049,8 @@
     "category": "feature",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "c4e6b7827590",
@@ -3975,7 +4065,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "436425b75bac",
@@ -4005,7 +4096,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "191f84430560",
@@ -4020,7 +4112,8 @@
     "category": "policy",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "e045ef729fe4",
@@ -4050,7 +4143,8 @@
     "category": "measurement",
     "impact": "low",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "f41552662301",
@@ -4080,7 +4174,8 @@
     "category": "policy",
     "impact": "medium",
     "collected": true,
-    "presented": false
+    "presented": false,
+    "expired": true
   },
   {
     "id": "f3dbaa09542f",
